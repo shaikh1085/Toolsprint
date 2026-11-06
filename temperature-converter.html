@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert temperatures between Celsius, Fahrenheit and Kelvin instantly — all three scales shown at once. Free temperature converter."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Temperature Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Temperature Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>Temperature Converter</h1>
+  <p>Enter a temperature in any scale and see all three at once: Celsius, Fahrenheit and Kelvin.</p></div>
+  <div class="panel">
+    <div class="row">
+      <div><label for="tv">Value</label><input type="number" id="tv" placeholder="e.g. 100"/></div>
+      <div><label for="tf">Measured in</label><select id="tf"><option value="c">Celsius (°C)</option><option value="f">Fahrenheit (°F)</option><option value="k">Kelvin (K)</option></select></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Convert</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter the value</strong><br/>Negative numbers are fine — winter exists.</div>
+    <div><b>2</b><strong>Say which scale it is in</strong><br/>The one detail that changes everything.</div>
+    <div><b>3</b><strong>Convert</strong><br/>All three scales are shown, so no second conversion is needed.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Take the full three-scale result.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Where do Celsius and Fahrenheit cross?</summary><p>At −40: −40 °C and −40 °F are the same temperature — a handy sanity check for any converter, including this one.</p></details>
+    <details><summary>Why can Kelvin not be negative?</summary><p>Kelvin starts at absolute zero (0 K = −273.15 °C), the coldest physically possible temperature, so a negative Kelvin value is an input error and the tool will tell you.</p></details>
+    <details><summary>What are the everyday reference points?</summary><p>Water freezes at 0 °C / 32 °F and boils at 100 °C / 212 °F; body temperature is about 37 °C / 98.6 °F; a hot day is 35 °C / 95 °F.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("temperature-converter", document.getElementById("related"));
+var lastText="";
+function r2(n){ return String(Math.round(n*100)/100); }
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var v=parseFloat(document.getElementById("tv").value), from=document.getElementById("tf").value;
+  if(isNaN(v)){ showMsg("msg","Enter a numeric temperature first."); return; }
+  var c;
+  if(from==="c") c=v; else if(from==="f") c=(v-32)*5/9; else c=v-273.15;
+  if(from==="k"&&v<0){ showMsg("msg","Kelvin cannot be negative — 0 K is absolute zero, the lowest possible temperature."); return; }
+  if(c<-273.15){ showMsg("msg","That is below absolute zero (−273.15 °C), which is physically impossible. Check the value and scale."); return; }
+  var f=c*9/5+32, k=c+273.15;
+  lastText=r2(c)+" °C = "+r2(f)+" °F = "+r2(k)+" K";
+  document.getElementById("out").innerHTML="<strong>"+r2(c)+" °C</strong> · <strong>"+r2(f)+" °F</strong> · <strong>"+r2(k)+" K</strong>";
+  showMsg("msg","Converted.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!lastText){ showMsg("msg","Convert a temperature first."); return; }
+  clearMsg("msg"); copyText(lastText,this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("tv").value=""; document.getElementById("out").innerHTML=""; lastText=""; clearMsg("msg");
+});
+</script>
+</body>
+</html>

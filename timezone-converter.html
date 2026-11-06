@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert any date and time between world time zones — see what 3pm in Karachi is in London, New York, Dubai and more. Free and instant."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Time Zone Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Time Zone Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>Time Zone Converter</h1>
+  <p>Pick a date and time in one city and see exactly what it is in another — daylight saving handled automatically for the date you choose.</p></div>
+  <div class="panel">
+    <div class="row">
+      <div><label for="z1">From city</label><select id="z1"></select></div>
+      <div><label for="z2">To city</label><select id="z2"></select></div>
+    </div>
+    <label for="tw">Date &amp; time in the “from” city (leave empty for right now)</label>
+    <input type="datetime-local" id="tw"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Convert time</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Pick the two cities</strong><br/>Where the time is known, and where you need it.</div>
+    <div><b>2</b><strong>Enter the date &amp; time</strong><br/>Any date — past or future. Empty means “right now”.</div>
+    <div><b>3</b><strong>Convert</strong><br/>See the equivalent time and the hour difference.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Send the result straight into a message or invite.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Does it handle daylight saving time?</summary><p>Yes. The conversion uses the full IANA time-zone database built into your browser, so a July date and a January date between the same cities can correctly show different offsets.</p></details>
+    <details><summary>Why did the result land on a different day?</summary><p>Big offsets cross midnight: 9am Monday in Sydney can be Sunday evening in New York. The result always shows the full date so the day shift is obvious, never hidden.</p></details>
+    <details><summary>How is the “from” time interpreted if I type it?</summary><p>As wall-clock time in the from-city: “15:00 in Karachi” means 3pm as a clock in Karachi reads, and the tool finds that same instant in the other city.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("timezone-converter", document.getElementById("related"));
+var ZONES=[["Karachi","Asia/Karachi"],["London","Europe/London"],["New York","America/New_York"],["Los Angeles","America/Los_Angeles"],["Dubai","Asia/Dubai"],["Tokyo","Asia/Tokyo"],["Sydney","Australia/Sydney"],["Delhi","Asia/Kolkata"],["Singapore","Asia/Singapore"],["Paris","Europe/Paris"],["Toronto","America/Toronto"],["Auckland","Pacific/Auckland"]];
+var z1=document.getElementById("z1"), z2=document.getElementById("z2"), lastText="";
+[z1,z2].forEach(function(sel){ sel.innerHTML=ZONES.map(function(z){ return '<option value="'+z[1]+'">'+z[0]+"</option>"; }).join(""); });
+z2.value="Europe/London";
+function fmtIn(d,zone){
+  return new Intl.DateTimeFormat("en-GB",{timeZone:zone,weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:false}).format(d);
+}
+function offsetMs(zone,date){
+  var dtf=new Intl.DateTimeFormat("en-US",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+  var parts={}; dtf.formatToParts(date).forEach(function(p){ parts[p.type]=p.value; });
+  var asUTC=Date.UTC(+parts.year,+parts.month-1,+parts.day,+parts.hour%24,+parts.minute,+parts.second);
+  return asUTC-date.getTime();
+}
+function zonedTimeToUTC(zone,y,mo,d,h,mi){
+  var guess=Date.UTC(y,mo,d,h,mi,0);
+  var off=offsetMs(zone,new Date(guess));
+  return new Date(guess-off);
+}
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var from=z1.value, to=z2.value;
+  var fromName=z1.options[z1.selectedIndex].text, toName=z2.options[z2.selectedIndex].text;
+  var v=document.getElementById("tw").value, instant;
+  if(v){
+    var p=v.split("T"), dp=p[0].split("-"), tp=(p[1]||"00:00").split(":");
+    instant=zonedTimeToUTC(from,+dp[0],+dp[1]-1,+dp[2],+tp[0],+tp[1]);
+  }else instant=new Date();
+  var diffH=(offsetMs(to,instant)-offsetMs(from,instant))/3600000;
+  lastText=fmtIn(instant,from)+" in "+fromName+" = "+fmtIn(instant,to)+" in "+toName+" ("+(diffH>=0?"+":"")+diffH+"h)";
+  document.getElementById("out").innerHTML="<strong>"+fmtIn(instant,to)+"</strong> in "+toName+"<br/>when it is "+fmtIn(instant,from)+" in "+fromName+" — a "+(diffH>=0?"+":"")+diffH+" hour difference.";
+  showMsg("msg","Converted.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!lastText){ showMsg("msg","Convert a time first."); return; }
+  clearMsg("msg"); copyText(lastText,this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("tw").value=""; document.getElementById("out").innerHTML=""; lastText=""; clearMsg("msg");
+});
+</script>
+</body>
+</html>

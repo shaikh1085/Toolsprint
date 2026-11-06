@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert JPG photos to PNG online for free. Compare original and new file size, preview the PNG, then download — in your browser, no upload."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>JPG to PNG Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › JPG to PNG Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>JPG to PNG Converter</h1>
+  <p>Turn a JPG photo into a lossless PNG — the format design tools, game engines and many upload forms ask for.</p></div>
+  <div class="panel">
+    <div class="drop">Choose a JPG image.<br/><br/><input type="file" id="f" accept="image/jpeg" aria-label="Choose a JPG image"/></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Convert to PNG</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download PNG</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <div id="previewWrap" style="display:none;margin-top:16px"><strong>Preview</strong><br/><img id="preview" alt="Preview of the converted PNG" style="max-width:100%;border-radius:10px;border:1px solid var(--border);margin-top:8px"/></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose a JPG</strong><br/>Pick the photo you want to convert.</div>
+    <div><b>2</b><strong>Convert</strong><br/>The PNG is created at full resolution.</div>
+    <div><b>3</b><strong>Compare sizes</strong><br/>PNG is usually larger — the size line shows by how much.</div>
+    <div><b>4</b><strong>Download</strong><br/>Save the PNG to your device.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Does converting to PNG improve the photo's quality?</summary><p>No. PNG preserves exactly the pixels the JPG already has — it cannot restore detail the JPG compression removed. The benefit is that future edits and re-saves lose nothing more.</p></details>
+    <details><summary>Why is the PNG so much bigger?</summary><p>JPG throws away detail to stay small; PNG stores every pixel. Photo PNGs are commonly 3–8× the JPG size, and the tool warns you before you download.</p></details>
+    <details><summary>Can this add transparency to my JPG?</summary><p>No — a JPG has no transparent areas to recover. The PNG starts fully opaque; removing a background needs a dedicated editor.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("jpg-to-png", document.getElementById("related"));
+var file=null,outUrl=null,fEl=document.getElementById("f");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+fEl.addEventListener("change",function(){clearMsg("msg");file=fEl.files[0]||null;
+  if(file&&file.type!=="image/jpeg"){showMsg("msg","That is not a JPG image. This converter accepts JPG only — for other formats use the Image Format Converter.");file=null;fEl.value="";}});
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!file){showMsg("msg","Choose a JPG image first.");return;}
+  var url=URL.createObjectURL(file),img=new Image();
+  img.onload=function(){
+    var c=document.createElement("canvas");c.width=img.naturalWidth;c.height=img.naturalHeight;
+    c.getContext("2d").drawImage(img,0,0);
+    c.toBlob(function(blob){
+      if(!blob){showMsg("msg","Conversion failed in your browser.");return;}
+      if(outUrl)URL.revokeObjectURL(outUrl); outUrl=URL.createObjectURL(blob);
+      var saved=100-(blob.size/file.size*100);
+      document.getElementById("sizeOut").innerHTML="Original size: <strong>"+fmt(file.size)+"</strong> → New size: <strong>"+fmt(blob.size)+"</strong> ("+(saved>=0?saved.toFixed(1)+"% saved":Math.abs(saved).toFixed(1)+"% bigger")+")";
+      document.getElementById("preview").src=outUrl;
+      document.getElementById("previewWrap").style.display="block";
+      document.getElementById("dl").disabled=false;
+      if(blob.size>=file.size)showMsg("msg","Warning: the PNG is bigger than the JPG — that is expected for photos. Only download it if you specifically need PNG.");
+      else showMsg("msg","Done — check the preview, then download.",true);
+    },"image/png");
+  };
+  img.onerror=function(){showMsg("msg","Your browser could not read that image.");};
+  img.src=url;
+});
+document.getElementById("dl").addEventListener("click",function(){if(!outUrl)return;var a=document.createElement("a");a.href=outUrl;a.download="toolsprint-png.png";a.click();});
+document.getElementById("reset").addEventListener("click",function(){file=null;fEl.value="";document.getElementById("sizeOut").innerHTML="";document.getElementById("previewWrap").style.display="none";document.getElementById("dl").disabled=true;clearMsg("msg");if(outUrl){URL.revokeObjectURL(outUrl);outUrl=null;}});
+</script>
+</body>
+</html>

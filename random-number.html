@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Generate random numbers in any range online for free — with an optional no-repeats mode so every number is unique. Copy the results with one click."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Random Number Generator — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Random Number Generator</nav>
+  <div class="prose" style="padding-top:10px"><h1>Random Number Generator</h1>
+  <p>Pick random numbers between any minimum and maximum — for draws, games, sampling and decisions — with an optional mode that guarantees no repeats.</p></div>
+  <div class="panel">
+    <div class="row3">
+      <div><label for="rmin">Minimum</label><input type="number" id="rmin" placeholder="e.g. 1"/></div>
+      <div><label for="rmax">Maximum</label><input type="number" id="rmax" placeholder="e.g. 100"/></div>
+      <div><label for="rn">How many</label><input type="number" id="rn" min="1" placeholder="e.g. 5"/></div>
+    </div>
+    <div class="checks"><label><input type="checkbox" id="runq"/> No repeats — every number unique</label></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+      <button type="button" class="btn" id="go">Pick numbers</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Set the range</strong><br/>Minimum and maximum, both included in the draw.</div>
+    <div><b>2</b><strong>Choose how many</strong><br/>One for a decision, several for a draw or sample.</div>
+    <div><b>3</b><strong>Optional: no repeats</strong><br/>Tick it for raffles and lotteries where duplicates are not allowed.</div>
+    <div><b>4</b><strong>Pick &amp; copy</strong><br/>Results appear in draw order; copy them with one click.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>How random are these numbers?</summary><p>They come from your browser's cryptographically secure random source (the same one used for security tokens), mapped evenly into your range — no patterns, no favouritism toward any number.</p></details>
+    <details><summary>Why did it refuse my no-repeats request?</summary><p>Because it was impossible: with no repeats, you cannot pick more numbers than the range contains. Picking 10 unique numbers from 1–5 has no answer, so the tool explains instead of looping forever.</p></details>
+    <details><summary>Are the minimum and maximum themselves possible results?</summary><p>Yes — the range is inclusive on both ends, which is what most draws and games expect.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("random-number", document.getElementById("related"));
+var last=[];
+function randInt(min,max){
+  var range=max-min+1, maxValid=Math.floor(4294967296/range)*range, arr=new Uint32Array(1);
+  do{ crypto.getRandomValues(arr); }while(arr[0]>=maxValid);
+  return min+(arr[0]%range);
+}
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var min=parseInt(document.getElementById("rmin").value,10), max=parseInt(document.getElementById("rmax").value,10), n=parseInt(document.getElementById("rn").value,10);
+  var out=document.getElementById("out");
+  if(isNaN(min)||isNaN(max)||isNaN(n)){ showMsg("msg","Fill in the minimum, maximum and how many numbers you want."); return; }
+  if(max<min){ showMsg("msg","The maximum must be equal to or bigger than the minimum."); return; }
+  if(n<1){ showMsg("msg","Ask for at least 1 number."); return; }
+  var unique=document.getElementById("runq").checked, range=max-min+1;
+  if(unique&&n>range){ showMsg("msg","Impossible with “no repeats”: you asked for "+n+" unique numbers but the range "+min+"–"+max+" only contains "+range+". Lower the count or widen the range."); return; }
+  last=[];
+  if(unique){
+    var seen={};
+    while(last.length<n){ var v=randInt(min,max); if(!seen[v]){ seen[v]=1; last.push(v); } }
+  }else{
+    for(var i=0;i<n;i++) last.push(randInt(min,max));
+  }
+  out.innerHTML="<strong>"+last.join(", ")+"</strong><br/>"+n+" number"+(n===1?"":"s")+" between "+min+" and "+max+(unique?" (no repeats)":"")+".";
+  showMsg("msg","Done.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!last.length){ showMsg("msg","Pick some numbers first."); return; }
+  clearMsg("msg"); copyText(last.join(", "),this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  ["rmin","rmax","rn"].forEach(function(id){ document.getElementById(id).value=""; });
+  document.getElementById("runq").checked=false; document.getElementById("out").innerHTML=""; last=[]; clearMsg("msg");
+});
+</script>
+</body>
+</html>

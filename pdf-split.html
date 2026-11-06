@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Split a PDF online for free — extract any page range into a new, smaller PDF in your browser. No upload, no sign-up."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>PDF Split — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › PDF Split</nav>
+  <div class="prose" style="padding-top:10px"><h1>PDF Split</h1>
+  <p>Pull a page range out of a PDF — for example pages 3–7 of a report — and save just those pages as a new, smaller PDF.</p></div>
+
+  <div class="panel">
+    <div class="drop">Choose one PDF file.<br/><br/><input type="file" id="f" accept="application/pdf" aria-label="Choose a PDF"/></div>
+    <div class="row">
+      <div><label for="from">From page</label><input type="number" id="from" min="1" placeholder="e.g. 1"/></div>
+      <div><label for="to">To page</label><input type="number" id="to" min="1" placeholder="e.g. 3"/></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Split PDF</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download split PDF</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose a PDF</strong><br/>The tool shows how many pages it has.</div>
+    <div><b>2</b><strong>Set the range</strong><br/>Enter the first and last page you want to keep.</div>
+    <div><b>3</b><strong>Split</strong><br/>A new PDF is built with only those pages.</div>
+    <div><b>4</b><strong>Download</strong><br/>Save the extracted pages to your device.</div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Can I extract a single page?</summary><p>Yes — set both “From page” and “To page” to the same number, for example 5 and 5, and you get a one-page PDF.</p></details>
+    <details><summary>Can I split into several separate files at once?</summary><p>This tool extracts one range per run. To get another range, change the numbers and split again — the original file is untouched.</p></details>
+    <details><summary>What if I enter a page number beyond the end?</summary><p>The tool checks your range against the real page count and shows an error naming the valid range, instead of producing a wrong file.</p></details>
+    <details><summary>Does splitting reduce quality?</summary><p>No. Pages are copied exactly as they are — text stays selectable and images keep their original resolution.</p></details>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/vendor/pdf-lib.min.js"></script>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("pdf-split", document.getElementById("related"));
+var file=null, pageCount=0, outUrl=null;
+var fEl=document.getElementById("f");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+fEl.addEventListener("change",async function(){
+  clearMsg("msg"); file=fEl.files[0]||null; pageCount=0;
+  document.getElementById("sizeOut").innerHTML="";
+  if(!file) return;
+  if(file.type!=="application/pdf" && !/\.pdf$/i.test(file.name)){ showMsg("msg","That is not a PDF file. Please choose a PDF."); file=null; fEl.value=""; return; }
+  if(!window.PDFLib){ showMsg("msg","The PDF library did not load. Reload the page and try again."); return; }
+  try{
+    var doc=await PDFLib.PDFDocument.load(await file.arrayBuffer());
+    pageCount=doc.getPageCount();
+    document.getElementById("sizeOut").innerHTML="\u201C"+file.name.replace(/</g,"&lt;")+"\u201D has <strong>"+pageCount+" page"+(pageCount===1?"":"s")+"</strong> ("+fmt(file.size)+"). Choose a range between 1 and "+pageCount+".";
+  }catch(e){ showMsg("msg","That PDF could not be read — it may be password-protected or damaged."); file=null; }
+});
+document.getElementById("go").addEventListener("click",async function(){
+  clearMsg("msg");
+  if(!file||!pageCount){ showMsg("msg","Choose a readable PDF first."); return; }
+  var a=parseInt(document.getElementById("from").value,10), z=parseInt(document.getElementById("to").value,10);
+  if(!a||!z){ showMsg("msg","Enter both a From page and a To page."); return; }
+  if(a<1||z>pageCount||a>z){ showMsg("msg","Invalid range. This PDF has "+pageCount+" pages — pick a range like 1 to "+Math.min(3,pageCount)+", with From ≤ To."); return; }
+  try{
+    var src=await PDFLib.PDFDocument.load(await file.arrayBuffer());
+    var out=await PDFLib.PDFDocument.create();
+    var idx=[]; for(var i=a-1;i<z;i++) idx.push(i);
+    var pages=await out.copyPages(src, idx);
+    pages.forEach(function(p){ out.addPage(p); });
+    var bytes=await out.save();
+    if(outUrl) URL.revokeObjectURL(outUrl);
+    outUrl=URL.createObjectURL(new Blob([bytes],{type:"application/pdf"}));
+    document.getElementById("sizeOut").innerHTML="Extracted pages <strong>"+a+"–"+z+"</strong> ("+(z-a+1)+" pages, "+fmt(bytes.length)+") from the original "+fmt(file.size)+".";
+    document.getElementById("dl").disabled=false;
+    showMsg("msg","Done — download your split PDF.",true);
+  }catch(e){ showMsg("msg","Splitting failed. The PDF may be damaged or protected."); }
+});
+document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprint-split.pdf"; a.click(); });
+document.getElementById("reset").addEventListener("click",function(){
+  file=null; pageCount=0; fEl.value="";
+  document.getElementById("from").value=""; document.getElementById("to").value="";
+  document.getElementById("sizeOut").innerHTML=""; document.getElementById("dl").disabled=true; clearMsg("msg");
+  if(outUrl){URL.revokeObjectURL(outUrl); outUrl=null;}
+});
+</script>
+</body>
+</html>

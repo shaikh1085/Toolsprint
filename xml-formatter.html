@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Format messy XML with proper indentation online for free — validates as it formats and reports the exact parse error when XML is broken."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>XML Formatter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › XML Formatter</nav>
+  <div class="prose" style="padding-top:10px"><h1>XML Formatter</h1>
+  <p>Paste one-line or messy XML and get it back neatly indented — and if the XML is broken, you get the parser's actual error instead of a silent failure.</p></div>
+  <div class="panel">
+    <label for="tx">Your XML</label>
+    <textarea id="tx" placeholder="Paste XML here, e.g. <root><item id=&quot;1&quot;>one</item></root>"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Format XML</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">Result</label>
+    <textarea id="out" readonly placeholder="The formatted XML appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste your XML</strong><br/>From a feed, config, SOAP response or sitemap.</div>
+    <div><b>2</b><strong>Format</strong><br/>The document is parsed first — broken XML errors out with the real reason.</div>
+    <div><b>3</b><strong>Read the tree</strong><br/>Two-space indentation shows nesting at a glance.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Take the clean version with one click.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Does formatting change the XML's meaning?</summary><p>No. Only whitespace between elements is added. Element order, attributes, text content and namespaces are preserved exactly as parsed — the output is serialised from the validated document, not edited as raw text.</p></details>
+    <details><summary>Why did my HTML not format?</summary><p>HTML is usually not valid XML — unclosed tags like &lt;br&gt; or &lt;img&gt; are legal HTML but broken XML, and the parser error will name the first offending spot. This tool is for real XML: feeds, configs, SVG and sitemaps.</p></details>
+    <details><summary>What indentation does it use?</summary><p>Two spaces per level, with text-only elements kept on one line so values stay easy to scan and diff.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("xml-formatter", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+function formatNode(node,depth){
+  var pad=new Array(depth+1).join("  "), lines=[];
+  if(node.nodeType===3){ var t=node.nodeValue.trim(); return t?[pad+node.nodeValue.trim()]:[]; }
+  if(node.nodeType===8) return [pad+"<!--"+node.nodeValue+"-->"];
+  if(node.nodeType!==1) return [];
+  var attrs="";
+  for(var i=0;i<node.attributes.length;i++){ var a=node.attributes[i]; attrs+=" "+a.name+'="'+a.value.replace(/"/g,"&quot;")+'"'; }
+  var kids=Array.prototype.slice.call(node.childNodes).filter(function(n){ return n.nodeType===1||(n.nodeType===3&&n.nodeValue.trim())||n.nodeType===8; });
+  if(!kids.length) return [pad+"<"+node.tagName+attrs+"/>"];
+  if(kids.length===1&&kids[0].nodeType===3) return [pad+"<"+node.tagName+attrs+">"+kids[0].nodeValue.trim()+"</"+node.tagName+">"];
+  lines.push(pad+"<"+node.tagName+attrs+">");
+  kids.forEach(function(k){ lines=lines.concat(formatNode(k,depth+1)); });
+  lines.push(pad+"</"+node.tagName+">");
+  return lines;
+}
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var raw=tx.value.trim();
+  if(!raw){ showMsg("msg","Paste some XML first — the input is empty."); return; }
+  var doc=new DOMParser().parseFromString(raw,"text/xml");
+  var err=doc.querySelector("parsererror");
+  if(err){ out.value=""; showMsg("msg","Invalid XML: "+err.textContent.split("\n")[0]); return; }
+  var decl=/^\s*<\?xml[^>]*\?>/.test(raw)?'<?xml version="1.0" encoding="UTF-8"?>':"";
+  out.value=(decl?decl+"\n":"")+formatNode(doc.documentElement,0).join("\n");
+  showMsg("msg","Valid XML — formatted.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Format some XML first — there is no result to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.value=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

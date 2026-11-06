@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Format, validate and minify JSON online for free, with clear error messages that point at the problem and a copy button — all in your browser."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>JSON Formatter &amp; Validator — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.json-out{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;max-height:420px;overflow:auto}.json-out:empty{display:none}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › JSON Formatter</nav>
+  <div class="prose" style="padding-top:10px"><h1>JSON Formatter &amp; Validator</h1>
+  <p>Paste messy JSON to pretty-print it, minify it for production, or just check that it is valid — errors are reported in plain language, never silently.</p></div>
+
+  <div class="panel">
+    <label for="tx">Your JSON</label>
+    <textarea id="tx" placeholder='Paste JSON here, e.g. {"name":"ToolSprint","tools":50}'></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="fmtBtn">Format</button>
+      <button type="button" class="btn ghost" id="minBtn">Minify</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <pre class="json-out" id="out" aria-live="polite"></pre>
+  </div>
+
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste your JSON</strong><br/>From an API response, a config file or anywhere else.</div>
+    <div><b>2</b><strong>Format or minify</strong><br/>Format adds indentation for reading; Minify strips it for size.</div>
+    <div><b>3</b><strong>Fix any errors</strong><br/>Invalid JSON produces a specific error message, not a silent failure.</div>
+    <div><b>4</b><strong>Copy the result</strong><br/>One click copies the output, with “Copied!” confirmation.</div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What makes JSON “invalid”?</summary><p>The usual culprits: trailing commas, single quotes instead of double quotes, unquoted keys, or comments. The error message names the problem the parser hit — fix that spot and format again.</p></details>
+    <details><summary>Does formatting change my data?</summary><p>No. Format and Minify only change whitespace. Keys, values, order and types come out exactly as they went in — the tool re-serialises the parsed value rather than editing your text.</p></details>
+    <details><summary>Is my JSON uploaded for validation?</summary><p>No. Parsing uses your browser's built-in JSON parser, on your device. API keys or tokens inside your JSON never leave the tab.</p></details>
+    <details><summary>Can it format a JSON array, not just an object?</summary><p>Yes — any valid JSON value works: objects, arrays, and even a bare string, number or boolean, though objects and arrays are what most people paste.</p></details>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("json-formatter", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+function run(minify){
+  clearMsg("msg");
+  var raw=tx.value.trim();
+  if(!raw){ showMsg("msg","Paste some JSON first — the input is empty."); out.textContent=""; return; }
+  try{
+    var parsed=JSON.parse(raw);
+    out.textContent=minify?JSON.stringify(parsed):JSON.stringify(parsed,null,2);
+    showMsg("msg","Valid JSON — "+(minify?"minified":"formatted")+" below.",true);
+  }catch(e){
+    out.textContent="";
+    showMsg("msg","Invalid JSON: "+e.message+" — check for trailing commas, single quotes or unquoted keys.");
+  }
+}
+document.getElementById("fmtBtn").addEventListener("click",function(){ run(false); });
+document.getElementById("minBtn").addEventListener("click",function(){ run(true); });
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.textContent){ showMsg("msg","Format or minify your JSON first — there is no result to copy yet."); return; }
+  clearMsg("msg"); copyText(out.textContent, this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.textContent=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

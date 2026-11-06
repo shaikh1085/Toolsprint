@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Encode or decode URL components online for free — percent-encode spaces, symbols and non-English text safely, or decode them back, with a copy button."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>URL Encoder / Decoder — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › URL Encoder / Decoder</nav>
+  <div class="prose" style="padding-top:10px"><h1>URL Encoder / Decoder</h1>
+  <p>Make text safe to put inside a link: spaces, symbols and non-English characters become percent-escapes — and decode them back just as easily.</p></div>
+  <div class="panel">
+    <label for="tx">Your text or URL part</label>
+    <textarea id="tx" placeholder="e.g. baby talk &amp; fun? or baby%20talk%20%26%20fun%3F"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="enc">Encode</button>
+      <button type="button" class="btn ghost" id="dec">Decode</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">Result</label>
+    <textarea id="out" readonly placeholder="The result appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste the text</strong><br/>A query value, a search phrase, a file name — the part that goes inside a URL.</div>
+    <div><b>2</b><strong>Encode or Decode</strong><br/>Encode makes it URL-safe; Decode turns %20-style escapes back into text.</div>
+    <div><b>3</b><strong>Copy</strong><br/>Drop the result straight into your link or code.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Does this encode a whole URL or just a component?</summary><p>Just a component — it escapes everything structural too, so a full URL's : / ? and &amp; would be encoded. That is the right behaviour for a query value or path segment. To keep a whole URL's structure intact, encode only the part you are adding to it.</p></details>
+    <details><summary>Why did my space become %20 and not +?</summary><p>Both exist: + means space only inside form-encoded query strings, while %20 works everywhere in a URL. This tool uses %20, the universally safe choice.</p></details>
+    <details><summary>Decode showed an error. What is wrong?</summary><p>Probably a bare % that is not followed by two hex digits, or a truncated escape at the end. The error message appears instead of a half-decoded result so you can find and fix the bad spot.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("url-encoder", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+document.getElementById("enc").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!tx.value){ showMsg("msg","Type or paste some text first — the input is empty."); return; }
+  out.value=encodeURIComponent(tx.value);
+  showMsg("msg","Encoded.",true);
+});
+document.getElementById("dec").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!tx.value.trim()){ showMsg("msg","Paste an encoded string first — the input is empty."); return; }
+  try{ out.value=decodeURIComponent(tx.value.trim()); showMsg("msg","Decoded.",true); }
+  catch(e){ showMsg("msg","That string cannot be decoded — it contains an invalid percent-escape (a % not followed by two hex digits)."); }
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Encode or decode something first — there is no result to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.value=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

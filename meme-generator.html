@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Make a meme online for free — add bold top and bottom text to any image, preview it and download. No watermark, no upload."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Meme Generator — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Meme Generator</nav>
+  <div class="prose" style="padding-top:10px"><h1>Meme Generator</h1>
+  <p>Add classic bold top and bottom captions to any image. The text is drawn in chunky outlined capitals, meme-style — and there is no watermark.</p></div>
+  <div class="panel">
+    <div class="drop">Choose an image from your device.<br/><br/><input type="file" id="f" accept="image/*" aria-label="Choose an image"/></div>
+    <label for="mt">Top text</label>
+    <input type="text" id="mt" placeholder="e.g. WHEN THE TOOL IS FREE"/>
+    <label for="mb">Bottom text</label>
+    <input type="text" id="mb" placeholder="e.g. AND HAS NO WATERMARK"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Make meme</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download meme</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <div id="previewWrap" style="display:none;margin-top:16px"><strong>Preview</strong><br/><img id="preview" alt="Preview of your meme" style="max-width:100%;border-radius:10px;border:1px solid var(--border);margin-top:8px"/></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose an image</strong><br/>A reaction photo works best.</div>
+    <div><b>2</b><strong>Write the captions</strong><br/>Setup on top, punchline at the bottom. Short wins.</div>
+    <div><b>3</b><strong>Make the meme</strong><br/>Check the text fits and is readable in the preview.</div>
+    <div><b>4</b><strong>Download &amp; post</strong><br/>Save the PNG and share it anywhere.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Why does long text overflow the image?</summary><p>The caption size is fixed relative to the image width, so very long lines can run off the edge. Keep each line under roughly 40 characters — memes are punchier short anyway.</p></details>
+    <details><summary>Is there really no watermark?</summary><p>Really none. What you see in the preview is exactly the file you download.</p></details>
+    <details><summary>Can I use any image I find online?</summary><p>Technically yes, but the rights are yours to check — only caption images you own, made yourself, or know are free to reuse.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("meme-generator", document.getElementById("related"));
+var file=null,outUrl=null,fEl=document.getElementById("f");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+fEl.addEventListener("change",function(){clearMsg("msg");file=fEl.files[0]||null;
+  if(file&&!/^image\//.test(file.type)){showMsg("msg","That file is not an image. Please choose a JPG, PNG or WebP.");file=null;fEl.value="";}});
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!file){showMsg("msg","Choose an image first.");return;}
+  var top=document.getElementById("mt").value.trim(), bot=document.getElementById("mb").value.trim();
+  if(!top&&!bot){showMsg("msg","Write a top or bottom caption first — a meme needs at least one line.");return;}
+  var url=URL.createObjectURL(file),img=new Image();
+  img.onload=function(){
+    var c=document.createElement("canvas");c.width=img.naturalWidth;c.height=img.naturalHeight;
+    var x=c.getContext("2d"); x.drawImage(img,0,0);
+    x.font="900 "+Math.max(18,Math.round(c.width/11))+"px Arial, sans-serif";
+    x.textAlign="center"; x.lineWidth=Math.max(3,Math.round(c.width/160)); x.strokeStyle="#000"; x.fillStyle="#fff";
+    function line(t,y){ if(!t)return; x.strokeText(t.toUpperCase(),c.width/2,y); x.fillText(t.toUpperCase(),c.width/2,y); }
+    line(top, c.width/9); line(bot, c.height-Math.round(c.width/28));
+    c.toBlob(function(blob){
+      if(!blob){showMsg("msg","Making the meme failed in your browser.");return;}
+      if(outUrl)URL.revokeObjectURL(outUrl); outUrl=URL.createObjectURL(blob);
+      var saved=100-(blob.size/file.size*100);
+      document.getElementById("sizeOut").innerHTML="Original size: <strong>"+fmt(file.size)+"</strong> → New size: <strong>"+fmt(blob.size)+"</strong> ("+(saved>=0?saved.toFixed(1)+"% saved":Math.abs(saved).toFixed(1)+"% bigger")+")";
+      document.getElementById("preview").src=outUrl;
+      document.getElementById("previewWrap").style.display="block";
+      document.getElementById("dl").disabled=false;
+      showMsg("msg","Done — check the preview, then download.",true);
+    },"image/png");
+  };
+  img.onerror=function(){showMsg("msg","Your browser could not read that image.");};
+  img.src=url;
+});
+document.getElementById("dl").addEventListener("click",function(){if(!outUrl)return;var a=document.createElement("a");a.href=outUrl;a.download="toolsprint-meme.png";a.click();});
+document.getElementById("reset").addEventListener("click",function(){file=null;fEl.value="";document.getElementById("mt").value="";document.getElementById("mb").value="";document.getElementById("sizeOut").innerHTML="";document.getElementById("previewWrap").style.display="none";document.getElementById("dl").disabled=true;clearMsg("msg");if(outUrl){URL.revokeObjectURL(outUrl);outUrl=null;}});
+</script>
+</body>
+</html>

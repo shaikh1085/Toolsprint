@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert PNG images to lightweight WebP online for free. See original vs new size and percent saved, preview, then download — in your browser."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>PNG to WebP Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › PNG to WebP Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>PNG to WebP Converter</h1>
+  <p>Turn heavy PNGs into lightweight WebP images for faster websites — transparency is preserved.</p></div>
+  <div class="panel">
+    <div class="drop">Choose a PNG image.<br/><br/><input type="file" id="f" accept="image/png" aria-label="Choose a PNG image"/></div>
+    <label for="q">Quality — <span id="qv">85</span>%</label>
+    <input type="range" id="q" min="10" max="100" value="85"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Convert to WebP</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download WebP</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <div id="previewWrap" style="display:none;margin-top:16px"><strong>Preview</strong><br/><img id="preview" alt="Preview of the converted WebP" style="max-width:100%;border-radius:10px;border:1px solid var(--border);margin-top:8px"/></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose a PNG</strong><br/>Screenshots and graphics save the most.</div>
+    <div><b>2</b><strong>Set quality</strong><br/>85% keeps it sharp; lower saves more space.</div>
+    <div><b>3</b><strong>Convert</strong><br/>Compare original → new size and percent saved.</div>
+    <div><b>4</b><strong>Download</strong><br/>Save the WebP for your site or app.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Does WebP keep transparency?</summary><p>Yes — unlike JPG, WebP supports an alpha channel, so transparent PNG logos and cut-outs stay transparent after conversion.</p></details>
+    <details><summary>How much smaller will my image be?</summary><p>Typically 25–50% smaller than the same PNG at similar quality. Flat graphics with few colours save the most; noisy photos save less.</p></details>
+    <details><summary>Is WebP supported everywhere?</summary><p>All modern browsers (Chrome, Edge, Firefox, Safari 14+) display WebP. Very old software and some print workflows still want PNG or JPG — keep your original PNG as the master copy.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("png-to-webp", document.getElementById("related"));
+var file=null,outUrl=null,fEl=document.getElementById("f"),qEl=document.getElementById("q");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+qEl.addEventListener("input",function(){document.getElementById("qv").textContent=qEl.value;});
+fEl.addEventListener("change",function(){clearMsg("msg");file=fEl.files[0]||null;
+  if(file&&file.type!=="image/png"){showMsg("msg","That is not a PNG image. This converter accepts PNG only — for other formats use the Image Format Converter.");file=null;fEl.value="";}});
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!file){showMsg("msg","Choose a PNG image first.");return;}
+  var url=URL.createObjectURL(file),img=new Image();
+  img.onload=function(){
+    var c=document.createElement("canvas");c.width=img.naturalWidth;c.height=img.naturalHeight;
+    c.getContext("2d").drawImage(img,0,0);
+    c.toBlob(function(blob){
+      if(!blob){showMsg("msg","Your browser could not write WebP. Try the Image Format Converter with JPG instead.");return;}
+      if(outUrl)URL.revokeObjectURL(outUrl); outUrl=URL.createObjectURL(blob);
+      var saved=100-(blob.size/file.size*100);
+      document.getElementById("sizeOut").innerHTML="Original size: <strong>"+fmt(file.size)+"</strong> → New size: <strong>"+fmt(blob.size)+"</strong> ("+(saved>=0?saved.toFixed(1)+"% saved":Math.abs(saved).toFixed(1)+"% bigger")+")";
+      document.getElementById("preview").src=outUrl;
+      document.getElementById("previewWrap").style.display="block";
+      document.getElementById("dl").disabled=false;
+      if(blob.size>=file.size)showMsg("msg","Warning: the WebP is not smaller than the PNG. Try a lower quality setting.");
+      else showMsg("msg","Done — check the preview, then download.",true);
+    },"image/webp",qEl.value/100);
+  };
+  img.onerror=function(){showMsg("msg","Your browser could not read that image.");};
+  img.src=url;
+});
+document.getElementById("dl").addEventListener("click",function(){if(!outUrl)return;var a=document.createElement("a");a.href=outUrl;a.download="toolsprint-webp.webp";a.click();});
+document.getElementById("reset").addEventListener("click",function(){file=null;fEl.value="";qEl.value=85;document.getElementById("qv").textContent="85";document.getElementById("sizeOut").innerHTML="";document.getElementById("previewWrap").style.display="none";document.getElementById("dl").disabled=true;clearMsg("msg");if(outUrl){URL.revokeObjectURL(outUrl);outUrl=null;}});
+</script>
+</body>
+</html>

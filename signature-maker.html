@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Draw your signature with mouse or finger and download it as a transparent PNG — free signature maker that runs in your browser."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Signature Maker — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>canvas.sig{border:1.5px solid var(--border);border-radius:10px;background:#fff;width:100%;height:200px;touch-action:none;cursor:crosshair}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Signature Maker</nav>
+  <div class="prose" style="padding-top:10px"><h1>Signature Maker</h1>
+  <p>Draw your signature in the box with your mouse or finger, then download it as a transparent PNG you can place on documents.</p></div>
+  <div class="panel">
+    <label>Draw your signature below</label>
+    <canvas class="sig" id="sig" width="760" height="240" aria-label="Signature drawing area"></canvas>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="dl">Download PNG</button>
+      <button type="button" class="btn ghost" id="clear">Clear</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <p class="notice"><strong>Private:</strong> Your signature is drawn and downloaded on your device only — it is never uploaded or stored.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Draw</strong><br/>Sign with your mouse, trackpad or finger, as naturally as you can.</div>
+    <div><b>2</b><strong>Not happy? Clear it</strong><br/>Wipe the canvas and try again — practice runs are free.</div>
+    <div><b>3</b><strong>Download the PNG</strong><br/>The background is transparent, so it sits cleanly on documents.</div>
+    <div><b>4</b><strong>Store it safely</strong><br/>Keep the file somewhere private, like your password manager's vault.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Is a drawn signature like this legally binding?</summary><p>That depends on your country and the document. Many places accept electronic signatures for everyday agreements, but for legal, banking or government documents, check what signature type they require first.</p></details>
+    <details><summary>Why is the background transparent?</summary><p>So the signature can be placed over a signature line or document background without a white box covering the text underneath.</p></details>
+    <details><summary>How do I sign more neatly on a phone?</summary><p>Turn the phone sideways for a wider canvas, zoom the page in, and draw slowly — or use a cheap stylus for much better control than a fingertip.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("signature-maker", document.getElementById("related"));
+var c=document.getElementById("sig"), x=c.getContext("2d"), drawing=false, hasInk=false;
+x.lineWidth=2.8; x.lineCap="round"; x.strokeStyle="#000";
+function pos(e){ var r=c.getBoundingClientRect(); var t=e.touches?e.touches[0]:e; return [(t.clientX-r.left)*c.width/r.width,(t.clientY-r.top)*c.height/r.height]; }
+function start(e){ e.preventDefault(); drawing=true; var p=pos(e); x.beginPath(); x.moveTo(p[0],p[1]); }
+function move(e){ if(!drawing)return; e.preventDefault(); var p=pos(e); x.lineTo(p[0],p[1]); x.stroke(); hasInk=true; }
+function end(){ drawing=false; }
+c.addEventListener("mousedown",start); c.addEventListener("mousemove",move); c.addEventListener("mouseup",end); c.addEventListener("mouseleave",end);
+c.addEventListener("touchstart",start,{passive:false}); c.addEventListener("touchmove",move,{passive:false}); c.addEventListener("touchend",end);
+function clearPad(){ x.clearRect(0,0,c.width,c.height); hasInk=false; }
+document.getElementById("clear").addEventListener("click",function(){ clearPad(); clearMsg("msg"); });
+document.getElementById("reset").addEventListener("click",function(){ clearPad(); clearMsg("msg"); });
+document.getElementById("dl").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!hasInk){ showMsg("msg","Draw your signature first — the canvas is empty."); return; }
+  var a=document.createElement("a"); a.href=c.toDataURL("image/png"); a.download="toolsprint-signature.png"; a.click();
+  showMsg("msg","Downloaded. Keep the file somewhere private.",true);
+});
+</script>
+</body>
+</html>

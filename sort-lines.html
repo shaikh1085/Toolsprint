@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Sort lines of text online for free — A to Z, Z to A or reverse order, with a natural number-aware sort and one-click copy."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Sort Lines — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Sort Lines</nav>
+  <div class="prose" style="padding-top:10px"><h1>Sort Lines</h1>
+  <p>Put any list in order: A–Z, Z–A, or simply reversed. Numbers sort naturally, so “Item 2” comes before “Item 10”.</p></div>
+  <div class="panel">
+    <label for="tx">Your list (one item per line)</label>
+    <textarea id="tx" placeholder="Paste your list here, one line per item…"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" data-sort="az">Sort A–Z</button>
+      <button type="button" class="btn ghost" data-sort="za">Sort Z–A</button>
+      <button type="button" class="btn ghost" data-sort="rev">Reverse order</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">Result</label>
+    <textarea id="out" readonly placeholder="The sorted list appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste your list</strong><br/>One item per line.</div>
+    <div><b>2</b><strong>Choose an order</strong><br/>Alphabetical either way, or a plain reversal of the current order.</div>
+    <div><b>3</b><strong>Check the result</strong><br/>Blank lines are dropped; everything else is kept.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Take the ordered list with one click.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Is the sort case-sensitive?</summary><p>No — sorting ignores case, so “banana” sorts with the B's rather than after all the capitalised words, the way most people expect a list to read.</p></details>
+    <details><summary>How are numbers handled?</summary><p>Naturally: the numeric parts compare by value, so “Track 2” sorts before “Track 10”. A purely alphabetical sort would put 10 first.</p></details>
+    <details><summary>What is the difference between Z–A and Reverse order?</summary><p>Z–A sorts the list alphabetically backwards. Reverse order does not sort at all — it flips your exact current sequence, keeping duplicates and grouping as they were.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("sort-lines", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+function lines(){ return tx.value.split(/\r?\n/).map(function(s){return s.trim();}).filter(Boolean); }
+document.querySelectorAll("[data-sort]").forEach(function(b){
+  b.addEventListener("click",function(){
+    clearMsg("msg");
+    var list=lines();
+    if(!list.length){ showMsg("msg","Paste a list first — the input is empty."); return; }
+    var mode=b.getAttribute("data-sort");
+    if(mode==="az") list.sort(function(a,c){return a.localeCompare(c,undefined,{numeric:true,sensitivity:"base"});});
+    else if(mode==="za") list.sort(function(a,c){return c.localeCompare(a,undefined,{numeric:true,sensitivity:"base"});});
+    else list.reverse();
+    out.value=list.join("\n");
+    showMsg("msg","Sorted "+list.length+" lines.",true);
+  });
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Sort a list first — there is no result to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.value=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

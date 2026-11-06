@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Count words, characters, sentences, paragraphs and reading time as you type — free word counter that runs entirely in your browser."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Word Counter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.stats div{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}.stats b{display:block;font-size:26px}.stats span{color:var(--muted);font-size:13px}@media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Word Counter</nav>
+  <div class="prose" style="padding-top:10px"><h1>Word Counter</h1>
+  <p>Words, characters, sentences, paragraphs and estimated reading time — updated live as you type or paste.</p></div>
+
+  <div class="panel">
+    <label for="tx">Your text</label>
+    <textarea id="tx" placeholder="Start typing or paste your text here — the counts update as you go…"></textarea>
+    <div class="stats" aria-live="polite">
+      <div><b id="sWords">0</b><span>Words</span></div>
+      <div><b id="sChars">0</b><span>Characters</span></div>
+      <div><b id="sCharsNo">0</b><span>Characters (no spaces)</span></div>
+      <div><b id="sSent">0</b><span>Sentences</span></div>
+      <div><b id="sPara">0</b><span>Paragraphs</span></div>
+      <div><b id="sRead">0 min</b><span>Reading time</span></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button type="button" class="btn ghost" id="copy">Copy text</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+  </div>
+
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Type or paste</strong><br/>Drop your essay, post, script or caption into the box.</div>
+    <div><b>2</b><strong>Read the counts</strong><br/>Everything updates live — no button to press.</div>
+    <div><b>3</b><strong>Edit to your target</strong><br/>Trim or expand until the word count fits your limit.</div>
+    <div><b>4</b><strong>Copy it back</strong><br/>Use Copy text to take the finished text with you.</div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>How are sentences counted?</summary><p>By sentence-ending punctuation (. ! ?) — and a final sentence without a full stop still counts, so a one-line caption is 1 sentence, not 0.</p></details>
+    <details><summary>How is reading time worked out?</summary><p>At an average adult reading speed of about 200 words per minute, rounded to the nearest minute (anything under ~30 seconds shows as “&lt; 1 min”).</p></details>
+    <details><summary>Do numbers and hyphenated words count as words?</summary><p>Numbers count as words, matching most editors. A hyphenated word like “well-known” counts as one word, since it has no spaces.</p></details>
+    <details><summary>Is my text saved anywhere?</summary><p>No. Counting happens in this tab only; reload the page and the text is gone. Keep your own copy of anything important.</p></details>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("word-counter", document.getElementById("related"));
+var tx=document.getElementById("tx");
+function count(){
+  var t=tx.value;
+  var trimmed=t.trim();
+  var words=trimmed?trimmed.split(/\s+/).length:0;
+  var sentences=0;
+  if(trimmed){
+    var parts=trimmed.split(/[.!?]+/).filter(function(s){return s.trim().length;});
+    sentences=parts.length;
+  }
+  var paras=trimmed?trimmed.split(/\n\s*\n/).filter(function(s){return s.trim().length;}).length:0;
+  if(trimmed && paras===0) paras=1;
+  document.getElementById("sWords").textContent=words;
+  document.getElementById("sChars").textContent=t.length;
+  document.getElementById("sCharsNo").textContent=t.replace(/\s/g,"").length;
+  document.getElementById("sSent").textContent=sentences;
+  document.getElementById("sPara").textContent=paras;
+  document.getElementById("sRead").textContent=words===0?"0 min":(words<100?"< 1 min":Math.round(words/200)+" min");
+}
+tx.addEventListener("input",count); count();
+document.getElementById("copy").addEventListener("click",function(){
+  if(!tx.value){ showMsg("msg","There is no text to copy yet — type or paste something first."); return; }
+  clearMsg("msg"); copyText(tx.value, this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; count(); clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

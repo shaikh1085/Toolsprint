@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Get fresh username ideas from a keyword — for social pages, gaming and channels. One click copies any suggestion."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Username Generator — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.names{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}.names:empty{display:none}.name-chip{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:8px;word-break:break-all}.name-chip button{min-height:44px}@media(max-width:860px){.names{grid-template-columns:1fr}}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Username Generator</nav>
+  <div class="prose" style="padding-top:10px"><h1>Username Generator</h1>
+  <p>Stuck on a name for a page, channel or game account? Give it one keyword and get a set of varied, ready-to-check ideas.</p></div>
+  <div class="panel">
+    <label for="uk">Keyword</label>
+    <input type="text" id="uk" placeholder="e.g. ziggy, falcon, pixel"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Suggest usernames</button>
+      <button type="button" class="btn ghost" id="copy">Copy all</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="names" id="out" aria-live="polite"></div>
+    <p class="notice">Availability is not checked here — always confirm the name is free on the platform itself before you commit to it.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter a keyword</strong><br/>A name, animal, hobby or word you like.</div>
+    <div><b>2</b><strong>Generate</strong><br/>Get ten combinations in different styles.</div>
+    <div><b>3</b><strong>Not feeling them? Generate again</strong><br/>Each run reshuffles prefixes, suffixes and numbers.</div>
+    <div><b>4</b><strong>Check availability yourself</strong><br/>Search the platform for your favourite before announcing it anywhere.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Are these usernames guaranteed to be available?</summary><p>No — no generator can honestly promise that. Popular keywords are heavily taken on big platforms. Treat the list as a starting point, check your top picks on the actual platform, and keep a backup choice.</p></details>
+    <details><summary>What makes a good username?</summary><p>Short, easy to spell after hearing it once, and free of confusing characters. If people must ask “is that a zero or an O?”, pick a different one.</p></details>
+    <details><summary>Why do some suggestions have numbers?</summary><p>Plain words are usually taken, so a short number tail is the classic way to keep the name you want. The generator mixes numbered and clean styles so you can choose your trade-off.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("username-generator", document.getElementById("related"));
+var last=[];
+var PRE=["the","its","mr","ms","the.real","hey","go","iam"], SUF=["talks","plays","creates","daily","hub","world","lab","tv","official","hq"], MID=[".","_",""];
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var kw=document.getElementById("uk").value.trim().toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g,"");
+  if(!kw){ showMsg("msg","Enter a keyword first — suggestions are built from it."); return; }
+  var ideas=new Set();
+  ideas.add(kw+pick(SUF));
+  ideas.add(pick(PRE)+kw);
+  ideas.add(kw+pick(MID)+pick(SUF));
+  ideas.add(pick(PRE)+pick(MID)+kw+pick(MID)+pick(SUF));
+  ideas.add(kw+Math.floor(10+Math.random()*89));
+  ideas.add(kw+"_"+pick(SUF));
+  ideas.add("the"+kw+pick(SUF));
+  ideas.add(kw+kw.slice(0,3));
+  ideas.add(pick(SUF)+pick(MID)+kw);
+  ideas.add(kw+pick(MID)+Math.floor(100+Math.random()*900));
+  last=Array.from(ideas).slice(0,10);
+  var out=document.getElementById("out"); out.innerHTML="";
+  last.forEach(function(name){
+    var d=document.createElement("div"); d.className="name-chip";
+    var s=document.createElement("span"); s.textContent=name;
+    var b=document.createElement("button"); b.type="button"; b.className="btn ghost"; b.textContent="Copy";
+    b.addEventListener("click",function(){ copyText(name,b); });
+    d.appendChild(s); d.appendChild(b); out.appendChild(d);
+  });
+  showMsg("msg","Here are "+last.length+" ideas — check availability on the platform before using one.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!last.length){ showMsg("msg","Generate suggestions first."); return; }
+  clearMsg("msg"); copyText(last.join("\n"),this);
+});
+document.getElementById("reset").addEventListener("click",function(){ document.getElementById("uk").value=""; document.getElementById("out").innerHTML=""; last=[]; clearMsg("msg"); });
+</script>
+</body>
+</html>

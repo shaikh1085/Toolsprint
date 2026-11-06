@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert length, weight, volume, area, speed and data units instantly — free unit converter with grouped units and one-click copy."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Unit Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Unit Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>Unit Converter</h1>
+  <p>Convert between metric and imperial units across six families: length, weight, volume, area, speed and data.</p></div>
+  <div class="panel">
+    <div class="row3">
+      <div><label for="uv">Value</label><input type="number" id="uv" placeholder="e.g. 10"/></div>
+      <div><label for="uf">From</label><select id="uf"></select></div>
+      <div><label for="ut">To</label><select id="ut"></select></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Convert</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter a value</strong><br/>Any number, decimals included.</div>
+    <div><b>2</b><strong>Pick the units</strong><br/>Both dropdowns list every family — converting only works within one family.</div>
+    <div><b>3</b><strong>Convert</strong><br/>Cross-family picks (say, kilograms to litres) show a clear error instead of a nonsense number.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Take the full sentence result with one click.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Does it include area? Many converters skip it.</summary><p>Yes — square metres, square feet, square inches, hectares, acres, square kilometres and square miles are all in the Area group, alongside length, weight, volume, speed and data.</p></details>
+    <details><summary>Why can't I convert kilograms to litres?</summary><p>Because that conversion depends on what the substance is — a litre of water weighs 1 kg, a litre of oil about 0.91 kg. Weight and volume are different families, so the tool refuses rather than inventing an answer.</p></details>
+    <details><summary>How precise are the results?</summary><p>Calculations use exact international definitions (1 inch = 2.54 cm and so on) and results are shown to up to 6 significant decimals — more than enough for everyday use.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("unit-converter", document.getElementById("related"));
+var GROUPS={
+  Length:{Metre:1,Centimetre:0.01,Millimetre:0.001,Kilometre:1000,Inch:0.0254,Foot:0.3048,Yard:0.9144,Mile:1609.344},
+  Weight:{Kilogram:1,Gram:0.001,Pound:0.45359237,Ounce:0.0283495231,Stone:6.35029318,Tonne:1000},
+  Volume:{Litre:1,Millilitre:0.001,"US Gallon":3.785411784,Cup:0.236588237,"Fluid Ounce (US)":0.0295735296},
+  Area:{"Square Metre":1,"Square Centimetre":0.0001,"Square Kilometre":1000000,Hectare:10000,Acre:4046.8564224,"Square Foot":0.09290304,"Square Inch":0.00064516,"Square Mile":2589988.11},
+  Speed:{"Metres/Second":1,"Kilometres/Hour":0.277777778,"Miles/Hour":0.44704,Knot:0.514444444},
+  Data:{Byte:1,Kilobyte:1024,Megabyte:1048576,Gigabyte:1073741824,Terabyte:1099511627776}
+};
+var uf=document.getElementById("uf"), ut=document.getElementById("ut"), lastText="";
+function fill(sel){
+  sel.innerHTML=Object.keys(GROUPS).map(function(g){
+    return '<optgroup label="'+g+'">'+Object.keys(GROUPS[g]).map(function(u){ return '<option value="'+g+"|"+u+'">'+u+"</option>"; }).join("")+"</optgroup>";
+  }).join("");
+}
+fill(uf); fill(ut); ut.selectedIndex=3;
+function parseSel(v){ var p=v.split("|"); return {group:p[0], unit:p[1], factor:GROUPS[p[0]][p[1]]}; }
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var v=parseFloat(document.getElementById("uv").value);
+  if(isNaN(v)){ showMsg("msg","Enter a numeric value first."); return; }
+  var a=parseSel(uf.value), b=parseSel(ut.value);
+  if(a.group!==b.group){
+    showMsg("msg","Those units measure different things ("+a.group+" vs "+b.group+") — pick two units from the same family."); return;
+  }
+  var result=v*a.factor/b.factor;
+  var shown=Math.abs(result)>=1e12||(Math.abs(result)<1e-6&&result!==0)?result.toExponential(4):String(Math.round(result*1e6)/1e6);
+  lastText=v+" "+a.unit+" = "+shown+" "+b.unit;
+  document.getElementById("out").innerHTML="<strong>"+lastText+"</strong>";
+  showMsg("msg","Converted.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!lastText){ showMsg("msg","Convert something first."); return; }
+  clearMsg("msg"); copyText(lastText,this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("uv").value=""; document.getElementById("out").innerHTML=""; lastText=""; clearMsg("msg");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert Markdown to HTML online for free — headings, bold, italic, code, links, images, lists, blockquotes and more, with a live preview and copyable HTML source."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Markdown to HTML Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.md-preview{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:8px}.md-preview:empty{display:none}.md-preview pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;overflow:auto}.md-preview code{font-family:ui-monospace,Menlo,Consolas,monospace}.md-preview blockquote{border-left:4px solid var(--primary);margin:10px 0;padding:4px 14px;color:var(--muted)}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Markdown to HTML</nav>
+  <div class="prose" style="padding-top:10px"><h1>Markdown to HTML</h1>
+  <p>Write Markdown on the left and watch the rendered page update live. Below the preview is the HTML source, ready to copy. Raw HTML inside your Markdown is escaped, never executed.</p></div>
+  <div class="panel">
+    <label for="tx">Markdown</label>
+    <textarea id="tx" placeholder="# Big heading&#10;&#10;Write **bold**, *italic* and `code` here…"></textarea>
+    <label>Live preview</label>
+    <div class="md-preview" id="preview" aria-live="polite"></div>
+    <label for="out">HTML source</label>
+    <textarea id="out" readonly placeholder="The generated HTML appears here as you type…"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn ghost" id="copy">Copy HTML</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Type or paste Markdown</strong><br/>Headings, lists, links, quotes, code — all supported.</div>
+    <div><b>2</b><strong>Watch the preview</strong><br/>It updates on every keystroke, exactly as a browser would render the HTML.</div>
+    <div><b>3</b><strong>Copy the HTML source</strong><br/>Paste it into your site, CMS or email template.</div>
+    <div><b>4</b><strong>Style it yourself</strong><br/>The output is plain semantic HTML with no classes or inline styles added.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Which Markdown features are supported?</summary><p>Headings H1–H6, bold, italic, inline code, fenced code blocks, links, images, ordered and unordered lists, blockquotes, horizontal rules and paragraphs — the core of CommonMark that most people use daily.</p></details>
+    <details><summary>What happens if I paste raw HTML into the Markdown?</summary><p>It is escaped and shown as literal text in the output, not rendered. That keeps the converter safe for untrusted content — a pasted &lt;script&gt; can never run.</p></details>
+    <details><summary>Are tables supported?</summary><p>Not in this converter. GitHub-style pipe tables are the main extra it leaves out; if you need them, write that part as an HTML table in your final page (the converter itself will escape it, so add it after copying).</p></details>
+    <details><summary>Why does my list need a blank line before it?</summary><p>Markdown lists must be separated from the paragraph above by a blank line, otherwise the list markers are treated as part of the paragraph — this converter follows that standard rule.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("markdown-to-html", document.getElementById("related"));
+function escHtml(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function inlineMd(s){
+  var codes=[];
+  s=s.replace(/`([^`]+)`/g,function(m,c){ codes.push(c); return "\u0001"+(codes.length-1)+"\u0001"; });
+  s=s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g,'<img src="$2" alt="$1"/>');
+  s=s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,'<a href="$2">$1</a>');
+  s=s.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+  s=s.replace(/__([^_]+)__/g,"<strong>$1</strong>");
+  s=s.replace(/\*([^*]+)\*/g,"<em>$1</em>");
+  s=s.replace(/(^|[^a-zA-Z0-9])_([^_]+)_(?![a-zA-Z0-9])/g,"$1<em>$2</em>");
+  s=s.replace(/\u0001(\d+)\u0001/g,function(m,i){ return "<code>"+codes[+i]+"</code>"; });
+  return s;
+}
+function mdToHtml(src){
+  var lines=src.replace(/\r\n?/g,"\n").split("\n"), html=[], i=0;
+  while(i<lines.length){
+    var line=lines[i];
+    /* fenced code block */
+    if(/^\s*```/.test(line)){
+      var buf=[]; i++;
+      while(i<lines.length && !/^\s*```/.test(lines[i])){ buf.push(lines[i]); i++; }
+      i++;
+      html.push("<pre><code>"+escHtml(buf.join("\n"))+"</code></pre>"); continue;
+    }
+    if(!line.trim()){ i++; continue; }
+    var h=line.match(/^(#{1,6})\s+(.*)$/);
+    if(h){ html.push("<h"+h[1].length+">"+inlineMd(escHtml(h[2]))+"</h"+h[1].length+">"); i++; continue; }
+    if(/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(line)){ html.push("<hr/>"); i++; continue; }
+    if(/^\s*>\s?/.test(line)){
+      var q=[];
+      while(i<lines.length && /^\s*>\s?/.test(lines[i])){ q.push(lines[i].replace(/^\s*>\s?/,"")); i++; }
+      html.push("<blockquote><p>"+inlineMd(escHtml(q.join(" ")))+"</p></blockquote>"); continue;
+    }
+    if(/^\s*[-*+]\s+/.test(line)){
+      var items=[];
+      while(i<lines.length && /^\s*[-*+]\s+/.test(lines[i])){ items.push("<li>"+inlineMd(escHtml(lines[i].replace(/^\s*[-*+]\s+/,"")))+"</li>"); i++; }
+      html.push("<ul>"+items.join("")+"</ul>"); continue;
+    }
+    if(/^\s*\d+[.)]\s+/.test(line)){
+      var oitems=[];
+      while(i<lines.length && /^\s*\d+[.)]\s+/.test(lines[i])){ oitems.push("<li>"+inlineMd(escHtml(lines[i].replace(/^\s*\d+[.)]\s+/,"")))+"</li>"); i++; }
+      html.push("<ol>"+oitems.join("")+"</ol>"); continue;
+    }
+    var para=[line]; i++;
+    while(i<lines.length && lines[i].trim() && !/^(#{1,6}\s|```|\s*[-*+]\s+|\s*\d+[.)]\s+|\s*>)/.test(lines[i]) && !/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(lines[i])){ para.push(lines[i]); i++; }
+    html.push("<p>"+inlineMd(escHtml(para.join(" ")))+"</p>");
+  }
+  return html.join("\n");
+}
+var tx=document.getElementById("tx"), out=document.getElementById("out"), pv=document.getElementById("preview");
+function render(){
+  var src=tx.value;
+  if(!src.trim()){ out.value=""; pv.innerHTML=""; return; }
+  var html=mdToHtml(src);
+  out.value=html; pv.innerHTML=html;
+}
+tx.addEventListener("input",render); render();
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Write some Markdown first — there is no HTML to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; render(); clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

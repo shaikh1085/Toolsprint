@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Minify CSS for production or beautify minified CSS for reading — free, in your browser, with before/after size comparison and a copy button."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>CSS Minifier &amp; Beautifier — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › CSS Minifier &amp; Beautifier</nav>
+  <div class="prose" style="padding-top:10px"><h1>CSS Minifier &amp; Beautifier</h1>
+  <p>Shrink CSS for production by stripping comments and whitespace — or take minified CSS and expand it back into something a human can read.</p></div>
+  <div class="panel">
+    <label for="tx">Your CSS</label>
+    <textarea id="tx" placeholder="Paste your CSS here…"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="min">Minify</button>
+      <button type="button" class="btn ghost" id="beau">Beautify</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <label for="out">Result</label>
+    <textarea id="out" readonly placeholder="The result appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste your CSS</strong><br/>A whole stylesheet or a single rule block.</div>
+    <div><b>2</b><strong>Minify or Beautify</strong><br/>Minify for shipping; Beautify for reading someone else's minified file.</div>
+    <div><b>3</b><strong>Compare sizes</strong><br/>The size line shows exactly how much Minify saved.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Straight into your project.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Is the minifier safe for my styles?</summary><p>It removes comments, collapses whitespace and trims spaces around { } : ; and commas — the transformations that cannot change meaning. It does not rename classes, merge rules or drop properties, so your CSS behaves identically.</p></details>
+    <details><summary>Why is my saving smaller than a build tool's?</summary><p>Bundler minifiers also do riskier optimisations (merging selectors, shortening colours, removing overridden rules). This tool sticks to the safe subset — a smaller but guaranteed-equivalent win.</p></details>
+    <details><summary>Can Beautify restore a truly minified file?</summary><p>It restores structure — newlines and indentation — so the logic is readable again. It cannot restore comments or original formatting choices, because minification deleted those permanently.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("css-minifier", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+function sizeLine(before,after){
+  var saved=before?100-(after/before*100):0;
+  document.getElementById("sizeOut").innerHTML="Before: <strong>"+before+" characters</strong> → After: <strong>"+after+" characters</strong> ("+(saved>=0?saved.toFixed(1)+"% smaller":Math.abs(saved).toFixed(1)+"% larger — normal for Beautify")+")";
+}
+document.getElementById("min").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!tx.value.trim()){ showMsg("msg","Paste some CSS first — the input is empty."); return; }
+  var css=tx.value
+    .replace(/\/\*[\s\S]*?\*\//g,"")
+    .replace(/\s+/g," ")
+    .replace(/\s*([{}:;,>~+])\s*/g,"$1")
+    .replace(/;}/g,"}")
+    .trim();
+  out.value=css; sizeLine(tx.value.length,css.length);
+  showMsg("msg","Minified.",true);
+});
+document.getElementById("beau").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!tx.value.trim()){ showMsg("msg","Paste some CSS first — the input is empty."); return; }
+  var css=tx.value.replace(/\s+/g," ").trim()
+    .replace(/\s*\{\s*/g," {\n    ")
+    .replace(/\s*;\s*/g,";\n    ")
+    .replace(/\s*\}\s*/g,"\n}\n\n")
+    .replace(/    \n}/g,"}");
+  out.value=css.trim(); sizeLine(tx.value.length,out.value.length);
+  showMsg("msg","Beautified.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Minify or beautify first — there is no result to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.value=""; document.getElementById("sizeOut").innerHTML=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

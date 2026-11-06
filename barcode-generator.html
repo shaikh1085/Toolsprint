@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Create a scannable CODE128 barcode from any text or number online for free — download it as a PNG for labels and packaging."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Barcode Generator (CODE128) — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.bc-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px;text-align:center}.bc-wrap:empty{display:none}.bc-wrap svg{max-width:100%}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Barcode Generator</nav>
+  <div class="prose" style="padding-top:10px"><h1>Barcode Generator</h1>
+  <p>Turn a product code, SKU, ticket number or any short text into a proper CODE128 barcode that standard scanners can read.</p></div>
+  <div class="panel">
+    <label for="bc">Text or number</label>
+    <input type="text" id="bc" placeholder="e.g. TOOLSPRINT-50 or 123456789012"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Generate barcode</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download PNG</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="bc-wrap" id="out"><svg id="bcsvg" aria-label="Your barcode"></svg></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter the value</strong><br/>Letters, numbers and most symbols are fine in CODE128.</div>
+    <div><b>2</b><strong>Generate</strong><br/>Test-scan the on-screen barcode with your phone before printing.</div>
+    <div><b>3</b><strong>Download the PNG</strong><br/>Drop it onto your label, ticket or packaging design.</div>
+    <div><b>4</b><strong>Print with quiet zones</strong><br/>Leave white space on both sides — scanners need it.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Why CODE128 and not EAN or UPC?</summary><p>EAN/UPC numbers are registered product codes with check digits, issued by GS1 for retail. CODE128 encodes anything without registration, which is right for internal labels, assets, tickets and warehouse use — but shops cannot scan it at checkout as a product price code.</p></details>
+    <details><summary>How small can I print it?</summary><p>Keep the printed barcode at least ~3 cm wide for short values, with clear white margins. Longer text makes a wider barcode — shrinking a wide barcode too small is the top reason scans fail.</p></details>
+    <details><summary>Can scanners read it from the screen?</summary><p>Yes, most phone scanner apps and handheld scanners read the preview directly — a handy way to test before you print a batch of labels.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/vendor/JsBarcode.all.min.js"></script>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("barcode-generator", document.getElementById("related"));
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var v=document.getElementById("bc").value.trim();
+  if(!v){ showMsg("msg","Enter some text or a number first — a barcode needs a value to encode."); return; }
+  if(!window.JsBarcode){ showMsg("msg","The barcode library did not load. Reload the page and try again."); return; }
+  try{
+    JsBarcode("#bcsvg",v,{format:"CODE128",displayValue:true,fontSize:16,margin:12});
+    document.getElementById("dl").disabled=false;
+    showMsg("msg","Done — test-scan it with your phone, then download.",true);
+  }catch(e){ showMsg("msg","That value cannot be encoded as CODE128: "+e.message); }
+});
+document.getElementById("dl").addEventListener("click",function(){
+  var svg=document.getElementById("bcsvg");
+  if(!svg||!svg.innerHTML){ showMsg("msg","Generate a barcode first."); return; }
+  var xml=new XMLSerializer().serializeToString(svg);
+  var img=new Image();
+  img.onload=function(){
+    var c=document.createElement("canvas"); c.width=img.width*3; c.height=img.height*3;
+    var ctx=c.getContext("2d"); ctx.fillStyle="#fff"; ctx.fillRect(0,0,c.width,c.height);
+    ctx.drawImage(img,0,0,c.width,c.height);
+    var a=document.createElement("a"); a.href=c.toDataURL("image/png"); a.download="toolsprint-barcode.png"; a.click();
+  };
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(xml);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("bc").value=""; document.getElementById("bcsvg").innerHTML="";
+  document.getElementById("dl").disabled=true; clearMsg("msg");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Add page numbers or a diagonal text watermark such as DRAFT or CONFIDENTIAL to every page of a PDF, free online. Processed in your browser, never uploaded."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>PDF Watermark / Page Numbers — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › PDF Watermark / Page Numbers</nav>
+  <div class="prose" style="padding-top:10px"><h1>PDF Watermark / Page Numbers</h1>
+  <p>Stamp page numbers on every page of a PDF, or add a diagonal text watermark such as DRAFT or CONFIDENTIAL. Choose a mode, add your PDF and download the result.</p></div>
+  <div class="panel">
+    <div class="drop">Choose one PDF file.<br/><br/><input type="file" id="f" accept="application/pdf" aria-label="Choose a PDF"/></div>
+    <label for="mode">What do you want to add?</label>
+    <select id="mode"><option value="numbers">Page numbers</option><option value="watermark">Text watermark</option></select>
+    <div id="numOpts">
+      <div class="row">
+        <div><label for="pos">Position</label>
+          <select id="pos"><option value="center">Bottom centre</option><option value="left">Bottom left</option><option value="right">Bottom right</option></select></div>
+        <div><label for="style">Format</label>
+          <select id="style"><option value="plain">Just the number (1, 2, 3…)</option><option value="ofy">Page X of Y</option></select></div>
+      </div>
+    </div>
+    <div id="wmOpts" style="display:none">
+      <label for="wtext">Watermark text</label>
+      <input type="text" id="wtext" maxlength="40" placeholder="e.g. DRAFT or CONFIDENTIAL"/>
+      <div class="row">
+        <div><label for="wop">Strength</label>
+          <select id="wop"><option value="0.15">Light</option><option value="0.3" selected>Medium</option><option value="0.5">Strong</option></select></div>
+        <div><label for="wang">Direction</label>
+          <select id="wang"><option value="45">Diagonal</option><option value="0">Straight across</option></select></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Add to PDF</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download PDF</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose a PDF</strong><br/>The document you want to mark or number.</div>
+    <div><b>2</b><strong>Pick a mode</strong><br/>Page numbers, or a text watermark such as DRAFT.</div>
+    <div><b>3</b><strong>Set the options</strong><br/>Position and format for numbers; text, strength and direction for a watermark.</div>
+    <div><b>4</b><strong>Add and download</strong><br/>Every page is stamped in one pass. Open the result and check a middle page.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Can I use non-English letters in the watermark?</summary><p>Only standard Latin letters, numbers and common punctuation. The built-in PDF font cannot draw other alphabets such as Arabic, Urdu or Chinese, and you will see an error message if you try.</p></details>
+    <details><summary>Can I skip numbering on the cover page?</summary><p>Not in this version, numbering starts at page 1. A common workaround is to split the cover off with PDF Split, number the rest, then merge the cover back in front.</p></details>
+    <details><summary>Will the watermark or numbers cover my content?</summary><p>Numbers sit in the bottom margin. A watermark is drawn over the page in a light, see-through colour so text underneath stays readable. Check a middle page after downloading.</p></details>
+    <details><summary>Can I remove the stamp later?</summary><p>No, it is drawn into each page. Keep your original PDF if you might need a clean copy.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/vendor/pdf-lib.min.js"></script>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("pdf-page-numbers", document.getElementById("related"));
+var file=null,outUrl=null,outName="toolsprint-numbered.pdf",fEl=document.getElementById("f"),modeEl=document.getElementById("mode");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+function setDl(on){document.getElementById("dl").disabled=!on}
+modeEl.addEventListener("change",function(){
+  var wm=modeEl.value==="watermark";
+  document.getElementById("numOpts").style.display=wm?"none":"";
+  document.getElementById("wmOpts").style.display=wm?"":"none";
+  setDl(false); clearMsg("msg"); document.getElementById("sizeOut").innerHTML="";
+});
+fEl.addEventListener("change",function(){clearMsg("msg");file=fEl.files[0]||null;setDl(false);
+  if(file&&file.type!=="application/pdf"&&!/\.pdf$/i.test(file.name)){showMsg("msg","That is not a PDF file. Please choose a PDF.");file=null;fEl.value="";}});
+document.getElementById("go").addEventListener("click",async function(){
+  clearMsg("msg");
+  if(!file){showMsg("msg","Choose a PDF first.");return;}
+  if(!window.PDFLib){showMsg("msg","The PDF library did not load. Reload the page and try again.");return;}
+  var wm=modeEl.value==="watermark", text=document.getElementById("wtext").value.trim();
+  if(wm&&!text){showMsg("msg","Type the watermark text first, for example DRAFT.");return;}
+  try{
+    var doc=await PDFLib.PDFDocument.load(await file.arrayBuffer());
+    var font=await doc.embedFont(wm?PDFLib.StandardFonts.HelveticaBold:PDFLib.StandardFonts.Helvetica);
+    var pages=doc.getPages(), total=pages.length;
+    if(wm){
+      var op=parseFloat(document.getElementById("wop").value), ang=parseFloat(document.getElementById("wang").value), th=ang*Math.PI/180;
+      var w1=font.widthOfTextAtSize(text,1);
+      pages.forEach(function(page){
+        var s=page.getSize(), diag=Math.sqrt(s.width*s.width+s.height*s.height);
+        var target=(ang===0?s.width*0.75:diag*0.6);
+        var size=Math.min(160,Math.max(14,target/w1)), tw=w1*size, h=size*0.7;
+        var cx=s.width/2, cy=s.height/2;
+        var x=cx-(tw/2)*Math.cos(th)+(h/2)*Math.sin(th);
+        var y=cy-(tw/2)*Math.sin(th)-(h/2)*Math.cos(th);
+        page.drawText(text,{x:x,y:y,size:size,font:font,color:PDFLib.rgb(0.45,0.45,0.45),opacity:op,rotate:PDFLib.degrees(ang)});
+      });
+      outName="toolsprint-watermarked.pdf";
+    }else{
+      var pos=document.getElementById("pos").value, style=document.getElementById("style").value;
+      var grey=PDFLib.rgb(0.35,0.35,0.35);
+      pages.forEach(function(page,i){
+        /* getSize() returns { width, height } - never treat it as a number. */
+        var width=page.getSize().width;
+        var label=style==="ofy" ? "Page "+(i+1)+" of "+total : String(i+1);
+        var tw=font.widthOfTextAtSize(label,10);
+        var x=pos==="left" ? 36 : pos==="right" ? width-36-tw : (width-tw)/2;
+        page.drawText(label,{x:x,y:22,size:10,font:font,color:grey});
+      });
+      outName="toolsprint-numbered.pdf";
+    }
+    var bytes=await doc.save();
+    if(outUrl)URL.revokeObjectURL(outUrl); outUrl=URL.createObjectURL(new Blob([bytes],{type:"application/pdf"}));
+    document.getElementById("sizeOut").innerHTML=(wm?"Watermarked ":"Numbered ")+"<strong>"+total+" page"+(total===1?"":"s")+"</strong> ("+fmt(bytes.length)+").";
+    setDl(true);
+    showMsg("msg","Done — download the PDF and check a middle page.",true);
+  }catch(e){
+    var latin=/WinAnsi|encode/i.test(String(e&&e.message));
+    showMsg("msg",latin?"That text has letters the PDF font cannot draw. Use standard Latin letters and numbers only.":"Could not edit this PDF — it may be password-protected or damaged.");
+  }
+});
+document.getElementById("dl").addEventListener("click",function(){if(!outUrl)return;var a=document.createElement("a");a.href=outUrl;a.download=outName;a.click();});
+document.getElementById("reset").addEventListener("click",function(){file=null;fEl.value="";document.getElementById("wtext").value="";modeEl.value="numbers";modeEl.dispatchEvent(new Event("change"));if(outUrl){URL.revokeObjectURL(outUrl);outUrl=null;}});
+</script>
+</body>
+</html>

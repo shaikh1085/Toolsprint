@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert text between UPPERCASE, lowercase, Title Case, Sentence case and camelCase online for free — then copy it with one click."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Case Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Case Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>Case Converter</h1>
+  <p>Paste text typed in the wrong case — or written in ALL CAPS by accident — and convert it to the case you actually need.</p></div>
+  <div class="panel">
+    <label for="tx">Your text</label>
+    <textarea id="tx" placeholder="Paste or type your text here…"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" data-case="upper">UPPERCASE</button>
+      <button type="button" class="btn ghost" data-case="lower">lowercase</button>
+      <button type="button" class="btn ghost" data-case="title">Title Case</button>
+      <button type="button" class="btn ghost" data-case="sentence">Sentence case</button>
+      <button type="button" class="btn ghost" data-case="camel">camelCase</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">Result</label>
+    <textarea id="out" readonly placeholder="The converted text appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste your text</strong><br/>Into the top box — nothing is pre-filled.</div>
+    <div><b>2</b><strong>Pick a case</strong><br/>The result appears in the second box instantly.</div>
+    <div><b>3</b><strong>Check it</strong><br/>Names and acronyms sometimes need a quick manual fix after Title or Sentence case.</div>
+    <div><b>4</b><strong>Copy</strong><br/>One click, with “Copied!” confirmation.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What is Sentence case exactly?</summary><p>Only the first letter of each sentence is capitalised — like normal writing. This converter lowercases everything first, then capitalises after each full stop, question mark or exclamation mark, so “hELLO. hOW are YOU?” becomes “Hello. How are you?”</p></details>
+    <details><summary>Will Title Case capitalise every word?</summary><p>It capitalises the first letter of every word, including small words like “and” and “the”. Some style guides leave those lowercase — check the result if you follow one.</p></details>
+    <details><summary>What does camelCase do with spaces and punctuation?</summary><p>It removes spaces and punctuation, lowercases the first word and capitalises each following word: “my video title” becomes “myVideoTitle”. It is meant for variable and file names in code.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("case-converter", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+function convert(kind){
+  clearMsg("msg");
+  var t=tx.value;
+  if(!t.trim()){ showMsg("msg","Type or paste some text first — the input is empty."); return; }
+  var r="";
+  if(kind==="upper") r=t.toUpperCase();
+  else if(kind==="lower") r=t.toLowerCase();
+  else if(kind==="title") r=t.toLowerCase().replace(/(^|[\s(\["])(\S)/g,function(m,p,ch){return p+ch.toUpperCase();});
+  else if(kind==="sentence"){ var low=t.toLowerCase(); r=low.replace(/(^\s*[a-z])|([.!?]\s*[a-z])/g,function(m){return m.toUpperCase();}); }
+  else if(kind==="camel"){ var words=t.replace(/[^a-zA-Z0-9 ]/g," ").split(/\s+/).filter(Boolean); r=words.map(function(w,i){ return i===0?w.toLowerCase():w.charAt(0).toUpperCase()+w.slice(1).toLowerCase(); }).join(""); }
+  out.value=r;
+}
+document.querySelectorAll("[data-case]").forEach(function(b){ b.addEventListener("click",function(){ convert(b.getAttribute("data-case")); }); });
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Convert some text first — there is no result to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.value=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Compress JPG, PNG and WebP images online for free. See original size, new size and percent saved, preview the result, then download — all in your browser."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Image Compressor — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Image Compressor</nav>
+  <div class="prose" style="padding-top:10px"><h1>Image Compressor</h1>
+  <p>Shrink a JPG, PNG or WebP photo with a quality slider. You always see the original size, the new size and the percent saved before you download.</p></div>
+
+  <div class="panel">
+    <div class="drop">Choose an image from your device.<br/><br/><input type="file" id="f" accept="image/jpeg,image/png,image/webp" aria-label="Choose an image"/></div>
+    <label for="q">Quality — <span id="qv">70</span>%</label>
+    <input type="range" id="q" min="10" max="95" value="70"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Compress image</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download compressed image</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <div id="previewWrap" style="display:none;margin-top:16px"><strong>Preview</strong><br/><img id="preview" alt="Preview of the compressed image" style="max-width:100%;border-radius:10px;border:1px solid var(--border);margin-top:8px"/></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose an image</strong><br/>Pick a JPG, PNG or WebP from your device.</div>
+    <div><b>2</b><strong>Set the quality</strong><br/>Lower quality means a smaller file. 70% is a good start for photos.</div>
+    <div><b>3</b><strong>Compress</strong><br/>Check the size line: original → new size and the percent saved.</div>
+    <div><b>4</b><strong>Download</strong><br/>Happy with the preview? Download the compressed image.</div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Will compressing ruin my photo's quality?</summary><p>At 70–85% quality most photos look identical on screen while losing half or more of their file size. Use the preview to judge before downloading — very low settings (under 40%) will show visible softness.</p></details>
+    <details><summary>Why did my PNG get bigger or barely shrink?</summary><p>PNG is already lossless, so re-saving it rarely helps much. The compressor outputs JPG for photos, which is where the big savings are. If the new file is bigger than the original, the tool warns you instead of letting you download a worse file by accident.</p></details>
+    <details><summary>Is there a file size limit?</summary><p>No server limit exists because nothing is uploaded. Very large photos (for example 100 MP camera files) depend on your device's memory — if one fails, resize it first with the Image Resizer.</p></details>
+    <details><summary>Does the compressed image keep its dimensions?</summary><p>Yes. Compression changes the file size, not the width and height. To change dimensions as well, run the result through the Image Resizer.</p></details>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("image-compressor", document.getElementById("related"));
+var file=null, outUrl=null;
+var fEl=document.getElementById("f"), qEl=document.getElementById("q");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+qEl.addEventListener("input",function(){document.getElementById("qv").textContent=qEl.value});
+fEl.addEventListener("change",function(){
+  clearMsg("msg");
+  file=fEl.files[0]||null;
+  if(file && !/^image\/(jpeg|png|webp)$/.test(file.type)){ showMsg("msg","That is not a JPG, PNG or WebP image. Please choose an image file."); file=null; fEl.value=""; }
+});
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!file){ showMsg("msg","Choose an image first — the Compress button needs a file to work on."); return; }
+  var url=URL.createObjectURL(file), img=new Image();
+  img.onload=function(){
+    var c=document.createElement("canvas"); c.width=img.naturalWidth; c.height=img.naturalHeight;
+    c.getContext("2d").drawImage(img,0,0);
+    c.toBlob(function(blob){
+      if(!blob){ showMsg("msg","Compression failed in your browser. Try a different image or a higher quality setting."); return; }
+      if(outUrl) URL.revokeObjectURL(outUrl);
+      outUrl=URL.createObjectURL(blob);
+      var saved=100-(blob.size/file.size*100);
+      var line="Original size: <strong>"+fmt(file.size)+"</strong> → New size: <strong>"+fmt(blob.size)+"</strong> ("+(saved>=0?saved.toFixed(1)+"% saved":Math.abs(saved).toFixed(1)+"% bigger")+")";
+      document.getElementById("sizeOut").innerHTML=line;
+      var pv=document.getElementById("preview"); pv.src=outUrl;
+      document.getElementById("previewWrap").style.display="block";
+      var dl=document.getElementById("dl"); dl.disabled=false;
+      if(blob.size>=file.size) showMsg("msg","Warning: the compressed file is not smaller than the original. Try a lower quality setting.");
+      else showMsg("msg","Done — check the preview, then download.",true);
+    },"image/jpeg", qEl.value/100);
+  };
+  img.onerror=function(){ showMsg("msg","Your browser could not read that image. It may be corrupt or an unsupported format."); };
+  img.src=url;
+});
+document.getElementById("dl").addEventListener("click",function(){
+  if(!outUrl) return;
+  var a=document.createElement("a"); a.href=outUrl; a.download="toolsprint-compressed.jpg"; a.click();
+});
+document.getElementById("reset").addEventListener("click",function(){
+  file=null; fEl.value=""; qEl.value=70; document.getElementById("qv").textContent="70";
+  document.getElementById("sizeOut").innerHTML=""; document.getElementById("previewWrap").style.display="none";
+  document.getElementById("dl").disabled=true; clearMsg("msg");
+  if(outUrl){URL.revokeObjectURL(outUrl); outUrl=null;}
+});
+</script>
+</body>
+</html>

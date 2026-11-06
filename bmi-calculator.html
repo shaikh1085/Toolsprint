@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Calculate your Body Mass Index (BMI) from height and weight and see which standard category it falls in. Free, private, instant."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>BMI Calculator — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › BMI Calculator</nav>
+  <div class="prose" style="padding-top:10px"><h1>BMI Calculator</h1>
+  <p>Body Mass Index from height and weight — a quick screening number used worldwide, with the standard adult categories.</p></div>
+  <div class="panel">
+    <div class="row">
+      <div><label for="bh">Height (cm)</label><input type="number" id="bh" placeholder="e.g. 170"/></div>
+      <div><label for="bw">Weight (kg)</label><input type="number" id="bw" placeholder="e.g. 70"/></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Calculate BMI</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+    <p class="notice">BMI is a general screening guide for adults, not a diagnosis. It does not account for muscle mass, age or body composition — talk to a clinician about your individual health.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter height in cm</strong><br/>170 cm, not 1.70 — the field says which unit.</div>
+    <div><b>2</b><strong>Enter weight in kg</strong><br/>Your current weight, roughly clothed is fine.</div>
+    <div><b>3</b><strong>Calculate</strong><br/>See your BMI to one decimal and its standard category.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Save the result if you are tracking it over time.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What are the standard BMI categories?</summary><p>For adults: below 18.5 underweight, 18.5–24.9 healthy weight, 25–29.9 overweight, 30 and above obese. These are the WHO ranges used by most health services.</p></details>
+    <details><summary>Why does BMI mislead for muscular people?</summary><p>BMI only sees height and total weight — it cannot tell muscle from fat. Athletes often land in “overweight” with low body fat, and older adults can be “healthy” on BMI while having low muscle. It is a first-pass screen, not a verdict.</p></details>
+    <details><summary>Can I use this for a child?</summary><p>No. Children's BMI is read against age-and-sex growth percentiles, not the adult categories shown here. Use a paediatric chart or your family doctor for anyone under 18.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("bmi-calculator", document.getElementById("related"));
+var lastText="";
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var h=parseFloat(document.getElementById("bh").value), w=parseFloat(document.getElementById("bw").value);
+  if(isNaN(h)||isNaN(w)){ showMsg("msg","Enter both height (cm) and weight (kg)."); return; }
+  if(h<50||h>280){ showMsg("msg","That height looks wrong — enter it in centimetres (for example 170, not 1.70)."); return; }
+  if(w<2||w>650){ showMsg("msg","That weight looks wrong — enter it in kilograms."); return; }
+  var bmi=w/Math.pow(h/100,2);
+  var cat=bmi<18.5?"Underweight":bmi<25?"Healthy weight":bmi<30?"Overweight":"Obese";
+  lastText="BMI: "+(Math.round(bmi*10)/10)+" — "+cat+" (height "+h+" cm, weight "+w+" kg)";
+  document.getElementById("out").innerHTML="<strong>BMI "+(Math.round(bmi*10)/10)+"</strong> — "+cat;
+  showMsg("msg","Calculated. Remember: BMI is a screening guide, not a diagnosis.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!lastText){ showMsg("msg","Calculate your BMI first."); return; }
+  clearMsg("msg"); copyText(lastText,this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("bh").value=""; document.getElementById("bw").value="";
+  document.getElementById("out").innerHTML=""; lastText=""; clearMsg("msg");
+});
+</script>
+</body>
+</html>

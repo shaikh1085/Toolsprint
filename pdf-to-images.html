@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert PDF pages to PNG images online for free — render every page and download the images, processed in your browser with no upload."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>PDF to Images — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › PDF to Images</nav>
+  <div class="prose" style="padding-top:10px"><h1>PDF to Images</h1>
+  <p>Render every page of a PDF as a PNG image — for slides, social posts, previews or anywhere an image works better than a document.</p></div>
+  <div class="panel">
+    <div class="drop">Choose one PDF file.<br/><br/><input type="file" id="f" accept="application/pdf" aria-label="Choose a PDF"/></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Render pages as PNG</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose a PDF</strong><br/>Any normal, unprotected PDF.</div>
+    <div><b>2</b><strong>Render</strong><br/>Each page is drawn at 1.6× scale for crisp text.</div>
+    <div><b>3</b><strong>Downloads start per page</strong><br/>Page 1, page 2 and so on save as separate PNGs — allow multiple downloads if your browser asks.</div>
+    <div><b>4</b><strong>Use the images anywhere</strong><br/>Posts, slides, thumbnails or chats.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What resolution are the PNGs?</summary><p>Pages render at 1.6× their PDF size (about 115 DPI for a typical A4 page) — sharp enough for screens and social posts, not for print. A print-grade render needs a desktop PDF tool.</p></details>
+    <details><summary>My browser blocked the extra downloads. What now?</summary><p>Browsers often block automatic multiple downloads. Allow downloads for this site in the address-bar prompt, then press Render again — every page will save.</p></details>
+    <details><summary>Can I get JPG instead of PNG?</summary><p>This tool outputs PNG for maximum sharpness on text. If file size matters more, convert the PNGs afterwards with the Image Format Converter.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/vendor/pdf.min.js"></script>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("pdf-to-images", document.getElementById("related"));
+var file=null,fEl=document.getElementById("f");
+fEl.addEventListener("change",function(){clearMsg("msg");file=fEl.files[0]||null;
+  if(file&&file.type!=="application/pdf"&&!/\.pdf$/i.test(file.name)){showMsg("msg","That is not a PDF file. Please choose a PDF.");file=null;fEl.value="";}});
+document.getElementById("go").addEventListener("click",async function(){
+  clearMsg("msg");
+  if(!file){showMsg("msg","Choose a PDF first.");return;}
+  if(!window.pdfjsLib){showMsg("msg","The PDF renderer did not load. Reload the page and try again.");return;}
+  try{
+    pdfjsLib.GlobalWorkerOptions.workerSrc="assets/vendor/pdf.worker.min.js";
+    var doc=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+    document.getElementById("sizeOut").innerHTML="Rendering <strong>"+doc.numPages+" page"+(doc.numPages===1?"":"s")+"</strong>… downloads will start one by one.";
+    for(var i=1;i<=doc.numPages;i++){
+      var page=await doc.getPage(i), vp=page.getViewport({scale:1.6});
+      var c=document.createElement("canvas"); c.width=vp.width; c.height=vp.height;
+      await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+      var a=document.createElement("a"); a.href=c.toDataURL("image/png"); a.download="page-"+i+".png"; a.click();
+    }
+    showMsg("msg","Done — "+doc.numPages+" PNG page(s) downloaded.",true);
+  }catch(e){ showMsg("msg","That PDF could not be rendered — it may be password-protected or damaged."); }
+});
+document.getElementById("reset").addEventListener("click",function(){file=null;fEl.value="";document.getElementById("sizeOut").innerHTML="";clearMsg("msg");});
+</script>
+</body>
+</html>

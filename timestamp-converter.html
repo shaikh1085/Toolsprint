@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert Unix timestamps to readable dates and dates back to timestamps online for free — handles seconds and milliseconds, UTC and your local time."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Timestamp Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Timestamp Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>Timestamp Converter</h1>
+  <p>Turn Unix timestamps (seconds or milliseconds since 1970) into human dates — and any date back into a timestamp — in UTC and your local time zone.</p></div>
+  <div class="panel">
+    <label for="ts">Unix timestamp</label>
+    <input type="number" id="ts" placeholder="e.g. 1793854534 (seconds) or 1793854534000 (ms)"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <button type="button" class="btn" id="toDate">Timestamp → Date</button>
+      <button type="button" class="btn ghost" id="now">Use current time</button>
+    </div>
+    <label for="dt">Date &amp; time</label>
+    <input type="datetime-local" id="dt"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <button type="button" class="btn" id="toTs">Date → Timestamp</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Going to a date?</strong><br/>Paste the timestamp and press Timestamp → Date.</div>
+    <div><b>2</b><strong>Going to a timestamp?</strong><br/>Pick a date and time, then press Date → Timestamp.</div>
+    <div><b>3</b><strong>Seconds vs milliseconds</strong><br/>Both are detected automatically by length — 10 digits means seconds, 13 means milliseconds.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Copy whichever result line you need.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What exactly is a Unix timestamp?</summary><p>The number of seconds since 1 January 1970, 00:00:00 UTC — a single number every computer on earth agrees on, with no time zones or daylight-saving confusion. That is why logs, APIs and databases store it.</p></details>
+    <details><summary>Why do I see two date results?</summary><p>The same instant in UTC and in your local time zone. They are the same moment — the clock reading differs because time zones shift the displayed hour.</p></details>
+    <details><summary>My timestamp gave a date in 1970 or the year 56000. What's wrong?</summary><p>A unit mix-up: milliseconds fed in as seconds land ~1000× too far in the future, and seconds treated as milliseconds land near 1970. This tool auto-detects by digit count, so check you pasted the whole number.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("timestamp-converter", document.getElementById("related"));
+var lastText="";
+function setOut(html,text){ document.getElementById("out").innerHTML=html; lastText=text; }
+document.getElementById("toDate").addEventListener("click",function(){
+  clearMsg("msg");
+  var raw=document.getElementById("ts").value.trim();
+  if(!raw||isNaN(Number(raw))){ showMsg("msg","Enter a numeric timestamp first."); return; }
+  var n=Number(raw);
+  var ms=Math.abs(n)>=100000000000?n:n*1000;
+  var d=new Date(ms);
+  if(isNaN(d.getTime())){ showMsg("msg","That number is outside the range browsers can represent as a date."); return; }
+  setOut("<strong>UTC:</strong> "+d.toUTCString()+"<br/><strong>Your local time:</strong> "+d.toLocaleString()+"<br/><strong>ISO:</strong> "+d.toISOString(),
+    "UTC: "+d.toUTCString()+"\nLocal: "+d.toLocaleString()+"\nISO: "+d.toISOString());
+  showMsg("msg",Math.abs(n)>=100000000000?"Interpreted as milliseconds.":"Interpreted as seconds.",true);
+});
+document.getElementById("now").addEventListener("click",function(){
+  document.getElementById("ts").value=Math.floor(Date.now()/1000);
+  document.getElementById("toDate").click();
+});
+document.getElementById("toTs").addEventListener("click",function(){
+  clearMsg("msg");
+  var v=document.getElementById("dt").value;
+  if(!v){ showMsg("msg","Pick a date and time first."); return; }
+  var d=new Date(v);
+  if(isNaN(d.getTime())){ showMsg("msg","That date could not be read. Use the date picker."); return; }
+  var s=Math.floor(d.getTime()/1000);
+  setOut("<strong>Seconds:</strong> "+s+"<br/><strong>Milliseconds:</strong> "+d.getTime(),
+    "Seconds: "+s+"\nMilliseconds: "+d.getTime());
+  showMsg("msg","Converted.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!lastText){ showMsg("msg","Convert something first — there is no result to copy yet."); return; }
+  clearMsg("msg"); copyText(lastText,this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("ts").value=""; document.getElementById("dt").value="";
+  document.getElementById("out").innerHTML=""; lastText=""; clearMsg("msg");
+});
+</script>
+</body>
+</html>

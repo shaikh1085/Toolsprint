@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="A precise online stopwatch plus a real countdown timer with minutes and seconds — with a beep when the countdown finishes. Free and simple."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Countdown Timer / Stopwatch — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.timer-big{font-size:56px;font-weight:800;text-align:center;margin:8px 0;letter-spacing:-.02em;font-variant-numeric:tabular-nums}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Countdown Timer / Stopwatch</nav>
+  <div class="prose" style="padding-top:10px"><h1>Countdown Timer / Stopwatch</h1>
+  <p>Two timers in one page: a stopwatch that counts up with tenth-of-a-second precision, and a countdown you set in minutes and seconds.</p></div>
+  <div class="panel">
+    <h2 style="margin-top:0">Stopwatch</h2>
+    <div class="timer-big" id="swDisp">00:00.0</div>
+    <div style="text-align:center;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button type="button" class="btn" id="swStart">Start</button>
+      <button type="button" class="btn ghost" id="swStop">Stop</button>
+      <button type="button" class="btn ghost" id="swReset">Reset</button>
+    </div>
+    <hr style="border:0;border-top:1px solid var(--border);margin:28px 0"/>
+    <h2>Countdown timer</h2>
+    <div class="row">
+      <div><label for="cdm">Minutes</label><input type="number" id="cdm" min="0" max="999" placeholder="e.g. 5"/></div>
+      <div><label for="cds">Seconds</label><input type="number" id="cds" min="0" max="59" placeholder="e.g. 0"/></div>
+    </div>
+    <div class="timer-big" id="cdDisp">00:00</div>
+    <div style="text-align:center;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button type="button" class="btn" id="cdStart">Start countdown</button>
+      <button type="button" class="btn ghost" id="cdStop">Stop / reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Stopwatch: press Start</strong><br/>Time counts up in tenths of a second.</div>
+    <div><b>2</b><strong>Stop &amp; Reset</strong><br/>Stop freezes the time; Reset returns to zero.</div>
+    <div><b>3</b><strong>Countdown: set minutes and seconds</strong><br/>Anything from 1 second to 999 minutes.</div>
+    <div><b>4</b><strong>Start the countdown</strong><br/>It beeps three times when it reaches zero.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>How accurate is the stopwatch?</summary><p>It measures from the system clock rather than counting screen updates, so even if the display refresh is throttled in a background tab, the elapsed time stays correct to within a tenth of a second.</p></details>
+    <details><summary>Will the countdown beep if the tab is in the background?</summary><p>The countdown itself stays accurate, but some browsers hold sound until the tab becomes visible — the display will already show 00:00 and the “time's up” message when you return.</p></details>
+    <details><summary>Can both timers run at once?</summary><p>Yes — the stopwatch and countdown are independent. Timing a race while a presentation countdown runs is exactly the sort of thing this page is for.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("stopwatch", document.getElementById("related"));
+/* Stopwatch */
+var swStart=0, swElapsed=0, swTimer=null;
+var swDisp=document.getElementById("swDisp");
+function swDraw(ms){
+  var t=Math.floor(ms/100), s=Math.floor(t/10), m=Math.floor(s/60);
+  swDisp.textContent=(m<10?"0":"")+m+":"+((s%60)<10?"0":"")+(s%60)+"."+(t%10);
+}
+document.getElementById("swStart").addEventListener("click",function(){
+  if(swTimer) return;
+  swStart=Date.now()-swElapsed;
+  swTimer=setInterval(function(){ swElapsed=Date.now()-swStart; swDraw(swElapsed); },47);
+});
+document.getElementById("swStop").addEventListener("click",function(){
+  if(swTimer){ clearInterval(swTimer); swTimer=null; }
+});
+document.getElementById("swReset").addEventListener("click",function(){
+  if(swTimer){ clearInterval(swTimer); swTimer=null; }
+  swElapsed=0; swDraw(0);
+});
+swDraw(0);
+/* Countdown */
+var cdTimer=null, cdEnd=0, cdDisp=document.getElementById("cdDisp");
+function cdDraw(sec){
+  var m=Math.floor(sec/60), s=sec%60;
+  cdDisp.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+}
+function beep(){
+  try{
+    var ctx=new (window.AudioContext||window.webkitAudioContext)();
+    [0,0.35,0.7].forEach(function(t){
+      var o=ctx.createOscillator(), g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.frequency.value=880;
+      g.gain.setValueAtTime(0.001,ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.25,ctx.currentTime+t+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.3);
+      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.32);
+    });
+  }catch(e){}
+}
+document.getElementById("cdStart").addEventListener("click",function(){
+  clearMsg("msg");
+  if(cdTimer) return;
+  var mins=parseInt(document.getElementById("cdm").value,10), secs=parseInt(document.getElementById("cds").value,10);
+  if(isNaN(mins)) mins=0; if(isNaN(secs)) secs=0;
+  var total=mins*60+secs;
+  if(total<=0){ showMsg("msg","Set a countdown time first — minutes and seconds are both zero or empty."); return; }
+  if(secs>59){ showMsg("msg","Seconds must be between 0 and 59 — add the extra as minutes instead."); return; }
+  cdEnd=Date.now()+total*1000;
+  cdTimer=setInterval(function(){
+    var left=Math.max(0,Math.round((cdEnd-Date.now())/1000));
+    cdDraw(left);
+    if(left<=0){
+      clearInterval(cdTimer); cdTimer=null; beep();
+      showMsg("msg","Time's up! The countdown has finished.",true);
+    }
+  },250);
+  cdDraw(total);
+});
+document.getElementById("cdStop").addEventListener("click",function(){
+  if(cdTimer){ clearInterval(cdTimer); cdTimer=null; }
+  cdDraw(0); clearMsg("msg");
+});
+cdDraw(0);
+</script>
+</body>
+</html>

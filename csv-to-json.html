@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert CSV to a JSON array online for free — a proper parser that handles quoted fields, commas and newlines inside quotes, with a header-row option."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>CSV to JSON Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › CSV to JSON Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>CSV to JSON Converter</h1>
+  <p>Turn CSV into a clean JSON array. The parser understands quoted fields — so commas, line breaks and escaped quotes inside a value never break your columns.</p></div>
+  <div class="panel">
+    <label for="tx">CSV input</label>
+    <textarea id="tx" placeholder="name,city&#10;&quot;A, B&quot;,Lahore&#10;C,Karachi"></textarea>
+    <div class="checks"><label><input type="checkbox" id="hdr" checked/> First row is the header</label></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+      <button type="button" class="btn" id="go">Convert to JSON</button>
+      <button type="button" class="btn ghost" id="copy">Copy JSON</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">JSON result</label>
+    <textarea id="out" readonly placeholder="The JSON array appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste your CSV</strong><br/>Quoted fields, commas inside values — all fine.</div>
+    <div><b>2</b><strong>Set the header option</strong><br/>Ticked: first row becomes the object keys. Unticked: you get arrays of values with generated column names.</div>
+    <div><b>3</b><strong>Convert</strong><br/>One JSON object per data row.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Pretty-printed JSON, ready for your API or code.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>How are quoted fields with newlines handled?</summary><p>Properly. The parser reads character by character and tracks whether it is inside quotes, so a line break inside a quoted value stays in that value instead of starting a new record — the exact case that breaks naive split-by-line converters.</p></details>
+    <details><summary>What if a row has fewer cells than the header?</summary><p>Missing cells become empty strings, and extra cells beyond the header are kept under generated names (column_5, and so on). A key is never literally “undefined”.</p></details>
+    <details><summary>Are numbers converted to JSON numbers?</summary><p>No — every value stays a string, exactly as CSV stores it. That is the safe default: IDs like “007” and phone numbers keep their leading zeros.</p></details>
+    <details><summary>My file uses semicolons instead of commas. Will it work?</summary><p>This parser expects commas (the CSV standard). If your export used semicolons — common in European Excel files — re-export with commas, or the whole line will land in one field.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("csv-to-json", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+/* Proper CSV parser: handles quoted fields, commas/newlines inside
+   quotes, and escaped "" quotes. */
+function parseCSV(text){
+  var rows=[], row=[], field="", inQ=false, i=0;
+  function endField(){ row.push(field); field=""; }
+  function endRow(){ endField(); rows.push(row); row=[]; }
+  while(i<text.length){
+    var ch=text[i];
+    if(inQ){
+      if(ch==='"'){
+        if(text[i+1]==='"'){ field+='"'; i+=2; continue; }
+        inQ=false; i++; continue;
+      }
+      field+=ch; i++; continue;
+    }
+    if(ch==='"' && field===""){ inQ=true; i++; continue; }
+    if(ch===","){ endField(); i++; continue; }
+    if(ch==="\r"){ i++; continue; }
+    if(ch==="\n"){ endRow(); i++; continue; }
+    field+=ch; i++;
+  }
+  if(field!==""||row.length) endRow();
+  return rows.filter(function(r){ return !(r.length===1&&r[0]===""); });
+}
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var raw=tx.value.replace(/^\uFEFF/,"");
+  if(!raw.trim()){ showMsg("msg","Paste some CSV first — the input is empty."); return; }
+  var rows=parseCSV(raw);
+  if(!rows.length){ showMsg("msg","No rows could be read from that input. Check it is really comma-separated text."); return; }
+  var useHeader=document.getElementById("hdr").checked;
+  var result;
+  if(useHeader){
+    var header=rows[0].map(function(h,idx){ var name=(h||"").trim(); return name?name:"column_"+(idx+1); });
+    if(rows.length<2){ showMsg("msg","Only a header row was found — add at least one data row below it, or untick “First row is the header”."); return; }
+    result=rows.slice(1).map(function(r){
+      var obj={}, width=Math.max(header.length,r.length);
+      for(var c=0;c<width;c++){ var key=header[c]!==undefined?header[c]:"column_"+(c+1); obj[key]=r[c]!==undefined?r[c]:""; }
+      return obj;
+    });
+  }else{
+    result=rows.map(function(r){
+      var obj={};
+      r.forEach(function(v,c){ obj["column_"+(c+1)]=v; });
+      return obj;
+    });
+  }
+  out.value=JSON.stringify(result,null,2);
+  showMsg("msg","Converted "+result.length+" row"+(result.length===1?"":"s")+".",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Convert your CSV first — there is no JSON to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.value=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

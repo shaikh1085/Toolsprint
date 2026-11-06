@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="A simple Pomodoro timer — 25-minute focus sprints with 5-minute breaks, a clear beep at the end, and a session counter. Free, no sign-up."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Pomodoro Timer — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.timer-big{font-size:64px;font-weight:800;text-align:center;margin:10px 0;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.mode-line{text-align:center;color:var(--muted);font-weight:700}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Pomodoro Timer</nav>
+  <div class="prose" style="padding-top:10px"><h1>Pomodoro Timer</h1>
+  <p>Focus in 25-minute sprints, rest for 5. The timer beeps when each block ends and counts your completed focus sessions.</p></div>
+  <div class="panel">
+    <div class="mode-line" id="modeLine">Focus — session 1</div>
+    <div class="timer-big" id="tmr">25:00</div>
+    <div style="text-align:center;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button type="button" class="btn" id="start">Start focus</button>
+      <button type="button" class="btn ghost" id="pause">Pause</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Pick one task</strong><br/>One pomodoro, one job — that is the method.</div>
+    <div><b>2</b><strong>Start the focus timer</strong><br/>25 minutes. No messages, no tabs, just the task.</div>
+    <div><b>3</b><strong>Take the 5-minute break</strong><br/>When it beeps, stop properly — stand up, water, look away.</div>
+    <div><b>4</b><strong>Repeat</strong><br/>After four focus sessions, take a longer break of 15–30 minutes away from the timer.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What if I finish the task mid-pomodoro?</summary><p>Use the remaining minutes to review or improve the work, then stop the sprint early with Reset if you like. The classic method says the pomodoro is indivisible — but finished is finished.</p></details>
+    <details><summary>Why 25 minutes specifically?</summary><p>It is the original length from Francesco Cirillo's technique: long enough to make real progress, short enough that starting feels easy. The break length matters as much as the focus length — do not skip it.</p></details>
+    <details><summary>Does the timer keep running if I switch tabs?</summary><p>Yes. The countdown is based on the clock, not on tab visibility, so it stays accurate in a background tab — though browsers may delay the beep until the tab is visible again.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("pomodoro-timer", document.getElementById("related"));
+var FOCUS=25*60, BREAK=5*60, mode="focus", sessions=1, left=FOCUS, timer=null, endAt=0;
+var tmr=document.getElementById("tmr"), modeLine=document.getElementById("modeLine");
+function draw(){
+  var m=Math.floor(left/60), s=left%60;
+  tmr.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+  modeLine.textContent=(mode==="focus"?"Focus":"Break")+" — session "+sessions;
+  document.title=tmr.textContent+" · Pomodoro Timer — ToolSprint";
+}
+function beep(){
+  try{
+    var ctx=new (window.AudioContext||window.webkitAudioContext)();
+    [0,0.35,0.7].forEach(function(t){
+      var o=ctx.createOscillator(), g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.frequency.value=880;
+      g.gain.setValueAtTime(0.001,ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.25,ctx.currentTime+t+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.3);
+      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.32);
+    });
+  }catch(e){}
+}
+function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
+function tick(){
+  left=Math.max(0,Math.round((endAt-Date.now())/1000));
+  draw();
+  if(left<=0){
+    stopTimer(); beep();
+    if(mode==="focus"){
+      showMsg("msg","Focus session "+sessions+" complete — take your 5-minute break.",true);
+      document.getElementById("out").innerHTML="Completed focus sessions this sitting: <strong>"+sessions+"</strong>";
+      sessions++; mode="break"; left=BREAK;
+      document.getElementById("start").textContent="Start break";
+    }else{
+      showMsg("msg","Break over — ready for focus session "+sessions+"?",true);
+      mode="focus"; left=FOCUS;
+      document.getElementById("start").textContent="Start focus";
+    }
+    draw();
+  }
+}
+document.getElementById("start").addEventListener("click",function(){
+  if(timer) return;
+  endAt=Date.now()+left*1000;
+  timer=setInterval(tick,250); tick();
+  clearMsg("msg");
+});
+document.getElementById("pause").addEventListener("click",function(){
+  if(!timer){ showMsg("msg","The timer is not running — press Start first."); return; }
+  stopTimer(); draw();
+});
+document.getElementById("reset").addEventListener("click",function(){
+  stopTimer(); mode="focus"; sessions=1; left=FOCUS;
+  document.getElementById("start").textContent="Start focus";
+  document.getElementById("out").innerHTML=""; clearMsg("msg");
+  document.title="Pomodoro Timer — ToolSprint"; draw();
+});
+draw();
+</script>
+</body>
+</html>

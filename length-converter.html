@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert lengths between metres, centimetres, kilometres, inches, feet, yards and miles instantly — free length converter with copy button."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Length Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Length Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>Length Converter</h1>
+  <p>Metres to feet, miles to kilometres, inches to centimetres — every common length unit, converted exactly.</p></div>
+  <div class="panel">
+    <div class="row3">
+      <div><label for="lv">Value</label><input type="number" id="lv" placeholder="e.g. 5"/></div>
+      <div><label for="lf">From</label><select id="lf"></select></div>
+      <div><label for="lt">To</label><select id="lt"></select></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Convert</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter the length</strong><br/>Decimals welcome.</div>
+    <div><b>2</b><strong>Pick From and To units</strong><br/>Metric and imperial are in the same list.</div>
+    <div><b>3</b><strong>Convert</strong><br/>The full sentence result appears instantly.</div>
+    <div><b>4</b><strong>Copy</strong><br/>One click to take it with you.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>How many centimetres are in an inch, exactly?</summary><p>Exactly 2.54 — that has been the international definition since 1959, and it is the factor this converter uses for all imperial-to-metric conversions.</p></details>
+    <details><summary>Can it do feet-and-inches, like 5′ 9″?</summary><p>Convert the parts separately and add them: 5 feet plus 9 inches converted to centimetres, summed, gives your height. Or convert 69 inches (5×12+9) in one go — same answer.</p></details>
+    <details><summary>How is this different from the Unit Converter?</summary><p>It is the length-only specialist: a shorter unit list and a bigger, faster workflow when length is all you need. The full Unit Converter also covers weight, volume, area, speed and data.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("length-converter", document.getElementById("related"));
+var UNITS={Millimetre:0.001,Centimetre:0.01,Metre:1,Kilometre:1000,Inch:0.0254,Foot:0.3048,Yard:0.9144,Mile:1609.344,"Nautical Mile":1852};
+var lf=document.getElementById("lf"), lt=document.getElementById("lt"), lastText="";
+[lf,lt].forEach(function(sel){ sel.innerHTML=Object.keys(UNITS).map(function(u){ return '<option value="'+u+'">'+u+"</option>"; }).join(""); });
+lf.value="Metre"; lt.value="Foot";
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var v=parseFloat(document.getElementById("lv").value);
+  if(isNaN(v)){ showMsg("msg","Enter a numeric length first."); return; }
+  var result=v*UNITS[lf.value]/UNITS[lt.value];
+  var shown=Math.abs(result)>=1e12||(Math.abs(result)<1e-6&&result!==0)?result.toExponential(4):String(Math.round(result*1e6)/1e6);
+  lastText=v+" "+lf.value+" = "+shown+" "+lt.value;
+  document.getElementById("out").innerHTML="<strong>"+lastText+"</strong>";
+  showMsg("msg","Converted.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!lastText){ showMsg("msg","Convert something first."); return; }
+  clearMsg("msg"); copyText(lastText,this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("lv").value=""; document.getElementById("out").innerHTML=""; lastText=""; clearMsg("msg");
+});
+</script>
+</body>
+</html>

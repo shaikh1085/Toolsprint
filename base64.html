@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Encode text to Base64 or decode Base64 back to text online for free — Unicode-safe, with a copy button and clear errors for invalid input."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Base64 Encoder / Decoder — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Base64 Encoder / Decoder</nav>
+  <div class="prose" style="padding-top:10px"><h1>Base64 Encoder / Decoder</h1>
+  <p>Convert text to Base64 for data URIs, APIs and tokens — or decode a Base64 string back into readable text. Non-English text is handled correctly.</p></div>
+  <div class="panel">
+    <label for="tx">Your text</label>
+    <textarea id="tx" placeholder="Type plain text to encode, or paste Base64 to decode…"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="enc">Encode to Base64</button>
+      <button type="button" class="btn ghost" id="dec">Decode from Base64</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">Result</label>
+    <textarea id="out" readonly placeholder="The result appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste your input</strong><br/>Plain text to encode, or Base64 to decode.</div>
+    <div><b>2</b><strong>Choose the direction</strong><br/>Encode or Decode — one button for each.</div>
+    <div><b>3</b><strong>Check for errors</strong><br/>Invalid Base64 produces a plain-language error, never a silent blank.</div>
+    <div><b>4</b><strong>Copy the result</strong><br/>One click, with confirmation.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Is Base64 encryption?</summary><p>No. Base64 is just an encoding — anyone can decode it instantly, including with this very tool. Never use it to “protect” passwords or secrets; use real encryption for that.</p></details>
+    <details><summary>Why does encoded text end with = signs?</summary><p>Padding. Base64 works in 3-byte groups; when the input does not divide evenly, = characters fill the last group so decoders know exactly where the data ends.</p></details>
+    <details><summary>Does it handle Urdu, Arabic and emoji?</summary><p>Yes. The text is converted to UTF-8 bytes before encoding (and back after decoding), so non-Latin scripts and emoji survive the round trip — unlike naive browser btoa calls, which throw errors on them.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("base64", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+document.getElementById("enc").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!tx.value){ showMsg("msg","Type or paste some text first — the input is empty."); return; }
+  var bytes=new TextEncoder().encode(tx.value), bin="";
+  bytes.forEach(function(b){ bin+=String.fromCharCode(b); });
+  out.value=btoa(bin);
+  showMsg("msg","Encoded.",true);
+});
+document.getElementById("dec").addEventListener("click",function(){
+  clearMsg("msg");
+  var raw=tx.value.trim().replace(/\s+/g,"");
+  if(!raw){ showMsg("msg","Paste a Base64 string first — the input is empty."); return; }
+  try{
+    var bin=atob(raw), bytes=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+    out.value=new TextDecoder().decode(bytes);
+    showMsg("msg","Decoded.",true);
+  }catch(e){ showMsg("msg","That is not valid Base64. Check for missing characters or stray text — Base64 uses only A–Z, a–z, 0–9, + / and = padding."); }
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Encode or decode something first — there is no result to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.value=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

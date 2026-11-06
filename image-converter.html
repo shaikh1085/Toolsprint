@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert images between JPG, PNG and WebP online for free. Transparent PNGs get a white background as JPG. Compare sizes, preview, then download."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Image Format Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Image Format Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>Image Format Converter</h1>
+  <p>Convert an image between JPG, PNG and WebP. When a transparent PNG becomes a JPG, the background is filled white so nothing turns black.</p></div>
+
+  <div class="panel">
+    <div class="drop">Choose an image from your device.<br/><br/><input type="file" id="f" accept="image/*" aria-label="Choose an image"/></div>
+    <label for="fmt">Convert to</label>
+    <select id="fmt"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option><option value="image/webp">WebP</option></select>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Convert image</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download converted image</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <div id="previewWrap" style="display:none;margin-top:16px"><strong>Preview</strong><br/><img id="preview" alt="Preview of the converted image" style="max-width:100%;border-radius:10px;border:1px solid var(--border);margin-top:8px"/></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose an image</strong><br/>Any JPG, PNG or WebP from your device.</div>
+    <div><b>2</b><strong>Pick the target format</strong><br/>PNG for transparency, JPG for photos, WebP for the web.</div>
+    <div><b>3</b><strong>Convert</strong><br/>Compare original → new size and inspect the preview.</div>
+    <div><b>4</b><strong>Download</strong><br/>Save the converted file with its new extension.</div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What happens to transparency when I convert PNG to JPG?</summary><p>JPG has no transparency, so this tool fills the transparent area with white before saving — your logo or cut-out will not end up on a black background.</p></details>
+    <details><summary>Which format makes the smallest file?</summary><p>For photos, WebP is usually smallest, then JPG. PNG is best for screenshots, logos and anything with sharp edges or transparency, but photo PNGs can be several times larger than the same image as JPG.</p></details>
+    <details><summary>Can I convert a WebP back to PNG?</summary><p>Yes — WebP to PNG is fully supported and lossless from the WebP's decoded pixels. Note that converting JPG to PNG cannot restore quality the JPG already lost.</p></details>
+    <details><summary>Why did the converted file come out bigger?</summary><p>Converting a compressed format (JPG/WebP) into PNG stores every pixel, so PNG output is often larger. The tool shows both sizes and warns you before you download.</p></details>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("image-converter", document.getElementById("related"));
+var file=null, outUrl=null, outExt="png";
+var fEl=document.getElementById("f");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+fEl.addEventListener("change",function(){
+  clearMsg("msg"); file=fEl.files[0]||null;
+  if(file && !/^image\//.test(file.type)){ showMsg("msg","That file is not an image. Please choose a JPG, PNG or WebP."); file=null; fEl.value=""; }
+});
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!file){ showMsg("msg","Choose an image first."); return; }
+  var type=document.getElementById("fmt").value;
+  outExt=type.split("/")[1].replace("jpeg","jpg");
+  var url=URL.createObjectURL(file), img=new Image();
+  img.onload=function(){
+    var c=document.createElement("canvas"); c.width=img.naturalWidth; c.height=img.naturalHeight;
+    var ctx=c.getContext("2d");
+    if(type==="image/jpeg"){ ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,c.width,c.height); }
+    ctx.drawImage(img,0,0);
+    c.toBlob(function(blob){
+      if(!blob){ showMsg("msg","Conversion failed — your browser may not support writing that format. Try PNG."); return; }
+      if(outUrl) URL.revokeObjectURL(outUrl);
+      outUrl=URL.createObjectURL(blob);
+      var saved=100-(blob.size/file.size*100);
+      document.getElementById("sizeOut").innerHTML="Original size: <strong>"+fmt(file.size)+"</strong> → New size: <strong>"+fmt(blob.size)+"</strong> ("+(saved>=0?saved.toFixed(1)+"% saved":Math.abs(saved).toFixed(1)+"% bigger")+") · format: "+outExt.toUpperCase();
+      var pv=document.getElementById("preview"); pv.src=outUrl;
+      document.getElementById("previewWrap").style.display="block";
+      document.getElementById("dl").disabled=false;
+      if(blob.size>=file.size) showMsg("msg","Warning: the converted file is bigger than the original. That is normal for PNG output — JPG or WebP will be smaller.");
+      else showMsg("msg","Done — check the preview, then download.",true);
+    }, type, 0.92);
+  };
+  img.onerror=function(){ showMsg("msg","Your browser could not read that image."); };
+  img.src=url;
+});
+document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprint-converted."+outExt; a.click(); });
+document.getElementById("reset").addEventListener("click",function(){
+  file=null; fEl.value=""; document.getElementById("fmt").value="image/png";
+  document.getElementById("sizeOut").innerHTML=""; document.getElementById("previewWrap").style.display="none";
+  document.getElementById("dl").disabled=true; clearMsg("msg");
+  if(outUrl){URL.revokeObjectURL(outUrl); outUrl=null;}
+});
+</script>
+</body>
+</html>

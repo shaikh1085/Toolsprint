@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Build a ready-to-paste set of separate hashtags for TikTok, Reels and posts from one keyword — free hashtag generator with one-click copy."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Hashtag Generator — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Hashtag Generator</nav>
+  <div class="prose" style="padding-top:10px"><h1>Hashtag Generator</h1>
+  <p>Enter a topic and get a clean set of separate hashtags — your keyword split and combined properly, plus proven general tags for reach.</p></div>
+  <div class="panel">
+    <label for="hk">Topic keyword</label>
+    <input type="text" id="hk" placeholder="e.g. baby talk, home workout, street food"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Build hashtag set</button>
+      <button type="button" class="btn ghost" id="copy">Copy hashtags</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">Your hashtag set</label>
+    <textarea id="out" readonly placeholder="Your hashtags appear here, each one separate…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter your topic</strong><br/>One phrase describing the post — “baby talk”, “leg day”, “easy recipes”.</div>
+    <div><b>2</b><strong>Build the set</strong><br/>You get your keyword as one joined tag, its words as separate tags, and related reach tags.</div>
+    <div><b>3</b><strong>Trim to taste</strong><br/>Delete any tag that does not fit your post — fewer, relevant tags beat a wall of generic ones.</div>
+    <div><b>4</b><strong>Copy &amp; paste</strong><br/>Into your TikTok, Reel or post caption.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Why do I get both #babytalk and #baby #talk?</summary><p>Because both forms get searched. The joined tag targets the exact topic; the split tags catch broader searches. The generator always emits them as separate hashtags — never one glued-together string.</p></details>
+    <details><summary>How many hashtags should I actually post?</summary><p>Platform guidance shifts, but a focused set of roughly 5–12 relevant tags is the common sweet spot. This tool gives you a set to choose from, not a quota to fill.</p></details>
+    <details><summary>Do hashtags guarantee more views?</summary><p>No — they help the platform categorise your post, nothing more. The first two seconds of the video and watch time matter far more than any tag.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("hashtag-generator", document.getElementById("related"));
+var out=document.getElementById("out");
+var REACH=["fyp","viral","trending","explore","reels","tiktokmademebuyit","foryou"];
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var raw=document.getElementById("hk").value.trim().toLowerCase().replace(/#/g,"");
+  if(!raw){ showMsg("msg","Enter a topic keyword first — hashtags are built from it."); return; }
+  var words=raw.split(/[^a-z0-9]+/).filter(Boolean);
+  if(!words.length){ showMsg("msg","That keyword has no usable letters or numbers. Try something like “baby talk”."); return; }
+  var tags=[];
+  function add(t){ t="#"+t; if(tags.indexOf(t)===-1) tags.push(t); }
+  add(words.join(""));
+  words.forEach(add);
+  if(words.length>1) add(words.join("")+"daily");
+  add(words.join("")+"tips");
+  REACH.slice(0,5).forEach(add);
+  out.value=tags.join(" ");
+  showMsg("msg","Built "+tags.length+" separate hashtags. Delete any that do not fit your post.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Build a hashtag set first."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ document.getElementById("hk").value=""; out.value=""; clearMsg("msg"); });
+</script>
+</body>
+</html>

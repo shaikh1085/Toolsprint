@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Turn JPG and PNG images into a single PDF online for free. One page per image, in the order you add them — processed in your browser, never uploaded."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Images to PDF — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Images to PDF</nav>
+  <div class="prose" style="padding-top:10px"><h1>Images to PDF</h1>
+  <p>Turn a set of JPG or PNG images into one clean PDF — receipts, scanned pages, photo sets. Each image becomes one page, sized to the image.</p></div>
+
+  <div class="panel">
+    <div class="drop">Choose images (JPG or PNG) — add them in page order.<br/><br/><input type="file" id="f" accept="image/jpeg,image/png" multiple aria-label="Choose images"/></div>
+    <div class="out" id="listOut" aria-live="polite"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Create PDF</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download PDF</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose images</strong><br/>Select JPG or PNG files in the order you want the pages.</div>
+    <div><b>2</b><strong>Check the list</strong><br/>The names appear in order — re-pick if the order is wrong.</div>
+    <div><b>3</b><strong>Create the PDF</strong><br/>Each image becomes one full-size page.</div>
+    <div><b>4</b><strong>Download</strong><br/>Save the PDF to your device.</div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What page size does the PDF use?</summary><p>Each page is exactly the size of its image (in PDF points), so nothing is stretched, cropped or padded with white margins.</p></details>
+    <details><summary>Can I mix JPG and PNG in one PDF?</summary><p>Yes. JPG and PNG files can be selected together; each is embedded in its own format on its own page.</p></details>
+    <details><summary>Why is my PDF so large?</summary><p>The images are embedded at full quality. If the PDF is too big to send, compress the images first with the Image Compressor, then rebuild the PDF.</p></details>
+    <details><summary>Can I reorder pages after selecting?</summary><p>Not in this version — the page order follows the order shown in the list. To change it, press Reset and select the files in the right order.</p></details>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/vendor/pdf-lib.min.js"></script>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("images-to-pdf", document.getElementById("related"));
+var files=[], outUrl=null;
+var fEl=document.getElementById("f");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+fEl.addEventListener("change",function(){
+  clearMsg("msg");
+  files=Array.prototype.slice.call(fEl.files||[]);
+  var bad=files.filter(function(x){return !/^image\/(jpeg|png)$/.test(x.type);});
+  if(bad.length){ showMsg("msg","\u201C"+bad[0].name+"\u201D is not a JPG or PNG — only JPG and PNG images can be added. It was removed from the list."); files=files.filter(function(x){return /^image\/(jpeg|png)$/.test(x.type);}); }
+  document.getElementById("listOut").innerHTML=files.length
+    ? "<strong>"+files.length+" image"+(files.length===1?"":"s")+" ready, in this page order:</strong><br/>"+files.map(function(x,i){return (i+1)+". "+x.name.replace(/</g,"&lt;")+" ("+fmt(x.size)+")";}).join("<br/>")
+    : "";
+});
+document.getElementById("go").addEventListener("click",async function(){
+  clearMsg("msg");
+  if(!files.length){ showMsg("msg","Choose at least one JPG or PNG image first."); return; }
+  if(!window.PDFLib){ showMsg("msg","The PDF library did not load. Reload the page and try again."); return; }
+  try{
+    var doc=await PDFLib.PDFDocument.create();
+    for(var k=0;k<files.length;k++){
+      var bytes=await files[k].arrayBuffer();
+      var img=files[k].type==="image/png" ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
+      var page=doc.addPage([img.width, img.height]);
+      page.drawImage(img,{x:0,y:0,width:img.width,height:img.height});
+    }
+    var out=await doc.save();
+    if(outUrl) URL.revokeObjectURL(outUrl);
+    outUrl=URL.createObjectURL(new Blob([out],{type:"application/pdf"}));
+    document.getElementById("sizeOut").innerHTML="Created a <strong>"+doc.getPageCount()+"-page PDF</strong> ("+fmt(out.length)+") from "+files.length+" image"+(files.length===1?"":"s")+".";
+    document.getElementById("dl").disabled=false;
+    showMsg("msg","Done — download your PDF.",true);
+  }catch(e){ showMsg("msg","Creating the PDF failed. One of the images may be corrupt — try removing it and rebuilding."); }
+});
+document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprint-images.pdf"; a.click(); });
+document.getElementById("reset").addEventListener("click",function(){
+  files=[]; fEl.value=""; document.getElementById("listOut").innerHTML=""; document.getElementById("sizeOut").innerHTML="";
+  document.getElementById("dl").disabled=true; clearMsg("msg");
+  if(outUrl){URL.revokeObjectURL(outUrl); outUrl=null;}
+});
+</script>
+</body>
+</html>

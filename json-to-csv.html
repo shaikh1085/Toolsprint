@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Convert a JSON array to CSV online for free — commas, quotes and newlines escaped correctly, uneven objects handled with a union of keys. Download or copy."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>JSON to CSV Converter — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › JSON to CSV Converter</nav>
+  <div class="prose" style="padding-top:10px"><h1>JSON to CSV Converter</h1>
+  <p>Turn a JSON array of objects into spreadsheet-ready CSV. Values containing commas, quotes or newlines are quoted properly, so the file opens correctly in Excel and Google Sheets.</p></div>
+  <div class="panel">
+    <label for="tx">JSON array</label>
+    <textarea id="tx" placeholder='Paste a JSON array, e.g. [{"name":"A, B","age":30},{"name":"C","city":"Lahore"}]'></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Convert to CSV</button>
+      <button type="button" class="btn ghost" id="copy">Copy CSV</button>
+      <button type="button" class="btn ghost" id="dl">Download .csv</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">CSV result</label>
+    <textarea id="out" readonly placeholder="The CSV appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Paste a JSON array</strong><br/>An array of objects works best — one object becomes one row.</div>
+    <div><b>2</b><strong>Convert</strong><br/>Columns are the union of every key found in any object.</div>
+    <div><b>3</b><strong>Check the quoting</strong><br/>Messy values are wrapped in double quotes with inner quotes doubled.</div>
+    <div><b>4</b><strong>Copy or download</strong><br/>Open the .csv directly in your spreadsheet app.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>My objects have different keys. What happens?</summary><p>The header row is the union of all keys across all objects, in the order they first appear. Objects missing a key simply get an empty cell in that column — no column is ever dropped.</p></details>
+    <details><summary>How are nested objects and arrays handled?</summary><p>They are stringified into compact JSON inside the cell (and quoted, since JSON contains commas). Flat scalar values — strings, numbers, booleans — go in as they are; null becomes an empty cell.</p></details>
+    <details><summary>Why are some values wrapped in quotes?</summary><p>That is the CSV standard: any value containing a comma, a double quote or a newline must be wrapped in double quotes, with each inner quote doubled. Spreadsheets rely on this to keep columns aligned.</p></details>
+    <details><summary>What if my JSON is a single object, not an array?</summary><p>It is treated as a one-row CSV. If your JSON is neither an object nor an array of objects, the tool shows an error explaining what it needs instead of producing garbage.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("json-to-csv", document.getElementById("related"));
+var tx=document.getElementById("tx"), out=document.getElementById("out");
+function csvCell(v){
+  if(v===null||v===undefined) return "";
+  var s=(typeof v==="object")?JSON.stringify(v):String(v);
+  if(/[",\n\r]/.test(s)) s='"'+s.replace(/"/g,'""')+'"';
+  return s;
+}
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var raw=tx.value.trim();
+  if(!raw){ showMsg("msg","Paste a JSON array first — the input is empty."); return; }
+  var data;
+  try{ data=JSON.parse(raw); }catch(e){ showMsg("msg","Invalid JSON: "+e.message); return; }
+  var rows=Array.isArray(data)?data:[data];
+  if(!rows.length){ showMsg("msg","That array is empty — there are no rows to convert."); return; }
+  if(rows.some(function(r){return r===null||typeof r!=="object"||Array.isArray(r);})){
+    showMsg("msg","Every item must be a flat object (like {\"name\":\"A\"}). Arrays of numbers or strings cannot become CSV columns."); return;
+  }
+  var keys=[];
+  rows.forEach(function(r){ Object.keys(r).forEach(function(k){ if(keys.indexOf(k)===-1) keys.push(k); }); });
+  var lines=[keys.map(csvCell).join(",")];
+  rows.forEach(function(r){ lines.push(keys.map(function(k){ return csvCell(r[k]); }).join(",")); });
+  out.value=lines.join("\n");
+  showMsg("msg","Converted "+rows.length+" row"+(rows.length===1?"":"s")+" with "+keys.length+" columns.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Convert your JSON first — there is no CSV to copy yet."); return; }
+  clearMsg("msg"); copyText(out.value,this);
+});
+document.getElementById("dl").addEventListener("click",function(){
+  if(!out.value){ showMsg("msg","Convert your JSON first — there is no CSV to download yet."); return; }
+  var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([out.value],{type:"text/csv"})); a.download="toolsprint-data.csv"; a.click();
+});
+document.getElementById("reset").addEventListener("click",function(){ tx.value=""; out.value=""; clearMsg("msg"); tx.focus(); });
+</script>
+</body>
+</html>

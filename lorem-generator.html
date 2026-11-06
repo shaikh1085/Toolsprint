@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Generate Lorem Ipsum placeholder paragraphs for designs and mock-ups — choose how many, then copy them with one click."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Lorem Ipsum Generator — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Lorem Ipsum Generator</nav>
+  <div class="prose" style="padding-top:10px"><h1>Lorem Ipsum Generator</h1>
+  <p>Fill a design, wireframe or template with realistic-looking placeholder paragraphs, so layout decisions are not distracted by real wording.</p></div>
+  <div class="panel">
+    <label for="n">Paragraphs (1–20)</label>
+    <input type="number" id="n" min="1" max="20" placeholder="e.g. 3"/>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Generate</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <label for="out">Result</label>
+    <textarea id="out" readonly placeholder="Your placeholder text appears here…"></textarea>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose a count</strong><br/>How many paragraphs your layout needs.</div>
+    <div><b>2</b><strong>Generate</strong><br/>Classic Lorem Ipsum, varied paragraph lengths.</div>
+    <div><b>3</b><strong>Copy</strong><br/>Take all of it in one click.</div>
+    <div><b>4</b><strong>Replace before launch</strong><br/>Placeholder text in a live page looks unfinished — swap in real copy.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What does Lorem Ipsum actually mean?</summary><p>It is scrambled Latin from Cicero's “De Finibus” — deliberately meaningless, so reviewers judge the design instead of reading the words. It has been the printing industry's standard dummy text since the 1500s.</p></details>
+    <details><summary>Does every generation start the same way?</summary><p>Yes — the first paragraph always opens with the traditional “Lorem ipsum dolor sit amet…”, and later paragraphs vary, so your mock-up looks natural rather than copy-pasted.</p></details>
+    <details><summary>Can I get sentences instead of paragraphs?</summary><p>Each paragraph here is 4–6 sentences. For a single sentence, generate one paragraph and keep just the first line.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("lorem-generator", document.getElementById("related"));
+var SENT=["Lorem ipsum dolor sit amet, consectetur adipiscing elit","Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua","Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris","Duis aute irure dolor in reprehenderit in voluptate velit esse cillum","Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia","Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit","Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet","Quis autem vel eum iure reprehenderit qui in ea voluptate velit","At vero eos et accusamus et iusto odio dignissimos ducimus","Et harum quidem rerum facilis est et expedita distinctio","Temporibus autem quibusdam et aut officiis debitis aut rerum","Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis"];
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var n=parseInt(document.getElementById("n").value,10);
+  if(!n||n<1||n>20){ showMsg("msg","Enter a paragraph count between 1 and 20."); return; }
+  var paras=[];
+  for(var p=0;p<n;p++){
+    var count=4+(p%3), sents=[];
+    for(var s=0;s<count;s++){ var base=SENT[(p*3+s)%SENT.length]; sents.push(base.charAt(0).toUpperCase()+base.slice(1)+"."); }
+    paras.push(sents.join(" "));
+  }
+  document.getElementById("out").value=paras.join("\n\n");
+  showMsg("msg","Generated "+n+" paragraph"+(n===1?"":"s")+".",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  var v=document.getElementById("out").value;
+  if(!v){ showMsg("msg","Generate some text first — there is nothing to copy yet."); return; }
+  clearMsg("msg"); copyText(v,this);
+});
+document.getElementById("reset").addEventListener("click",function(){ document.getElementById("n").value=""; document.getElementById("out").value=""; clearMsg("msg"); });
+</script>
+</body>
+</html>

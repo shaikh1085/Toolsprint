@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Test regular expressions online for free — g/i/m flags, matches highlighted in your text, and capture groups listed for every match."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Regex Tester — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.hl{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;white-space:pre-wrap;word-break:break-word}.hl mark{background:#e5e5e5;color:#000;border-radius:3px;padding:0 1px}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Regex Tester</nav>
+  <div class="prose" style="padding-top:10px"><h1>Regex Tester</h1>
+  <p>Write a pattern, paste test text, and see every match highlighted in place — with its capture groups listed underneath.</p></div>
+  <div class="panel">
+    <label for="rp">Pattern</label>
+    <input type="text" id="rp" placeholder="e.g. (\w+)@(\w+\.com)"/>
+    <div class="checks">
+      <label><input type="checkbox" id="fg" checked/> g — global (find all matches)</label>
+      <label><input type="checkbox" id="fi"/> i — ignore case</label>
+      <label><input type="checkbox" id="fm"/> m — multiline (^ and $ per line)</label>
+    </div>
+    <label for="rt">Test text</label>
+    <textarea id="rt" placeholder="Paste the text to test against…"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Test pattern</button>
+      <button type="button" class="btn ghost" id="copy">Copy matches</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="hl" id="hl" aria-live="polite" style="display:none"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Write a pattern</strong><br/>Just the pattern — no slashes or quotes around it.</div>
+    <div><b>2</b><strong>Set the flags</strong><br/>g finds all matches, i ignores case, m makes ^/$ work per line.</div>
+    <div><b>3</b><strong>Paste test text</strong><br/>Real samples beat toy ones: use your actual data.</div>
+    <div><b>4</b><strong>Read the results</strong><br/>Matches highlight in the text and are listed with their groups and positions.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Why did it only find the first match?</summary><p>The g (global) flag is off. Without it, a regex search stops at the first match — tick g to find them all. This tester defaults g to on because that is what most people testing a pattern want.</p></details>
+    <details><summary>What are capture groups?</summary><p>Parts of the pattern inside parentheses. For (\w+)@(\w+\.com), group 1 is the part before the @ and group 2 is the domain. Each match below lists its groups so you can check your parentheses are capturing what you intended.</p></details>
+    <details><summary>My pattern is valid in Python/PCRE but errors here. Why?</summary><p>This tester uses JavaScript's regex engine. Most syntax is shared, but a few features differ — for example \d, \w, classes and quantifiers work the same, while lookbehind support and some flags (like x) do not exist in JavaScript.</p></details>
+    <details><summary>What does “zero-width match” mean in the results?</summary><p>Your pattern can match an empty string (for example \d* against letters). Those matches are shown by position rather than highlighted text, and the tester stops safely instead of looping forever.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("regex-tester", document.getElementById("related"));
+var lastMatches=[];
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg"); lastMatches=[];
+  var pattern=document.getElementById("rp").value;
+  var text=document.getElementById("rt").value;
+  var hl=document.getElementById("hl"), out=document.getElementById("out");
+  hl.style.display="none"; out.innerHTML="";
+  if(!pattern){ showMsg("msg","Enter a pattern first — an empty pattern is not a valid test."); return; }
+  if(!text){ showMsg("msg","Paste some test text — there is nothing to match against."); return; }
+  var flags="";
+  if(document.getElementById("fg").checked) flags+="g";
+  if(document.getElementById("fi").checked) flags+="i";
+  if(document.getElementById("fm").checked) flags+="m";
+  var re;
+  try{ re=new RegExp(pattern,flags); }
+  catch(e){ showMsg("msg","Invalid pattern: "+e.message); return; }
+  var matches=[], m, guard=0;
+  if(flags.indexOf("g")!==-1){
+    while((m=re.exec(text))!==null){
+      matches.push(m);
+      if(m[0]==="") re.lastIndex++;
+      if(++guard>1000) break;
+    }
+  }else{
+    m=re.exec(text); if(m) matches.push(m);
+  }
+  if(!matches.length){ showMsg("msg","No matches — the pattern does not match anywhere in the test text. That is a result, not an error: check the pattern and flags."); return; }
+  /* Highlight */
+  var html="", last=0;
+  matches.forEach(function(mm){
+    if(mm[0]==="") return;
+    html+=esc(text.slice(last,mm.index))+"<mark>"+esc(mm[0])+"</mark>";
+    last=mm.index+mm[0].length;
+  });
+  html+=esc(text.slice(last));
+  hl.innerHTML=html; hl.style.display="block";
+  lastMatches=matches.map(function(mm){return mm[0];});
+  out.innerHTML="<strong>"+matches.length+" match"+(matches.length===1?"":"es")+"</strong><br/>"+matches.map(function(mm,idx){
+    var groups="";
+    for(var g=1;g<mm.length;g++) groups+="<br/>&nbsp;&nbsp;Group "+g+": "+esc(mm[g]===undefined?"(not matched)":'"'+mm[g]+'"');
+    return "Match "+(idx+1)+" at index "+mm.index+": <code>"+esc(mm[0]===""?"(empty)":'"'+mm[0]+'"')+"</code>"+groups;
+  }).join("<br/>");
+  showMsg("msg","Found "+matches.length+" match"+(matches.length===1?"":"es")+".",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!lastMatches.length){ showMsg("msg","Run a test first — there are no matches to copy yet."); return; }
+  clearMsg("msg"); copyText(lastMatches.join("\n"),this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("rp").value=""; document.getElementById("rt").value="";
+  document.getElementById("hl").style.display="none"; document.getElementById("out").innerHTML="";
+  lastMatches=[]; clearMsg("msg");
+});
+</script>
+</body>
+</html>

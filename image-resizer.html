@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Resize any image to exact pixel dimensions online for free. Preview the result, compare original and new file size, then download — in your browser."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Image Resizer — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Image Resizer</nav>
+  <div class="prose" style="padding-top:10px"><h1>Image Resizer</h1>
+  <p>Set an exact width and height in pixels — for profile pictures, thumbnails, marketplace uploads and anywhere a site demands specific dimensions.</p></div>
+
+  <div class="panel">
+    <div class="drop">Choose an image from your device.<br/><br/><input type="file" id="f" accept="image/*" aria-label="Choose an image"/></div>
+    <div class="row">
+      <div><label for="w">Width (px)</label><input type="number" id="w" min="1" placeholder="e.g. 1080"/></div>
+      <div><label for="h">Height (px)</label><input type="number" id="h" min="1" placeholder="e.g. 1080"/></div>
+    </div>
+    <div class="checks"><label><input type="checkbox" id="keep" checked/> Keep aspect ratio (changing width sets height automatically)</label></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+      <button type="button" class="btn" id="go">Resize image</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download resized image</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <div id="previewWrap" style="display:none;margin-top:16px"><strong>Preview</strong><br/><img id="preview" alt="Preview of the resized image" style="max-width:100%;border-radius:10px;border:1px solid var(--border);margin-top:8px"/></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose an image</strong><br/>Its current dimensions appear under the size line once loaded.</div>
+    <div><b>2</b><strong>Enter the new size</strong><br/>Type a width; with “keep aspect ratio” on, the height fills itself in.</div>
+    <div><b>3</b><strong>Resize</strong><br/>Compare original → new file size and check the preview.</div>
+    <div><b>4</b><strong>Download</strong><br/>Save the resized PNG to your device.</div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>What size should I use for Instagram or YouTube?</summary><p>Common sizes: Instagram post 1080×1080, Instagram/Reels cover 1080×1920, YouTube thumbnail 1280×720, profile photos are usually square — 800×800 is plenty.</p></details>
+    <details><summary>Will making an image bigger improve its quality?</summary><p>No. Enlarging stretches the pixels that already exist, so a small image made bigger will look soft. Resizing down is where this tool shines.</p></details>
+    <details><summary>Why does the output come out as PNG?</summary><p>PNG keeps the resized result lossless. If you need a smaller JPG afterwards, run the PNG through the Image Compressor.</p></details>
+    <details><summary>What happens if I untick “keep aspect ratio”?</summary><p>You can set any width and height independently, but the picture may look stretched or squashed. The preview shows exactly what you will get.</p></details>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("image-resizer", document.getElementById("related"));
+var file=null, img=null, outUrl=null;
+var fEl=document.getElementById("f"), wEl=document.getElementById("w"), hEl=document.getElementById("h"), keepEl=document.getElementById("keep");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+fEl.addEventListener("change",function(){
+  clearMsg("msg"); file=fEl.files[0]||null; img=null;
+  if(!file) return;
+  if(!/^image\//.test(file.type)){ showMsg("msg","That file is not an image. Please choose a JPG, PNG or WebP."); file=null; fEl.value=""; return; }
+  var url=URL.createObjectURL(file), im=new Image();
+  im.onload=function(){ img=im; wEl.value=im.naturalWidth; hEl.value=im.naturalHeight;
+    document.getElementById("sizeOut").innerHTML="Loaded: <strong>"+im.naturalWidth+"×"+im.naturalHeight+" px</strong>, "+fmt(file.size)+". Enter the new size and press Resize."; };
+  im.onerror=function(){ showMsg("msg","Your browser could not read that image."); };
+  im.src=url;
+});
+wEl.addEventListener("input",function(){ if(keepEl.checked && img && wEl.value) hEl.value=Math.max(1,Math.round(img.naturalHeight*(wEl.value/img.naturalWidth))); });
+hEl.addEventListener("input",function(){ if(keepEl.checked && img && hEl.value) wEl.value=Math.max(1,Math.round(img.naturalWidth*(hEl.value/img.naturalHeight))); });
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  if(!img){ showMsg("msg","Choose an image first."); return; }
+  var w=parseInt(wEl.value,10), h=parseInt(hEl.value,10);
+  if(!w||!h||w<1||h<1){ showMsg("msg","Enter a width and height of at least 1 px."); return; }
+  var c=document.createElement("canvas"); c.width=w; c.height=h;
+  c.getContext("2d").drawImage(img,0,0,w,h);
+  c.toBlob(function(blob){
+    if(!blob){ showMsg("msg","Resize failed in your browser. Try smaller dimensions."); return; }
+    if(outUrl) URL.revokeObjectURL(outUrl);
+    outUrl=URL.createObjectURL(blob);
+    var saved=100-(blob.size/file.size*100);
+    document.getElementById("sizeOut").innerHTML="Original size: <strong>"+fmt(file.size)+"</strong> → New size: <strong>"+fmt(blob.size)+"</strong> ("+(saved>=0?saved.toFixed(1)+"% saved":Math.abs(saved).toFixed(1)+"% bigger")+") · "+w+"×"+h+" px";
+    var pv=document.getElementById("preview"); pv.src=outUrl;
+    document.getElementById("previewWrap").style.display="block";
+    document.getElementById("dl").disabled=false;
+    if(blob.size>=file.size) showMsg("msg","Warning: the resized file is bigger than the original (PNG output). The Image Compressor can shrink it as a JPG.");
+    else showMsg("msg","Done — check the preview, then download.",true);
+  },"image/png");
+});
+document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprint-resized.png"; a.click(); });
+document.getElementById("reset").addEventListener("click",function(){
+  file=null; img=null; fEl.value=""; wEl.value=""; hEl.value=""; keepEl.checked=true;
+  document.getElementById("sizeOut").innerHTML=""; document.getElementById("previewWrap").style.display="none";
+  document.getElementById("dl").disabled=true; clearMsg("msg");
+  if(outUrl){URL.revokeObjectURL(outUrl); outUrl=null;}
+});
+</script>
+</body>
+</html>

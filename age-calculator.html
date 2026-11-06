@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Calculate exact age in years, months and days from a date of birth — plus total weeks and days. Free age calculator, no sign-up."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Age Calculator — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Age Calculator</nav>
+  <div class="prose" style="padding-top:10px"><h1>Age Calculator</h1>
+  <p>Find an exact age — in years, months and days — from a date of birth, today or on any date you choose.</p></div>
+  <div class="panel">
+    <div class="row">
+      <div><label for="d1">Date of birth</label><input type="date" id="d1"/></div>
+      <div><label for="d2">Age on date (leave empty for today)</label><input type="date" id="d2"/></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Calculate age</button>
+      <button type="button" class="btn ghost" id="copy">Copy result</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter the birth date</strong><br/>Use the date picker or type it.</div>
+    <div><b>2</b><strong>Optionally pick an “as of” date</strong><br/>Useful for school cut-offs, eligibility checks and anniversaries.</div>
+    <div><b>3</b><strong>Calculate</strong><br/>Get years, months and days — plus total weeks and total days.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Take the summary with one click.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>How are the months and days worked out?</summary><p>Calendar-accurately: full years first, then full calendar months, then the remaining days — the same method official age checks use, so a person born on 31 January ages correctly across short Februaries.</p></details>
+    <details><summary>Can I calculate age for a future date?</summary><p>Yes — that is what the second date field is for. Age at a school admission cut-off or a future birthday works exactly the same way.</p></details>
+    <details><summary>What if the birth date is after the “as of” date?</summary><p>The tool stops with a clear error instead of showing a negative age — most likely the dates were entered the wrong way round.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("age-calculator", document.getElementById("related"));
+var lastText="";
+document.getElementById("go").addEventListener("click",function(){
+  clearMsg("msg");
+  var v1=document.getElementById("d1").value, v2=document.getElementById("d2").value;
+  if(!v1){ showMsg("msg","Enter a date of birth first."); return; }
+  var dob=new Date(v1+"T00:00:00"), on=v2?new Date(v2+"T00:00:00"):new Date();
+  if(isNaN(dob.getTime())||isNaN(on.getTime())){ showMsg("msg","One of those dates could not be read."); return; }
+  if(on<dob){ showMsg("msg","The “age on” date is before the date of birth — check the two dates are the right way round."); return; }
+  var years=on.getFullYear()-dob.getFullYear(), months=on.getMonth()-dob.getMonth(), days=on.getDate()-dob.getDate();
+  if(days<0){ months--; var prev=new Date(on.getFullYear(),on.getMonth(),0); days+=prev.getDate(); }
+  if(months<0){ years--; months+=12; }
+  var totalDays=Math.floor((on-dob)/86400000), totalWeeks=Math.floor(totalDays/7);
+  lastText="Age: "+years+" years, "+months+" months, "+days+" days ("+totalDays.toLocaleString()+" days total, "+totalWeeks.toLocaleString()+" weeks)";
+  document.getElementById("out").innerHTML="<strong>"+years+" years, "+months+" months, "+days+" days</strong><br/>Total: "+totalDays.toLocaleString()+" days · "+totalWeeks.toLocaleString()+" weeks";
+  showMsg("msg","Calculated.",true);
+});
+document.getElementById("copy").addEventListener("click",function(){
+  if(!lastText){ showMsg("msg","Calculate an age first."); return; }
+  clearMsg("msg"); copyText(lastText,this);
+});
+document.getElementById("reset").addEventListener("click",function(){
+  document.getElementById("d1").value=""; document.getElementById("d2").value="";
+  document.getElementById("out").innerHTML=""; lastText=""; clearMsg("msg");
+});
+</script>
+</body>
+</html>

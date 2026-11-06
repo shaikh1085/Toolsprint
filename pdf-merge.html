@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Merge multiple PDF files into one online for free. Reorder files with up/down buttons or drag and drop, see page counts, then download — in your browser."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>PDF Merge — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.file-row{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-top:8px;flex-wrap:wrap}.file-row .fname{font-weight:700;word-break:break-all}.file-row .fmeta{color:var(--muted);font-size:13px}.file-row button{min-height:44px;min-width:44px;border:1px solid var(--border);background:var(--card);border-radius:8px;cursor:pointer;font-weight:700}.file-row.dragging{opacity:.5}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › PDF Merge</nav>
+  <div class="prose" style="padding-top:10px"><h1>PDF Merge</h1>
+  <p>Combine two or more PDFs into one file, in exactly the order you want. Reorder with the ↑ ↓ buttons or by dragging, remove any file, and check each file's page count before you merge.</p></div>
+
+  <div class="panel">
+    <div class="drop">Choose PDF files — you can add more at any time.<br/><br/><input type="file" id="f" accept="application/pdf" multiple aria-label="Choose PDF files"/></div>
+    <div id="fileList" aria-live="polite"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button type="button" class="btn" id="go">Merge PDFs</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download merged PDF</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Add your PDFs</strong><br/>Pick two or more files. Each one shows its name, size and page count.</div>
+    <div><b>2</b><strong>Arrange the order</strong><br/>Use ↑ and ↓, or drag a row to where it belongs. The merged file follows this order.</div>
+    <div><b>3</b><strong>Merge</strong><br/>Press Merge PDFs and wait for the total page count.</div>
+    <div><b>4</b><strong>Download</strong><br/>Save the combined PDF to your device.</div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Is there a limit to how many PDFs I can merge?</summary><p>There is no set number — the limit is your device's memory. Dozens of normal documents merge fine; hundreds of scanned pages may be slow on a phone.</p></details>
+    <details><summary>Will the merged PDF keep bookmarks and links?</summary><p>Pages, text, images and internal links are copied across. Outlines/bookmarks from the source files are not carried over by the in-browser library, so check navigation after merging if that matters to you.</p></details>
+    <details><summary>One of my PDFs is password-protected. What happens?</summary><p>Protected files cannot be read, so the tool will name the file and stop with a clear error instead of producing a broken merge. Remove the password in your PDF app first, then merge.</p></details>
+    <details><summary>Does merging reduce the file size?</summary><p>Not reliably — the merged file is roughly the sum of its parts. If size matters, run the result through the PDF Compressor afterwards.</p></details>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/vendor/pdf-lib.min.js"></script>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("pdf-merge", document.getElementById("related"));
+var items=[]; /* {file, pages} in display order */
+var outUrl=null;
+var fEl=document.getElementById("f"), listEl=document.getElementById("fileList");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+function renderList(){
+  listEl.innerHTML=items.map(function(it,i){
+    return '<div class="file-row" draggable="true" data-i="'+i+'">' +
+      '<span class="fname">'+it.file.name.replace(/</g,"&lt;")+'</span>' +
+      '<span class="fmeta">'+fmt(it.file.size)+' · '+(it.pages===null?"counting…":it.pages+" page"+(it.pages===1?"":"s"))+'</span>' +
+      '<span style="margin-left:auto;display:flex;gap:6px">' +
+      '<button type="button" data-move="-1" data-i="'+i+'" aria-label="Move up" '+(i===0?"disabled":"")+'>↑</button>' +
+      '<button type="button" data-move="1" data-i="'+i+'" aria-label="Move down" '+(i===items.length-1?"disabled":"")+'>↓</button>' +
+      '<button type="button" data-remove="'+i+'" aria-label="Remove this file">✕ Remove</button></span></div>';
+  }).join("");
+  listEl.querySelectorAll("[data-move]").forEach(function(b){ b.addEventListener("click",function(){
+    var i=+b.getAttribute("data-i"), j=i+ +b.getAttribute("data-move");
+    if(j<0||j>=items.length) return;
+    var t=items[i]; items[i]=items[j]; items[j]=t; renderList();
+  });});
+  listEl.querySelectorAll("[data-remove]").forEach(function(b){ b.addEventListener("click",function(){
+    items.splice(+b.getAttribute("data-remove"),1); renderList();
+  });});
+  var dragI=null;
+  listEl.querySelectorAll(".file-row").forEach(function(row){
+    row.addEventListener("dragstart",function(){ dragI=+row.getAttribute("data-i"); row.classList.add("dragging"); });
+    row.addEventListener("dragend",function(){ row.classList.remove("dragging"); });
+    row.addEventListener("dragover",function(e){ e.preventDefault(); });
+    row.addEventListener("drop",function(e){
+      e.preventDefault();
+      var j=+row.getAttribute("data-i");
+      if(dragI===null||dragI===j) return;
+      var moved=items.splice(dragI,1)[0]; items.splice(j,0,moved); dragI=null; renderList();
+    });
+  });
+}
+fEl.addEventListener("change",async function(){
+  clearMsg("msg");
+  var files=Array.prototype.slice.call(fEl.files||[]);
+  fEl.value="";
+  for(var k=0;k<files.length;k++){
+    var file=files[k];
+    if(file.type!=="application/pdf" && !/\.pdf$/i.test(file.name)){ showMsg("msg","\u201C"+file.name+"\u201D is not a PDF — it was skipped. Choose PDF files only."); continue; }
+    var entry={file:file, pages:null};
+    items.push(entry); renderList();
+    try{
+      if(!window.PDFLib) throw new Error("lib");
+      var doc=await PDFLib.PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:false});
+      entry.pages=doc.getPageCount();
+    }catch(e){ entry.pages=0; showMsg("msg","\u201C"+file.name+"\u201D could not be read (it may be password-protected or damaged). Remove it before merging."); }
+    renderList();
+  }
+});
+document.getElementById("go").addEventListener("click",async function(){
+  clearMsg("msg");
+  if(items.length<2){ showMsg("msg","Add at least 2 PDF files to merge."); return; }
+  if(items.some(function(it){return !it.pages;})){ showMsg("msg","One of the files could not be read. Remove it (✕) and try again."); return; }
+  if(!window.PDFLib){ showMsg("msg","The PDF library did not load. Check your connection, reload the page and try again."); return; }
+  try{
+    var merged=await PDFLib.PDFDocument.create();
+    for(var k=0;k<items.length;k++){
+      var src=await PDFLib.PDFDocument.load(await items[k].file.arrayBuffer());
+      var pages=await merged.copyPages(src, src.getPageIndices());
+      pages.forEach(function(p){ merged.addPage(p); });
+    }
+    var bytes=await merged.save();
+    if(outUrl) URL.revokeObjectURL(outUrl);
+    outUrl=URL.createObjectURL(new Blob([bytes],{type:"application/pdf"}));
+    document.getElementById("sizeOut").innerHTML="Merged <strong>"+items.length+" files</strong> into <strong>"+merged.getPageCount()+" pages</strong> ("+fmt(bytes.length)+").";
+    document.getElementById("dl").disabled=false;
+    showMsg("msg","Done — download your merged PDF.",true);
+  }catch(e){ showMsg("msg","Merging failed. One of the PDFs may be damaged or protected — remove files one at a time to find it."); }
+});
+document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprint-merged.pdf"; a.click(); });
+document.getElementById("reset").addEventListener("click",function(){
+  items=[]; renderList(); document.getElementById("sizeOut").innerHTML="";
+  document.getElementById("dl").disabled=true; clearMsg("msg");
+  if(outUrl){URL.revokeObjectURL(outUrl); outUrl=null;}
+});
+</script>
+</body>
+</html>

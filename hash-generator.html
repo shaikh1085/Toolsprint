@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Generate MD5, SHA-1, SHA-256 and SHA-512 hashes of any text online for free — computed on your device, with a copy button for each hash."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Hash Generator (MD5, SHA-1, SHA-256, SHA-512) — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<style>.hash-row{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px}.hash-row b{display:block;margin-bottom:4px}.hash-row code{word-break:break-all;font-size:13px}</style>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Hash Generator</nav>
+  <div class="prose" style="padding-top:10px"><h1>Hash Generator</h1>
+  <p>Compute MD5, SHA-1, SHA-256 and SHA-512 hashes of any text — for checksums, fingerprints and verifying that data has not changed.</p></div>
+  <div class="panel">
+    <label for="tx">Your text</label>
+    <textarea id="tx" placeholder="Type or paste the text to hash…"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Generate hashes</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div id="results" aria-live="polite"></div>
+    <p class="notice">Hashes are computed on your device — MD5 in plain JavaScript, the SHA family with your browser's Web Crypto API. Your text never leaves the tab.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Enter your text</strong><br/>Exactly as it is — one extra space changes every hash.</div>
+    <div><b>2</b><strong>Generate</strong><br/>All four algorithms are computed at once.</div>
+    <div><b>3</b><strong>Compare or store</strong><br/>Compare with the hash you expected, character for character.</div>
+    <div><b>4</b><strong>Copy</strong><br/>Each hash has its own Copy button.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Which hash should I use?</summary><p>SHA-256 is the safe general-purpose choice today. MD5 and SHA-1 are fine for casual checksums and fingerprints, but both are considered broken for security purposes — never use them to protect passwords or verify downloads from untrusted sources.</p></details>
+    <details><summary>Can a hash be turned back into the original text?</summary><p>No — hashing is one-way. The only way to “reverse” a hash of something short or common is guessing inputs and hashing them until one matches, which is why weak passwords fall even when hashed.</p></details>
+    <details><summary>Why does one changed letter change the whole hash?</summary><p>That is by design — the avalanche effect. A good hash makes the smallest change produce a completely different output, which is what makes tampering detectable.</p></details>
+    <details><summary>Can I hash a file instead of text?</summary><p>This page hashes text you paste. Hashing whole files needs a file-based tool; the algorithms here are the same ones such tools use.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("hash-generator", document.getElementById("related"));
+/* Compact MD5 (RSA Data Security algorithm, public-domain reference logic). */
+function md5(input){
+  function rl(n,c){return (n<<c)|(n>>>(32-c));}
+  function add(x,y){var l=(x&0xFFFF)+(y&0xFFFF);var m=(x>>16)+(y>>16)+(l>>16);return (m<<16)|(l&0xFFFF);}
+  function cmn(q,a,b,x,s,t){return add(rl(add(add(a,q),add(x,t)),s),b);}
+  function ff(a,b,c,d,x,s,t){return cmn((b&c)|(~b&d),a,b,x,s,t);}
+  function gg(a,b,c,d,x,s,t){return cmn((b&d)|(c&~d),a,b,x,s,t);}
+  function hh(a,b,c,d,x,s,t){return cmn(b^c^d,a,b,x,s,t);}
+  function ii(a,b,c,d,x,s,t){return cmn(c^(b|~d),a,b,x,s,t);}
+  var bytes=new TextEncoder().encode(input);
+  var words=[];
+  for(var i=0;i<bytes.length;i++) words[i>>2]=(words[i>>2]||0)|(bytes[i]<<((i%4)*8));
+  var bitLen=bytes.length*8;
+  words[bitLen>>5]=(words[bitLen>>5]||0)|(0x80<< (bitLen%32));
+  words[(((bitLen+64)>>>9)<<4)+14]=bitLen;
+  var a=1732584193,b=-271733879,c=-1732584194,d=271733878;
+  for(var k=0;k<words.length;k+=16){
+    var A=a,B=b,C=c,D=d,g=function(idx){return words[k+idx]||0;};
+    A=ff(A,B,C,D,g(0),7,-680876936);D=ff(D,A,B,C,g(1),12,-389564586);C=ff(C,D,A,B,g(2),17,606105819);B=ff(B,C,D,A,g(3),22,-1044525330);
+    A=ff(A,B,C,D,g(4),7,-176418897);D=ff(D,A,B,C,g(5),12,1200080426);C=ff(C,D,A,B,g(6),17,-1473231341);B=ff(B,C,D,A,g(7),22,-45705983);
+    A=ff(A,B,C,D,g(8),7,1770035416);D=ff(D,A,B,C,g(9),12,-1958414417);C=ff(C,D,A,B,g(10),17,-42063);B=ff(B,C,D,A,g(11),22,-1990404162);
+    A=ff(A,B,C,D,g(12),7,1804603682);D=ff(D,A,B,C,g(13),12,-40341101);C=ff(C,D,A,B,g(14),17,-1502002290);B=ff(B,C,D,A,g(15),22,1236535329);
+    A=gg(A,B,C,D,g(1),5,-165796510);D=gg(D,A,B,C,g(6),9,-1069501632);C=gg(C,D,A,B,g(11),14,643717713);B=gg(B,C,D,A,g(0),20,-373897302);
+    A=gg(A,B,C,D,g(5),5,-701558691);D=gg(D,A,B,C,g(10),9,38016083);C=gg(C,D,A,B,g(15),14,-660478335);B=gg(B,C,D,A,g(4),20,-405537848);
+    A=gg(A,B,C,D,g(9),5,568446438);D=gg(D,A,B,C,g(14),9,-1019803690);C=gg(C,D,A,B,g(3),14,-187363961);B=gg(B,C,D,A,g(8),20,1163531501);
+    A=gg(A,B,C,D,g(13),5,-1444681467);D=gg(D,A,B,C,g(2),9,-51403784);C=gg(C,D,A,B,g(7),14,1735328473);B=gg(B,C,D,A,g(12),20,-1926607734);
+    A=hh(A,B,C,D,g(5),4,-378558);D=hh(D,A,B,C,g(8),11,-2022574463);C=hh(C,D,A,B,g(11),16,1839030562);B=hh(B,C,D,A,g(14),23,-35309556);
+    A=hh(A,B,C,D,g(1),4,-1530992060);D=hh(D,A,B,C,g(4),11,1272893353);C=hh(C,D,A,B,g(7),16,-155497632);B=hh(B,C,D,A,g(10),23,-1094730640);
+    A=hh(A,B,C,D,g(13),4,681279174);D=hh(D,A,B,C,g(0),11,-358537222);C=hh(C,D,A,B,g(3),16,-722521979);B=hh(B,C,D,A,g(6),23,76029189);
+    A=hh(A,B,C,D,g(9),4,-640364487);D=hh(D,A,B,C,g(12),11,-421815835);C=hh(C,D,A,B,g(15),16,530742520);B=hh(B,C,D,A,g(2),23,-995338651);
+    A=ii(A,B,C,D,g(0),6,-198630844);D=ii(D,A,B,C,g(7),10,1126891415);C=ii(C,D,A,B,g(14),15,-1416354905);B=ii(B,C,D,A,g(5),21,-57434055);
+    A=ii(A,B,C,D,g(12),6,1700485571);D=ii(D,A,B,C,g(3),10,-1894986606);C=ii(C,D,A,B,g(10),15,-1051523);B=ii(B,C,D,A,g(1),21,-2054922799);
+    A=ii(A,B,C,D,g(8),6,1873313359);D=ii(D,A,B,C,g(15),10,-30611744);C=ii(C,D,A,B,g(6),15,-1560198380);B=ii(B,C,D,A,g(13),21,1309151649);
+    A=ii(A,B,C,D,g(4),6,-145523070);D=ii(D,A,B,C,g(11),10,-1120210379);C=ii(C,D,A,B,g(2),15,718787259);B=ii(B,C,D,A,g(9),21,-343485551);
+    a=add(a,A);b=add(b,B);c=add(c,C);d=add(d,D);
+  }
+  function hex(n){var s="";for(var j=0;j<4;j++)s+=("0"+((n>>(j*8))&0xFF).toString(16)).slice(-2);return s;}
+  return hex(a)+hex(b)+hex(c)+hex(d);
+}
+async function sha(algo,text){
+  var buf=await crypto.subtle.digest(algo,new TextEncoder().encode(text));
+  return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");
+}
+document.getElementById("go").addEventListener("click",async function(){
+  clearMsg("msg");
+  var t=document.getElementById("tx").value;
+  if(!t){ showMsg("msg","Type or paste some text first — the input is empty."); return; }
+  var res=document.getElementById("results");
+  res.innerHTML="";
+  var list=[["MD5",md5(t)],["SHA-1",await sha("SHA-1",t)],["SHA-256",await sha("SHA-256",t)],["SHA-512",await sha("SHA-512",t)]];
+  list.forEach(function(pair){
+    var d=document.createElement("div"); d.className="hash-row";
+    var b=document.createElement("b"); b.textContent=pair[0];
+    var code=document.createElement("code"); code.textContent=pair[1];
+    var btn=document.createElement("button"); btn.type="button"; btn.className="btn ghost"; btn.textContent="Copy"; btn.style.marginTop="8px";
+    btn.addEventListener("click",function(){ copyText(pair[1],btn); });
+    d.appendChild(b); d.appendChild(code); d.appendChild(document.createElement("br")); d.appendChild(btn);
+    res.appendChild(d);
+  });
+  showMsg("msg","All four hashes generated.",true);
+});
+document.getElementById("reset").addEventListener("click",function(){ document.getElementById("tx").value=""; document.getElementById("results").innerHTML=""; clearMsg("msg"); });
+</script>
+</body>
+</html>

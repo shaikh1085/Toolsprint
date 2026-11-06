@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Basic PDF compression online for free, plus a Strong mode that re-renders pages as images. Honest warnings before you compress — in your browser."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>PDF Compressor (Basic Compression) — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › PDF Compressor</nav>
+  <div class="prose" style="padding-top:10px"><h1>PDF Compressor — Basic compression</h1>
+  <p>Two honest modes. <strong>Basic</strong> re-saves the PDF with optimised structure and keeps text selectable. <strong>Strong</strong> re-renders each page as an image, which can shrink scanned PDFs a lot.</p></div>
+  <div class="panel">
+    <p class="notice" style="margin-top:0"><strong>Please read before you compress:</strong> already optimised PDFs may not shrink at all — many PDFs from modern apps are already as small as Basic mode can make them. The Strong option converts pages to images, so <strong>text becomes non-selectable</strong> and cannot be copied or searched. Use Strong mainly for scanned documents.</p>
+    <div class="drop">Choose one PDF file.<br/><br/><input type="file" id="f" accept="application/pdf" aria-label="Choose a PDF"/></div>
+    <label for="mode">Mode</label>
+    <select id="mode"><option value="basic">Basic — re-save optimised (text stays selectable)</option><option value="strong">Strong — pages become images (text NOT selectable)</option></select>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn" id="go">Compress PDF</button>
+      <button type="button" class="btn ghost" id="dl" disabled>Download compressed PDF</button>
+      <button type="button" class="btn ghost" id="reset">Reset</button>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="out" id="sizeOut" aria-live="polite"></div>
+    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded.</p>
+  </div>
+  <!-- ad-slot -->
+  <div class="ad-slot" aria-hidden="true">Advertisement</div>
+  <h2>How to use</h2>
+  <div class="steps">
+    <div><b>1</b><strong>Choose a PDF</strong><br/>Note its current size.</div>
+    <div><b>2</b><strong>Pick a mode</strong><br/>Basic first. Strong only for scans, and only if you accept image-only pages.</div>
+    <div><b>3</b><strong>Compress</strong><br/>Compare original → new size honestly — no shrink is a valid result.</div>
+    <div><b>4</b><strong>Download</strong><br/>Open the file and check it before replacing your original.</div>
+  </div>
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <details><summary>Why didn't my PDF shrink in Basic mode?</summary><p>Because it was probably already optimised. Basic mode removes structural waste (unused objects, uncompressed streams); a PDF exported by a modern app often has none. The tool tells you the real before/after sizes instead of pretending.</p></details>
+    <details><summary>When is Strong mode worth it?</summary><p>For scanned PDFs: a scan stores a huge photo per page, and re-rendering it at screen resolution can cut the file dramatically. The price is real — pages become pictures, so no text selection, no search, no copy-paste.</p></details>
+    <details><summary>Can Strong mode make the file bigger?</summary><p>Yes, for text-heavy PDFs with small original images. If the result is bigger, the tool warns you and you should keep the Basic output (or your original) instead.</p></details>
+    <details><summary>Is the compressed PDF lower quality in Basic mode?</summary><p>No. Basic mode does not touch images or text — it only re-packs the file structure. Quality loss is only possible in Strong mode, from re-rendering.</p></details>
+  </div>
+  <h2>Related tools</h2>
+  <div class="grid" id="related"></div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/vendor/pdf-lib.min.js"></script>
+<script src="assets/vendor/pdf.min.js"></script>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+buildHeader("All Tools"); buildFooter(); renderRelated("pdf-compressor", document.getElementById("related"));
+var file=null,outUrl=null,fEl=document.getElementById("f");
+function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
+fEl.addEventListener("change",function(){clearMsg("msg");file=fEl.files[0]||null;
+  if(file&&file.type!=="application/pdf"&&!/\.pdf$/i.test(file.name)){showMsg("msg","That is not a PDF file. Please choose a PDF.");file=null;fEl.value="";}});
+function finish(bytes,modeLabel){
+  if(outUrl)URL.revokeObjectURL(outUrl); outUrl=URL.createObjectURL(new Blob([bytes],{type:"application/pdf"}));
+  var saved=100-(bytes.length/file.size*100);
+  document.getElementById("sizeOut").innerHTML="Original size: <strong>"+fmt(file.size)+"</strong> → New size: <strong>"+fmt(bytes.length)+"</strong> ("+(saved>=0?saved.toFixed(1)+"% saved":Math.abs(saved).toFixed(1)+"% bigger")+") · "+modeLabel;
+  document.getElementById("dl").disabled=false;
+  if(bytes.length>=file.size) showMsg("msg","This PDF did not shrink — it was already optimised. That is a normal result for Basic compression; your original file is the better copy.");
+  else showMsg("msg","Done — open the downloaded PDF and check it before replacing your original.",true);
+}
+document.getElementById("go").addEventListener("click",async function(){
+  clearMsg("msg");
+  if(!file){showMsg("msg","Choose a PDF first.");return;}
+  if(!window.PDFLib){showMsg("msg","The PDF library did not load. Reload the page and try again.");return;}
+  var mode=document.getElementById("mode").value;
+  try{
+    if(mode==="basic"){
+      var doc=await PDFLib.PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:true});
+      var bytes=await doc.save({useObjectStreams:true});
+      finish(bytes,"Basic mode — text still selectable");
+    }else{
+      if(!window.pdfjsLib){showMsg("msg","The PDF renderer needed for Strong mode did not load. Reload the page and try again, or use Basic mode.");return;}
+      pdfjsLib.GlobalWorkerOptions.workerSrc="assets/vendor/pdf.worker.min.js";
+      var src=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+      var out=await PDFLib.PDFDocument.create();
+      for(var i=1;i<=src.numPages;i++){
+        var page=await src.getPage(i), vp=page.getViewport({scale:1.4});
+        var c=document.createElement("canvas"); c.width=vp.width; c.height=vp.height;
+        await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+        var dataUrl=c.toDataURL("image/jpeg",0.72);
+        var imgBytes=await (await fetch(dataUrl)).arrayBuffer();
+        var img=await out.embedJpg(imgBytes);
+        var p=out.addPage([vp.width,vp.height]);
+        p.drawImage(img,{x:0,y:0,width:vp.width,height:vp.height});
+      }
+      finish(await out.save(),"Strong mode — pages are images, text is NOT selectable");
+    }
+  }catch(e){ showMsg("msg","Compression failed — the PDF may be password-protected or damaged."); }
+});
+document.getElementById("dl").addEventListener("click",function(){if(!outUrl)return;var a=document.createElement("a");a.href=outUrl;a.download="toolsprint-compressed.pdf";a.click();});
+document.getElementById("reset").addEventListener("click",function(){file=null;fEl.value="";document.getElementById("sizeOut").innerHTML="";document.getElementById("dl").disabled=true;clearMsg("msg");if(outUrl){URL.revokeObjectURL(outUrl);outUrl=null;}});
+</script>
+</body>
+</html>

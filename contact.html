@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="Contact ToolSprint to report a bug, request a tool or ask a question."/>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+<title>Contact — ToolSprint</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main">
+<div class="wrap">
+<nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › Contact</nav>
+<div class="prose">
+<h1>Contact</h1>
+<p>Tool requests and bug reports are welcome. Fill in the form and it will open your email app with the message ready to send.</p>
+<div class="panel">
+<label for="cn">Your name</label><input type="text" id="cn" autocomplete="name"/>
+<label for="ce">Your email</label><input type="text" id="ce" autocomplete="email"/>
+<label for="cm">Message</label><textarea id="cm"></textarea>
+<div class="checks"><button type="button" class="btn" id="send">Open email</button></div>
+<div class="msg" id="msg" role="status"></div>
+</div>
+</div>
+</div>
+</main>
+<footer class="site" id="site-footer"></footer>
+<script src="assets/js/tools.js"></script>
+<script src="assets/js/site.js"></script>
+<script>buildHeader("Contact"); buildFooter();</script>
+<script>
+/* CHANGE THIS to your real email address before going live. */
+var CONTACT_EMAIL = "hello@example.com";
+document.getElementById("send").addEventListener("click",function(){
+  var n=document.getElementById("cn").value.trim(),e=document.getElementById("ce").value.trim(),m=document.getElementById("cm").value.trim(),box=document.getElementById("msg");
+  if(!m){box.className="msg err";box.textContent="Please write a message first.";return}
+  if(e&&e.indexOf("@")<1){box.className="msg err";box.textContent="That email address does not look right.";return}
+  box.className="msg ok";box.textContent="Opening your email app…";
+  location.href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent("ToolSprint message from "+(n||"a visitor"))+"&body="+encodeURIComponent(m+(e?"\n\nReply to: "+e:""));
+});
+</script>
+</body>
+</html>
