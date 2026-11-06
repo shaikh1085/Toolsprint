@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="How to format and validate JSON — make minified JSON readable, and find the exact mistake (trailing comma, wrong quotes) that makes JSON invalid."/>
+<meta name="keywords" content="how to format json, validate json guide, json formatting guide, fix broken json, how to format and validate json online step by step, find where broken json goes wrong guide, make unreadable json readable guide"/>
+<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/guides/how-to-format-and-validate-json.html"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="ToolSprint"/>
+<meta property="og:title" content="How to Format and Validate JSON — ToolSprint Guide"/>
+<meta property="og:description" content="How to format and validate JSON — make minified JSON readable, and find the exact mistake (trailing comma, wrong quotes) that makes JSON invalid."/>
+<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/guides/how-to-format-and-validate-json.html"/>
+<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="How to Format and Validate JSON — ToolSprint Guide"/>
+<meta name="twitter:description" content="How to format and validate JSON — make minified JSON readable, and find the exact mistake (trailing comma, wrong quotes) that makes JSON invalid."/>
+<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://shaikh1085.github.io/Toolsprint/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Guides",
+   "item": "https://shaikh1085.github.io/Toolsprint/#guides"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "How to Format and Validate JSON",
+   "item": "https://shaikh1085.github.io/Toolsprint/guides/how-to-format-and-validate-json.html"
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What is the difference between formatting and validating?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Validating answers \u201cis this legal JSON?\u201d Formatting answers \u201cshow it to me readably\u201d \u2014 and a formatter can only format JSON that validates. If formatting fails, the error message is the validation result telling you where it broke."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why does my JSON work in code but fail validation?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Because what you have is probably a JavaScript object literal, not JSON: unquoted keys, single quotes, trailing commas or comments are all fine in JS and all forbidden in JSON. The fix list above covers nearly every case."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is it safe to paste API responses here?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The formatter runs entirely in your browser, so the JSON never leaves your device. Still, make it a habit to strip tokens and passwords out of anything you paste into any tool, anywhere."
+   }
+  }
+ ]
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"/>
+<title>How to Format and Validate JSON — ToolSprint Guide</title>
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body>
+<header class="site" id="site-header"></header>
+<main id="main"><div class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="../">Home</a> › Guides › How to format and validate JSON</nav>
+  <div class="prose">
+    <h1>How to format and validate JSON</h1>
+    <p>APIs return JSON as one endless line. Config files break with a cryptic “unexpected token” error. Formatting (pretty-printing) spreads JSON across indented lines so a human can read its structure — and validating tells you whether it is legal JSON at all, and where it breaks if it isn't.</p>
+
+    <h2>Step by step</h2>
+    <p><strong>1. Open the <a href="../json-formatter.html">JSON Formatter</a>.</strong> It runs in your browser — don't paste secrets into any online tool, this one included; here, at least, nothing leaves your device.</p>
+    <p><strong>2. Paste your JSON.</strong></p>
+    <p><strong>3. Format.</strong> Valid JSON comes back indented and readable. Invalid JSON gets a clear error message pointing at the problem instead of a silent failure.</p>
+    <p><strong>4. Copy or minify.</strong> Copy the pretty version for reading and debugging, or minify it back to one line for pasting into a config or request body.</p>
+
+    <h2>The five mistakes that break JSON</h2>
+    <p><strong>Trailing commas</strong> — <code>{"a": 1,}</code> is legal in JavaScript objects and illegal in JSON. The number one culprit.</p>
+    <p><strong>Single quotes</strong> — JSON strings and keys must use double quotes: <code>"name"</code>, never <code>'name'</code>.</p>
+    <p><strong>Unquoted keys</strong> — <code>{name: "x"}</code> is a JavaScript object, not JSON. Keys need quotes.</p>
+    <p><strong>Comments</strong> — JSON has none. A <code>// note</code> inside the file breaks it (some parsers forgive this; the standard doesn't).</p>
+    <p><strong>Missing or extra brackets</strong> — every <code>{</code> and <code>[</code> needs its partner. Formatting a valid file makes nesting visible; an invalid one usually has a bracket out of place near the error position.</p>
+
+    <h2>Tips that save you a re-do</h2>
+    <p><strong>Read the error position, then look slightly before it.</strong> Parsers report where they gave up, which is often one token after the real mistake — a missing comma at the end of the previous line is the classic.</p>
+    <p><strong>Format before you diff.</strong> Comparing two minified JSON blobs is hopeless; format both, and the one changed value stands out line by line.</p>
+    <p><strong>Keep a known-good copy.</strong> Before editing a config by hand, save the working version. When the edit breaks, you can diff or roll back in seconds.</p>
+
+    <h2>Frequently asked questions</h2>
+  </div>
+  <div class="faq" style="max-width:760px">
+    <details><summary>What is the difference between formatting and validating?</summary><p>Validating answers “is this legal JSON?” Formatting answers “show it to me readably” — and a formatter can only format JSON that validates. If formatting fails, the error message is the validation result telling you where it broke.</p></details>
+    <details><summary>Why does my JSON work in code but fail validation?</summary><p>Because what you have is probably a JavaScript object literal, not JSON: unquoted keys, single quotes, trailing commas or comments are all fine in JS and all forbidden in JSON. The fix list above covers nearly every case.</p></details>
+    <details><summary>Is it safe to paste API responses here?</summary><p>The formatter runs entirely in your browser, so the JSON never leaves your device. Still, make it a habit to strip tokens and passwords out of anything you paste into any tool, anywhere.</p></details>
+  </div>
+  <p style="max-width:760px"><a class="btn" href="../json-formatter.html">Open JSON Formatter — it's free</a></p>
+  <div class="prose">
+    <h2>More guides</h2>
+    <p><a href="how-to-count-words.html">How to count words in a document</a> · <a href="how-to-make-a-qr-code.html">How to make a QR code</a> · <a href="how-to-create-a-strong-password.html">How to create a strong password</a></p>
+  </div>
+</div></main>
+<footer class="site" id="site-footer"></footer>
+<script src="../assets/js/tools.js"></script>
+<script src="../assets/js/site.js"></script>
+<script>buildHeader("Home"); buildFooter();</script>
+</body>
+</html>

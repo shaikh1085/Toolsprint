@@ -4,6 +4,97 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Convert JPG photos to PNG online for free. Compare original and new file size, preview the PNG, then download — in your browser, no upload."/>
+<meta name="keywords" content="jpg to png, jpeg to png, jpg to png converter, convert jpg to png, jpg png converter, convert jpg to png online free, jpg to png converter online without sign up, how to change jpg to png online free"/>
+<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/jpg-to-png.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="ToolSprint"/>
+<meta property="og:title" content="JPG to PNG Converter — ToolSprint"/>
+<meta property="og:description" content="Convert JPG photos to PNG online for free. Compare original and new file size, preview the PNG, then download — in your browser, no upload."/>
+<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/jpg-to-png.html"/>
+<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="JPG to PNG Converter — ToolSprint"/>
+<meta name="twitter:description" content="Convert JPG photos to PNG online for free. Compare original and new file size, preview the PNG, then download — in your browser, no upload."/>
+<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "JPG to PNG Converter",
+ "url": "https://shaikh1085.github.io/Toolsprint/jpg-to-png.html",
+ "description": "Convert JPG photos to PNG online for free. Compare original and new file size, preview the PNG, then download \u2014 in your browser, no upload.",
+ "applicationCategory": "UtilitiesApplication",
+ "operatingSystem": "Any (web browser)",
+ "offers": {
+  "@type": "Offer",
+  "price": "0",
+  "priceCurrency": "USD"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "ToolSprint",
+  "url": "https://shaikh1085.github.io/Toolsprint/"
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://shaikh1085.github.io/Toolsprint/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "All Tools",
+   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "JPG to PNG Converter",
+   "item": "https://shaikh1085.github.io/Toolsprint/jpg-to-png.html"
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Does converting to PNG improve the photo's quality?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. PNG preserves exactly the pixels the JPG already has \u2014 it cannot restore detail the JPG compression removed. The benefit is that future edits and re-saves lose nothing more."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why is the PNG so much bigger?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "JPG throws away detail to stay small; PNG stores every pixel. Photo PNGs are commonly 3\u20138\u00d7 the JPG size, and the tool warns you before you download."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can this add transparency to my JPG?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No \u2014 a JPG has no transparent areas to recover. The PNG starts fully opaque; removing a background needs a dedicated editor."
+   }
+  }
+ ]
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
 <title>JPG to PNG Converter — ToolSprint</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
@@ -52,7 +143,7 @@ buildHeader("All Tools"); buildFooter(); renderRelated("jpg-to-png", document.ge
 var file=null,outUrl=null,fEl=document.getElementById("f");
 function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
 fEl.addEventListener("change",function(){clearMsg("msg");file=fEl.files[0]||null;
-  if(file&&file.type!=="image/jpeg"){showMsg("msg","That is not a JPG image. This converter accepts JPG only — for other formats use the Image Format Converter.");file=null;fEl.value="";}});
+  if(file&&file.type!=="image/jpeg"){showMsg("msg","That is not a JPG image. This converter accepts JPG only — for other formats use the Image Converter.");file=null;fEl.value="";}});
 document.getElementById("go").addEventListener("click",function(){
   clearMsg("msg");
   if(!file){showMsg("msg","Choose a JPG image first.");return;}

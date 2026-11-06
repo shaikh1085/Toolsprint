@@ -66,6 +66,15 @@ section.block{padding:30px 0 6px;scroll-margin-top:84px}
 .card .meta{margin-top:9px;display:flex;gap:6px;flex-wrap:wrap}
 .tag{font-size:11px;font-weight:700;border:1px solid var(--border);border-radius:999px;padding:2px 8px;color:var(--muted)}
 .tag.pop{color:var(--primary);border-color:var(--primary)}
+/* Card wrapper + favourite star (star is a sibling of the card link,
+   never nested inside it) */
+.card-wrap{position:relative}
+.card-wrap .card{height:100%;padding-right:54px}
+.fav-btn{position:absolute;top:8px;right:8px;width:44px;height:44px;border-radius:999px;border:1px solid transparent;background:transparent;font-size:21px;line-height:1;cursor:pointer;color:var(--muted);display:grid;place-items:center;padding:0;z-index:2}
+.fav-btn:hover{border-color:var(--border);color:var(--text)}
+.fav-btn.on{color:var(--text)}
+.fav-toggle{margin:2px 0 8px}
+.guide-banner{margin:24px 0 0}
 .pills{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
 .pill{border:1.5px solid var(--border);background:var(--card);color:var(--text);border-radius:999px;padding:8px 15px;font-weight:700;font-size:14px;cursor:pointer;min-height:44px}
 .pill.active{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -129,7 +138,3 @@ footer.site nav a:hover{color:var(--primary)}
   nav.main{margin-left:0;order:3;width:100%}
   .searchbox{flex-direction:column}
 }
-
-/* Fix: native file input could push the page wider than a phone screen */
-input[type=file]{max-width:100%;width:100%}
-.drop{overflow:hidden}

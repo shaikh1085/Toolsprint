@@ -4,6 +4,105 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Basic PDF compression online for free, plus a Strong mode that re-renders pages as images. Honest warnings before you compress — in your browser."/>
+<meta name="keywords" content="compress pdf, pdf compressor, reduce pdf size, pdf compress, shrink pdf, pdf size reducer, make pdf smaller, compress pdf online free, how to reduce pdf file size online, compress pdf to 200kb online for email, pdf compressor online free without sign up, make pdf file smaller in browser no upload"/>
+<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/pdf-compressor.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="ToolSprint"/>
+<meta property="og:title" content="PDF Compressor (Basic Compression) — ToolSprint"/>
+<meta property="og:description" content="Basic PDF compression online for free, plus a Strong mode that re-renders pages as images. Honest warnings before you compress — in your browser."/>
+<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/pdf-compressor.html"/>
+<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="PDF Compressor (Basic Compression) — ToolSprint"/>
+<meta name="twitter:description" content="Basic PDF compression online for free, plus a Strong mode that re-renders pages as images. Honest warnings before you compress — in your browser."/>
+<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "PDF Compressor (Basic Compression)",
+ "url": "https://shaikh1085.github.io/Toolsprint/pdf-compressor.html",
+ "description": "Basic PDF compression online for free, plus a Strong mode that re-renders pages as images. Honest warnings before you compress \u2014 in your browser.",
+ "applicationCategory": "UtilitiesApplication",
+ "operatingSystem": "Any (web browser)",
+ "offers": {
+  "@type": "Offer",
+  "price": "0",
+  "priceCurrency": "USD"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "ToolSprint",
+  "url": "https://shaikh1085.github.io/Toolsprint/"
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://shaikh1085.github.io/Toolsprint/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "All Tools",
+   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "PDF Compressor (Basic Compression)",
+   "item": "https://shaikh1085.github.io/Toolsprint/pdf-compressor.html"
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Why didn't my PDF shrink in Basic mode?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Because it was probably already optimised. Basic mode removes structural waste (unused objects, uncompressed streams); a PDF exported by a modern app often has none. The tool tells you the real before/after sizes instead of pretending."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "When is Strong mode worth it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "For scanned PDFs: a scan stores a huge photo per page, and re-rendering it at screen resolution can cut the file dramatically. The price is real \u2014 pages become pictures, so no text selection, no search, no copy-paste."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can Strong mode make the file bigger?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes, for text-heavy PDFs with small original images. If the result is bigger, the tool warns you and you should keep the Basic output (or your original) instead."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is the compressed PDF lower quality in Basic mode?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. Basic mode does not touch images or text \u2014 it only re-packs the file structure. Quality loss is only possible in Strong mode, from re-rendering."
+   }
+  }
+ ]
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
 <title>PDF Compressor (Basic Compression) — ToolSprint</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
@@ -49,7 +148,9 @@
 </div></main>
 <footer class="site" id="site-footer"></footer>
 <script src="assets/vendor/pdf-lib.min.js"></script>
-<script src="assets/vendor/pdf.min.js"></script>
+<!-- pdf.min.js (the Strong-mode page renderer, ~316 KB) is NOT loaded
+     here — site.js loadScriptOnce() fetches it only when a visitor
+     actually runs Strong mode, so Basic-mode visits stay fast. -->
 <script src="assets/js/tools.js"></script>
 <script src="assets/js/site.js"></script>
 <script>
@@ -77,7 +178,12 @@ document.getElementById("go").addEventListener("click",async function(){
       var bytes=await doc.save({useObjectStreams:true});
       finish(bytes,"Basic mode — text still selectable");
     }else{
-      if(!window.pdfjsLib){showMsg("msg","The PDF renderer needed for Strong mode did not load. Reload the page and try again, or use Basic mode.");return;}
+      if(!window.pdfjsLib){
+        showMsg("msg","Loading the Strong-mode renderer (one-time download)…",true);
+        try{ await loadScriptOnce("assets/vendor/pdf.min.js"); }
+        catch(loadErr){ showMsg("msg","The PDF renderer needed for Strong mode could not be loaded. Check your connection and try again, or use Basic mode."); return; }
+        clearMsg("msg");
+      }
       pdfjsLib.GlobalWorkerOptions.workerSrc="assets/vendor/pdf.worker.min.js";
       var src=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
       var out=await PDFLib.PDFDocument.create();

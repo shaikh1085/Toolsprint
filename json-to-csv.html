@@ -4,6 +4,105 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Convert a JSON array to CSV online for free — commas, quotes and newlines escaped correctly, uneven objects handled with a union of keys. Download or copy."/>
+<meta name="keywords" content="json to csv, json to csv converter, convert json to csv, json csv, json to spreadsheet, convert json to csv online free, json to csv converter with proper quoting online, turn json array into csv file online free"/>
+<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/json-to-csv.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="ToolSprint"/>
+<meta property="og:title" content="JSON to CSV Converter — ToolSprint"/>
+<meta property="og:description" content="Convert a JSON array to CSV online for free — commas, quotes and newlines escaped correctly, uneven objects handled with a union of keys. Download or copy."/>
+<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/json-to-csv.html"/>
+<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="JSON to CSV Converter — ToolSprint"/>
+<meta name="twitter:description" content="Convert a JSON array to CSV online for free — commas, quotes and newlines escaped correctly, uneven objects handled with a union of keys. Download or copy."/>
+<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "JSON to CSV Converter",
+ "url": "https://shaikh1085.github.io/Toolsprint/json-to-csv.html",
+ "description": "Convert a JSON array to CSV online for free \u2014 commas, quotes and newlines escaped correctly, uneven objects handled with a union of keys. Download or copy.",
+ "applicationCategory": "UtilitiesApplication",
+ "operatingSystem": "Any (web browser)",
+ "offers": {
+  "@type": "Offer",
+  "price": "0",
+  "priceCurrency": "USD"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "ToolSprint",
+  "url": "https://shaikh1085.github.io/Toolsprint/"
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://shaikh1085.github.io/Toolsprint/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "All Tools",
+   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "JSON to CSV Converter",
+   "item": "https://shaikh1085.github.io/Toolsprint/json-to-csv.html"
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "My objects have different keys. What happens?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The header row is the union of all keys across all objects, in the order they first appear. Objects missing a key simply get an empty cell in that column \u2014 no column is ever dropped."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How are nested objects and arrays handled?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "They are stringified into compact JSON inside the cell (and quoted, since JSON contains commas). Flat scalar values \u2014 strings, numbers, booleans \u2014 go in as they are; null becomes an empty cell."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why are some values wrapped in quotes?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "That is the CSV standard: any value containing a comma, a double quote or a newline must be wrapped in double quotes, with each inner quote doubled. Spreadsheets rely on this to keep columns aligned."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What if my JSON is a single object, not an array?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "It is treated as a one-row CSV. If your JSON is neither an object nor an array of objects, the tool shows an error explaining what it needs instead of producing garbage."
+   }
+  }
+ ]
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
 <title>JSON to CSV Converter — ToolSprint</title>
 <link rel="stylesheet" href="assets/css/style.css"/>

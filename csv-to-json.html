@@ -4,6 +4,105 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Convert CSV to a JSON array online for free — a proper parser that handles quoted fields, commas and newlines inside quotes, with a header-row option."/>
+<meta name="keywords" content="csv to json, csv to json converter, convert csv to json, csv parser online, csv json, convert csv to json online free, csv to json converter with header row option, turn csv file into json array online free"/>
+<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/csv-to-json.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="ToolSprint"/>
+<meta property="og:title" content="CSV to JSON Converter — ToolSprint"/>
+<meta property="og:description" content="Convert CSV to a JSON array online for free — a proper parser that handles quoted fields, commas and newlines inside quotes, with a header-row option."/>
+<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/csv-to-json.html"/>
+<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CSV to JSON Converter — ToolSprint"/>
+<meta name="twitter:description" content="Convert CSV to a JSON array online for free — a proper parser that handles quoted fields, commas and newlines inside quotes, with a header-row option."/>
+<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "CSV to JSON Converter",
+ "url": "https://shaikh1085.github.io/Toolsprint/csv-to-json.html",
+ "description": "Convert CSV to a JSON array online for free \u2014 a proper parser that handles quoted fields, commas and newlines inside quotes, with a header-row option.",
+ "applicationCategory": "UtilitiesApplication",
+ "operatingSystem": "Any (web browser)",
+ "offers": {
+  "@type": "Offer",
+  "price": "0",
+  "priceCurrency": "USD"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "ToolSprint",
+  "url": "https://shaikh1085.github.io/Toolsprint/"
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://shaikh1085.github.io/Toolsprint/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "All Tools",
+   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "CSV to JSON Converter",
+   "item": "https://shaikh1085.github.io/Toolsprint/csv-to-json.html"
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "How are quoted fields with newlines handled?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Properly. The parser reads character by character and tracks whether it is inside quotes, so a line break inside a quoted value stays in that value instead of starting a new record \u2014 the exact case that breaks naive split-by-line converters."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What if a row has fewer cells than the header?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Missing cells become empty strings, and extra cells beyond the header are kept under generated names (column_5, and so on). A key is never literally \u201cundefined\u201d."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Are numbers converted to JSON numbers?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No \u2014 every value stays a string, exactly as CSV stores it. That is the safe default: IDs like \u201c007\u201d and phone numbers keep their leading zeros."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "My file uses semicolons instead of commas. Will it work?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "This parser expects commas (the CSV standard). If your export used semicolons \u2014 common in European Excel files \u2014 re-export with commas, or the whole line will land in one field."
+   }
+  }
+ ]
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
 <title>CSV to JSON Converter — ToolSprint</title>
 <link rel="stylesheet" href="assets/css/style.css"/>

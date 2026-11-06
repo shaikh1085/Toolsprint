@@ -4,6 +4,97 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Convert PNG images to lightweight WebP online for free. See original vs new size and percent saved, preview, then download — in your browser."/>
+<meta name="keywords" content="png to webp, png to webp converter, convert png to webp, webp converter, png webp, convert png to webp online free, png to webp converter online for faster website, how to convert png to webp without losing quality"/>
+<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/png-to-webp.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="ToolSprint"/>
+<meta property="og:title" content="PNG to WebP Converter — ToolSprint"/>
+<meta property="og:description" content="Convert PNG images to lightweight WebP online for free. See original vs new size and percent saved, preview, then download — in your browser."/>
+<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/png-to-webp.html"/>
+<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="PNG to WebP Converter — ToolSprint"/>
+<meta name="twitter:description" content="Convert PNG images to lightweight WebP online for free. See original vs new size and percent saved, preview, then download — in your browser."/>
+<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "PNG to WebP Converter",
+ "url": "https://shaikh1085.github.io/Toolsprint/png-to-webp.html",
+ "description": "Convert PNG images to lightweight WebP online for free. See original vs new size and percent saved, preview, then download \u2014 in your browser.",
+ "applicationCategory": "UtilitiesApplication",
+ "operatingSystem": "Any (web browser)",
+ "offers": {
+  "@type": "Offer",
+  "price": "0",
+  "priceCurrency": "USD"
+ },
+ "publisher": {
+  "@type": "Organization",
+  "name": "ToolSprint",
+  "url": "https://shaikh1085.github.io/Toolsprint/"
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://shaikh1085.github.io/Toolsprint/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "All Tools",
+   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "PNG to WebP Converter",
+   "item": "https://shaikh1085.github.io/Toolsprint/png-to-webp.html"
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Does WebP keep transparency?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes \u2014 unlike JPG, WebP supports an alpha channel, so transparent PNG logos and cut-outs stay transparent after conversion."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How much smaller will my image be?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Typically 25\u201350% smaller than the same PNG at similar quality. Flat graphics with few colours save the most; noisy photos save less."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is WebP supported everywhere?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "All modern browsers (Chrome, Edge, Firefox, Safari 14+) display WebP. Very old software and some print workflows still want PNG or JPG \u2014 keep your original PNG as the master copy."
+   }
+  }
+ ]
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
 <title>PNG to WebP Converter — ToolSprint</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
@@ -55,7 +146,7 @@ var file=null,outUrl=null,fEl=document.getElementById("f"),qEl=document.getEleme
 function fmt(b){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB"}
 qEl.addEventListener("input",function(){document.getElementById("qv").textContent=qEl.value;});
 fEl.addEventListener("change",function(){clearMsg("msg");file=fEl.files[0]||null;
-  if(file&&file.type!=="image/png"){showMsg("msg","That is not a PNG image. This converter accepts PNG only — for other formats use the Image Format Converter.");file=null;fEl.value="";}});
+  if(file&&file.type!=="image/png"){showMsg("msg","That is not a PNG image. This converter accepts PNG only — for other formats use the Image Converter.");file=null;fEl.value="";}});
 document.getElementById("go").addEventListener("click",function(){
   clearMsg("msg");
   if(!file){showMsg("msg","Choose a PNG image first.");return;}
@@ -64,7 +155,7 @@ document.getElementById("go").addEventListener("click",function(){
     var c=document.createElement("canvas");c.width=img.naturalWidth;c.height=img.naturalHeight;
     c.getContext("2d").drawImage(img,0,0);
     c.toBlob(function(blob){
-      if(!blob){showMsg("msg","Your browser could not write WebP. Try the Image Format Converter with JPG instead.");return;}
+      if(!blob){showMsg("msg","Your browser could not write WebP. Try the Image Converter with JPG instead.");return;}
       if(outUrl)URL.revokeObjectURL(outUrl); outUrl=URL.createObjectURL(blob);
       var saved=100-(blob.size/file.size*100);
       document.getElementById("sizeOut").innerHTML="Original size: <strong>"+fmt(file.size)+"</strong> → New size: <strong>"+fmt(blob.size)+"</strong> ("+(saved>=0?saved.toFixed(1)+"% saved":Math.abs(saved).toFixed(1)+"% bigger")+")";
