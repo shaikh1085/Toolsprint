@@ -3,7 +3,7 @@
    read from this list. Fields: name, slug, category, description,
    keywords, popular. The tool page file is slug + ".html".
    No finance/tax calculators, no colour tools, no PDF-to-Word,
-   no Background Remover, no Video Converter — by design. */
+   no Video Converter — by design. */
 var TOOLS = [
   {name:"Image Compressor", slug:"image-compressor", category:"Image", popular:true,
    description:"Shrink JPG, PNG and WebP photos with a quality slider and see original vs new size before you download.",
@@ -32,6 +32,9 @@ var TOOLS = [
   {name:"Signature Maker", slug:"signature-maker", category:"Image", popular:false,
    description:"Draw your signature with mouse or finger and download it as a transparent PNG.",
    keywords:"signature maker generator draw online creator e free how to your and download png create digital make transparent no sign up"},
+  {name:"Background Remover", slug:"background-remover", category:"Image", popular:false,
+   description:"Remove a plain or solid background from an image and download it as a transparent PNG. Best for logos, product shots and portraits on plain backgrounds.",
+   keywords:"background remover remove background bg remover transparent png make image transparent remove bg from photo online free how to remove the background of a picture product photo logo cutout without uploading no sign up drag and drop"},
 
   {name:"PDF Merge", slug:"pdf-merge", category:"PDF", popular:true,
    description:"Combine two or more PDFs into one file — reorder them with up/down buttons or drag and drop.",

@@ -153,6 +153,56 @@ function loadScriptOnce(src) {
   });
 }
 
+/* ---------- Drag & drop for every file picker -------------------
+   Every tool page marks its file picker with class "drop" and a
+   normal <input type="file"> inside it. This one helper upgrades all
+   of them: drag a file anywhere onto the dashed zone (it highlights
+   while you drag), or click the zone itself to open the picker. The
+   dropped files are handed to the existing input and a normal
+   "change" event is fired, so each tool keeps using its own handler
+   exactly as before — no per-tool drag code anywhere. */
+function initDropZones() {
+  /* Stop the browser opening a file that misses its drop zone. */
+  ["dragover", "drop"].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { e.preventDefault(); });
+  });
+  document.querySelectorAll(".drop").forEach(function (zone) {
+    var input = zone.querySelector('input[type="file"]');
+    if (!input) return;
+    zone.addEventListener("click", function (e) {
+      if (e.target !== input && !(e.target.closest && e.target.closest("button, a"))) input.click();
+    });
+    ["dragenter", "dragover"].forEach(function (ev) {
+      zone.addEventListener(ev, function (e) {
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+        zone.classList.add("is-dragging");
+      });
+    });
+    zone.addEventListener("dragleave", function (e) {
+      if (!zone.contains(e.relatedTarget)) zone.classList.remove("is-dragging");
+    });
+    zone.addEventListener("drop", function (e) {
+      e.preventDefault();
+      zone.classList.remove("is-dragging");
+      var files = e.dataTransfer && e.dataTransfer.files;
+      if (!files || !files.length) return;
+      try {
+        var dt = new DataTransfer();
+        var n = input.multiple ? files.length : 1;
+        for (var i = 0; i < n; i++) dt.items.add(files[i]);
+        input.files = dt.files;
+      } catch (err) { return; /* very old browser — the picker still works */ }
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  });
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initDropZones);
+} else {
+  initDropZones();
+}
+
 /* ---------- Header + footer ---------- */
 function buildHeader(active) {
   var el = document.getElementById("site-header");
