@@ -80,6 +80,23 @@ section.block{padding:30px 0 6px;scroll-margin-top:84px}
 .pill.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 .empty-note{color:var(--muted);padding:14px 0}
 
+/* Homepage: sticky category bar, tab counts, compact layout.
+   The bar sticks directly under the site header (site header is
+   sticky too); the homepage script sets its exact top offset. */
+.catbar{position:sticky;top:57px;z-index:40;background:var(--header-bg);backdrop-filter:blur(10px);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:20px -20px 0;padding:10px 20px}
+.catbar .pills{margin:0;align-items:center}
+.catbar .pill{display:inline-flex;align-items:center;text-decoration:none}
+.catbar .pill .cnt{font-weight:600;color:var(--muted);font-size:12.5px;margin-left:6px}
+.catbar .pill.active .cnt{color:#fff}
+.catbar .pill.all-link{margin-left:auto;border-color:var(--text)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.browse-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 6px}
+.home .hero{padding:34px 0 4px}
+.home section.block{padding:20px 0 2px}
+.home .card{padding:15px}
+.home .grid{margin:12px 0 6px}
+.home footer.site{margin-top:36px}
+
 /* Prose pages (about / privacy / terms / contact) */
 .prose{max-width:760px;padding:34px 0 10px}
 .prose h1{font-size:clamp(28px,4vw,38px);margin:0 0 10px;letter-spacing:-.02em}
@@ -139,6 +156,8 @@ footer.site nav a:hover{color:var(--primary)}
 @media(max-width:860px){
   .grid,.why,.steps,.footer-in,.row,.row3{grid-template-columns:1fr}
   .hero{padding-top:32px}
+  .home .hero{padding-top:26px}
+  .catbar .pill.all-link{margin-left:0}
   nav.main{margin-left:0;order:3;width:100%}
   .searchbox{flex-direction:column}
 }

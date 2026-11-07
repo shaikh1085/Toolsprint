@@ -35,7 +35,7 @@
    "name": "How many tools are on ToolSprint, and how are they organised?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "There are 50 tools in seven groups \u2014 Image, PDF, Text, Developer, Generator, Calculator and Timer. The ten most-used tools sit under Popular tools at the top of this page, and every tool also appears again in its group below, so you can either search or browse."
+    "text": "There are 50 tools in seven groups \u2014 Image, PDF, Text, Developer, Generator, Calculator and Timer. The ten most-used tools sit under the Popular tab, and one tab per category lets you browse each group on its own — no need to scroll through all 50. The All Tools page lists everything in one searchable grid."
    }
   },
   {
@@ -43,7 +43,7 @@
    "name": "How does the search on this page work?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Type part of a tool's name or the job you want to do \u2014 for example \u201cPDF\u201d, \u201cQR\u201d or \u201cpassword\u201d. Matching tools appear under \u201cSearch results\u201d as you type. Clear the search box and the Popular tools and grouped sections come back."
+    "text": "Type part of a tool's name or the job you want to do \u2014 for example \u201cPDF\u201d, \u201cQR\u201d or \u201cpassword\u201d. Matching tools appear under \u201cSearch results\u201d as you type. Clear the search box and the Popular tools and category tabs come back."
    }
   },
   {
@@ -69,21 +69,39 @@
 <title>ToolSprint — Free Online Tools: PDF, Image, Text &amp; Developer Tools</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
 </head>
-<body>
+<body class="home">
 <header class="site" id="site-header"></header>
 
 <main id="main">
 <div class="wrap">
   <div class="hero">
-    <h1>Free online tools that <em>run in your browser</em></h1>
-    <p class="lede">Merge PDFs, compress images, make QR codes, format JSON and 46 more everyday tools — fast, free, and with no sign-up.</p>
+    <h1>50 Free Online Tools — <em>Use Instantly</em></h1>
+    <p class="lede">Everyday Tools, Free in Your Browser. Merge PDFs, compress images, make QR codes, format JSON and 46 more everyday tools — fast, free, and with no sign-up.</p>
     <div class="search-wrap">
       <div class="searchbox">
         <input id="search" type="search" placeholder="Search 50 tools — try “PDF”, “QR”, “password”…" aria-label="Search tools"/>
       </div>
     </div>
     <p class="privacy-line"><strong>Private by design:</strong> every tool runs on your own device — your files are processed in your browser and never uploaded.</p>
+    <div class="hero-actions">
+      <a class="btn" href="all-tools.html">Browse all 50 tools</a>
+      <a class="btn ghost" href="#guides">Read the guides</a>
+    </div>
   </div>
+
+  <nav class="catbar" id="catbar" aria-label="Browse tools by category">
+    <div class="pills" id="catTabs" role="group" aria-label="Tool categories">
+      <button type="button" class="pill active" data-cat="Popular" aria-pressed="true">Popular</button>
+      <button type="button" class="pill" data-cat="Image" aria-pressed="false">Image</button>
+      <button type="button" class="pill" data-cat="PDF" aria-pressed="false">PDF</button>
+      <button type="button" class="pill" data-cat="Text" aria-pressed="false">Text</button>
+      <button type="button" class="pill" data-cat="Developer" aria-pressed="false">Developer</button>
+      <button type="button" class="pill" data-cat="Generator" aria-pressed="false">Generator</button>
+      <button type="button" class="pill" data-cat="Calculator" aria-pressed="false">Calculator</button>
+      <button type="button" class="pill" data-cat="Timer" aria-pressed="false">Timer</button>
+      <a class="pill all-link" href="all-tools.html">All 50 tools →</a>
+    </div>
+  </nav>
 
   <section class="block" id="favSection" style="display:none" aria-labelledby="fav-h">
     <div class="sec-head"><h2 id="fav-h">Your favourites</h2><p>Starred by you — saved only in this browser.</p></div>
@@ -95,9 +113,9 @@
     <div class="grid" id="recentGrid"></div>
   </section>
 
-  <section class="block" id="popular" aria-labelledby="popular-h">
-    <div class="sec-head"><h2 id="popular-h">Popular tools</h2><p>The ones people open first.</p></div>
-    <div class="grid" id="popularGrid">
+  <section class="block" id="browse" aria-labelledby="browse-h">
+    <div class="sec-head"><h2 id="browse-h">Popular tools</h2><p id="browse-count">The ones people open first.</p></div>
+    <div class="grid" id="browseGrid">
       <a class="card" href="image-compressor.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Image Compressor</span><span class="card-d">Shrink JPG, PNG and WebP photos with a quality slider and see original vs new size before you download.</span><span class="meta"><span class="tag">Image</span><span class="tag pop">Popular</span></span></span></a>
       <a class="card" href="image-resizer.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Image Resizer</span><span class="card-d">Resize any image to exact pixel dimensions for social posts, thumbnails and upload limits.</span><span class="meta"><span class="tag">Image</span><span class="tag pop">Popular</span></span></span></a>
       <a class="card" href="image-converter.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Image Converter</span><span class="card-d">Convert images between JPG, PNG and WebP. Transparent PNGs get a white background when saved as JPG.</span><span class="meta"><span class="tag">Image</span><span class="tag pop">Popular</span></span></span></a>
@@ -109,61 +127,12 @@
       <a class="card" href="qr-generator.html"><span class="ic" aria-hidden="true">⚡</span><span><span class="card-t">QR Code Generator</span><span class="card-d">Make a QR code for any link, text or Wi-Fi network and download it as PNG.</span><span class="meta"><span class="tag">Generator</span><span class="tag pop">Popular</span></span></span></a>
       <a class="card" href="password-generator.html"><span class="ic" aria-hidden="true">⚡</span><span><span class="card-t">Password Generator</span><span class="card-d">Create strong random passwords with symbols, numbers and custom length.</span><span class="meta"><span class="tag">Generator</span><span class="tag pop">Popular</span></span></span></a>
     </div>
+    <div class="browse-actions">
+      <button type="button" class="btn ghost" id="showMoreBtn" style="display:none">Show more tools</button>
+      <a class="btn" href="all-tools.html">See all 50 tools</a>
+    </div>
   </section>
 
-  <div id="grouped">
-  <section class="block" aria-label="Image tools"><div class="sec-head"><h2>Image tools</h2><p>9 tools</p></div><div class="grid"><a class="card" href="image-compressor.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Image Compressor</span><span class="card-d">Shrink JPG, PNG and WebP photos with a quality slider and see original vs new size before you download.</span><span class="meta"><span class="tag">Image</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="image-resizer.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Image Resizer</span><span class="card-d">Resize any image to exact pixel dimensions for social posts, thumbnails and upload limits.</span><span class="meta"><span class="tag">Image</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="image-converter.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Image Converter</span><span class="card-d">Convert images between JPG, PNG and WebP. Transparent PNGs get a white background when saved as JPG.</span><span class="meta"><span class="tag">Image</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="image-cropper.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Image Cropper</span><span class="card-d">Crop an image by percentage from each side, preview the result and download it.</span><span class="meta"><span class="tag">Image</span></span></span></a>
-      <a class="card" href="favicon-generator.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Favicon Generator</span><span class="card-d">Turn any image into favicon PNGs at 16, 32, 48, 180, 192 and 512 px — individually or as one ZIP.</span><span class="meta"><span class="tag">Image</span></span></span></a>
-      <a class="card" href="jpg-to-png.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">JPG to PNG Converter</span><span class="card-d">Convert JPG photos to PNG format, ready for design tools.</span><span class="meta"><span class="tag">Image</span></span></span></a>
-      <a class="card" href="png-to-webp.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">PNG to WebP Converter</span><span class="card-d">Convert PNG images to lightweight WebP for faster websites.</span><span class="meta"><span class="tag">Image</span></span></span></a>
-      <a class="card" href="meme-generator.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Meme Generator</span><span class="card-d">Add top and bottom text to any image and download your meme.</span><span class="meta"><span class="tag">Image</span></span></span></a>
-      <a class="card" href="signature-maker.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Signature Maker</span><span class="card-d">Draw your signature with mouse or finger and download it as a transparent PNG.</span><span class="meta"><span class="tag">Image</span></span></span></a>
-</div></section>
-  <section class="block" aria-label="PDF tools"><div class="sec-head"><h2>PDF tools</h2><p>7 tools</p></div><div class="grid"><a class="card" href="pdf-merge.html"><span class="ic" aria-hidden="true">◤</span><span><span class="card-t">PDF Merge</span><span class="card-d">Combine two or more PDFs into one file — reorder them with up/down buttons or drag and drop.</span><span class="meta"><span class="tag">PDF</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="pdf-split.html"><span class="ic" aria-hidden="true">◤</span><span><span class="card-t">PDF Split</span><span class="card-d">Extract a page range from a PDF into a new, smaller file.</span><span class="meta"><span class="tag">PDF</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="images-to-pdf.html"><span class="ic" aria-hidden="true">◤</span><span><span class="card-t">Images to PDF</span><span class="card-d">Turn JPG and PNG images into a single clean PDF document.</span><span class="meta"><span class="tag">PDF</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="pdf-to-images.html"><span class="ic" aria-hidden="true">◤</span><span><span class="card-t">PDF to Images</span><span class="card-d">Render each PDF page as a PNG image you can download.</span><span class="meta"><span class="tag">PDF</span></span></span></a>
-      <a class="card" href="pdf-rotate.html"><span class="ic" aria-hidden="true">◤</span><span><span class="card-t">PDF Rotate</span><span class="card-d">Rotate every page of a PDF by 90, 180 or 270 degrees.</span><span class="meta"><span class="tag">PDF</span></span></span></a>
-      <a class="card" href="pdf-page-numbers.html"><span class="ic" aria-hidden="true">◤</span><span><span class="card-t">PDF Page Numbers</span><span class="card-d">Stamp page numbers on every page — bottom centre, left or right, with an optional “Page X of Y” format.</span><span class="meta"><span class="tag">PDF</span></span></span></a>
-      <a class="card" href="pdf-compressor.html"><span class="ic" aria-hidden="true">◤</span><span><span class="card-t">PDF Compressor</span><span class="card-d">Basic compression for PDFs, plus a Strong mode that re-renders pages as images. Both modes, clearly labelled.</span><span class="meta"><span class="tag">PDF</span></span></span></a></div></section>
-  <section class="block" aria-label="Text tools"><div class="sec-head"><h2>Text tools</h2><p>6 tools</p></div><div class="grid"><a class="card" href="word-counter.html"><span class="ic" aria-hidden="true">¶</span><span><span class="card-t">Word Counter</span><span class="card-d">Count words, characters, sentences, paragraphs and reading time as you type.</span><span class="meta"><span class="tag">Text</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="case-converter.html"><span class="ic" aria-hidden="true">¶</span><span><span class="card-t">Case Converter</span><span class="card-d">Switch text between UPPER, lower, Title, Sentence case and camelCase, then copy it.</span><span class="meta"><span class="tag">Text</span></span></span></a>
-      <a class="card" href="lorem-generator.html"><span class="ic" aria-hidden="true">¶</span><span><span class="card-t">Lorem Ipsum Generator</span><span class="card-d">Generate placeholder paragraphs for designs and mock-ups.</span><span class="meta"><span class="tag">Text</span></span></span></a>
-      <a class="card" href="remove-duplicates.html"><span class="ic" aria-hidden="true">¶</span><span><span class="card-t">Remove Duplicate Lines</span><span class="card-d">Paste a list and remove repeated lines, keeping the first copy.</span><span class="meta"><span class="tag">Text</span></span></span></a>
-      <a class="card" href="sort-lines.html"><span class="ic" aria-hidden="true">¶</span><span><span class="card-t">Sort Lines</span><span class="card-d">Sort any list of lines A–Z, Z–A or in reverse order.</span><span class="meta"><span class="tag">Text</span></span></span></a>
-      <a class="card" href="text-to-speech.html"><span class="ic" aria-hidden="true">¶</span><span><span class="card-t">Text to Speech</span><span class="card-d">Hear any text read aloud using your browser voices — no API, no upload.</span><span class="meta"><span class="tag">Text</span></span></span></a></div></section>
-  <section class="block" aria-label="Developer tools"><div class="sec-head"><h2>Developer tools</h2><p>12 tools</p></div><div class="grid"><a class="card" href="json-formatter.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">JSON Formatter</span><span class="card-d">Format, validate and minify JSON with clear error messages and a copy button.</span><span class="meta"><span class="tag">Developer</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="markdown-to-html.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">Markdown to HTML</span><span class="card-d">Convert Markdown to HTML with a live preview and copyable source. Raw HTML is escaped safely.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="base64.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">Base64 Encoder / Decoder</span><span class="card-d">Encode text to Base64 or decode it back, instantly, with a copy button.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="url-encoder.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">URL Encoder / Decoder</span><span class="card-d">Encode or decode URL components safely.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="uuid-generator.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">UUID Generator</span><span class="card-d">Generate random UUID v4 values, one or in bulk.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="hash-generator.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">Hash Generator</span><span class="card-d">Create MD5, SHA-1, SHA-256 and SHA-512 hashes of any text.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="timestamp-converter.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">Timestamp Converter</span><span class="card-d">Convert Unix timestamps to dates and dates back to timestamps.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="json-to-csv.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">JSON to CSV Converter</span><span class="card-d">Turn a JSON array into a spreadsheet-ready CSV — commas, quotes and newlines are escaped correctly.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="csv-to-json.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">CSV to JSON Converter</span><span class="card-d">Turn CSV into a clean JSON array with a proper quoted-field parser and a header-row option.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="xml-formatter.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">XML Formatter</span><span class="card-d">Format messy XML with proper indentation and copy the result.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="css-minifier.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">CSS Minifier & Beautifier</span><span class="card-d">Minify CSS for production or beautify it for reading.</span><span class="meta"><span class="tag">Developer</span></span></span></a>
-      <a class="card" href="regex-tester.html"><span class="ic" aria-hidden="true">&lt;/&gt;</span><span><span class="card-t">Regex Tester</span><span class="card-d">Test a regular expression with g/i/m flags, highlighted matches and capture groups.</span><span class="meta"><span class="tag">Developer</span></span></span></a></div></section>
-  <section class="block" aria-label="Generator tools"><div class="sec-head"><h2>Generator tools</h2><p>6 tools</p></div><div class="grid"><a class="card" href="qr-generator.html"><span class="ic" aria-hidden="true">⚡</span><span><span class="card-t">QR Code Generator</span><span class="card-d">Make a QR code for any link, text or Wi-Fi network and download it as PNG.</span><span class="meta"><span class="tag">Generator</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="password-generator.html"><span class="ic" aria-hidden="true">⚡</span><span><span class="card-t">Password Generator</span><span class="card-d">Create strong random passwords with symbols, numbers and custom length.</span><span class="meta"><span class="tag">Generator</span><span class="tag pop">Popular</span></span></span></a>
-      <a class="card" href="barcode-generator.html"><span class="ic" aria-hidden="true">⚡</span><span><span class="card-t">Barcode Generator</span><span class="card-d">Create a scannable CODE128 barcode from any text or number.</span><span class="meta"><span class="tag">Generator</span></span></span></a>
-      <a class="card" href="username-generator.html"><span class="ic" aria-hidden="true">⚡</span><span><span class="card-t">Username Generator</span><span class="card-d">Get fresh username ideas from a keyword — for pages, games and channels.</span><span class="meta"><span class="tag">Generator</span></span></span></a>
-      <a class="card" href="random-number.html"><span class="ic" aria-hidden="true">⚡</span><span><span class="card-t">Random Number Generator</span><span class="card-d">Pick random numbers in any range, with an optional no-repeats mode.</span><span class="meta"><span class="tag">Generator</span></span></span></a>
-      <a class="card" href="hashtag-generator.html"><span class="ic" aria-hidden="true">⚡</span><span><span class="card-t">Hashtag Generator</span><span class="card-d">Build a ready-to-paste set of separate hashtags for TikTok and Reels from one keyword.</span><span class="meta"><span class="tag">Generator</span></span></span></a></div></section>
-  <section class="block" aria-label="Calculator tools"><div class="sec-head"><h2>Calculator tools</h2><p>8 tools</p></div><div class="grid"><a class="card" href="unit-converter.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Unit Converter</span><span class="card-d">Convert length, weight, volume, area, speed and data units instantly.</span><span class="meta"><span class="tag">Calculator</span></span></span></a>
-      <a class="card" href="age-calculator.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Age Calculator</span><span class="card-d">Find exact age in years, months and days from a date of birth.</span><span class="meta"><span class="tag">Calculator</span></span></span></a>
-      <a class="card" href="percentage-calculator.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Percentage Calculator</span><span class="card-d">Percentages, increases, discounts, what-percent and percent change — all five modes.</span><span class="meta"><span class="tag">Calculator</span></span></span></a>
-      <a class="card" href="bmi-calculator.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">BMI Calculator</span><span class="card-d">Calculate body mass index from height and weight.</span><span class="meta"><span class="tag">Calculator</span></span></span></a>
-      <a class="card" href="date-difference.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Date Difference Calculator</span><span class="card-d">Count the days, weeks and months between two dates.</span><span class="meta"><span class="tag">Calculator</span></span></span></a>
-      <a class="card" href="timezone-converter.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Time Zone Converter</span><span class="card-d">Convert any date and time between cities and time zones.</span><span class="meta"><span class="tag">Calculator</span></span></span></a>
-      <a class="card" href="temperature-converter.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Temperature Converter</span><span class="card-d">Convert between Celsius, Fahrenheit and Kelvin.</span><span class="meta"><span class="tag">Calculator</span></span></span></a>
-      <a class="card" href="length-converter.html"><span class="ic" aria-hidden="true">▦</span><span><span class="card-t">Length Converter</span><span class="card-d">Convert metres, feet, inches, kilometres, miles and more.</span><span class="meta"><span class="tag">Calculator</span></span></span></a></div></section>
-  <section class="block" aria-label="Timer tools"><div class="sec-head"><h2>Timer tools</h2><p>2 tools</p></div><div class="grid"><a class="card" href="pomodoro-timer.html"><span class="ic" aria-hidden="true">◷</span><span><span class="card-t">Pomodoro Timer</span><span class="card-d">Focus in 25-minute sprints with a simple, distraction-free timer.</span><span class="meta"><span class="tag">Timer</span></span></span></a>
-      <a class="card" href="stopwatch.html"><span class="ic" aria-hidden="true">◷</span><span><span class="card-t">Countdown Timer / Stopwatch</span><span class="card-d">A precise stopwatch and a real countdown timer in one place.</span><span class="meta"><span class="tag">Timer</span></span></span></a></div></section>
-  </div>
   <p class="empty-note" id="noResults" style="display:none">No tool matches that search. Try “PDF”, “image” or “converter” — or browse <a href="all-tools.html">all tools</a>.</p>
 
   <section class="block" id="why" aria-labelledby="why-h">
@@ -178,7 +147,7 @@
 
   <section class="block" id="guides" aria-labelledby="guides-h">
     <div class="sec-head"><h2 id="guides-h">Guides</h2><p>Short, practical how-tos for the most-used tools.</p></div>
-    <div class="grid">
+    <div class="grid" id="guidesGrid">
       <a class="card" href="guides/how-to-merge-pdf-files.html"><span class="ic" aria-hidden="true">✎</span><span><span class="card-t">How to merge PDF files</span><span class="card-d">Combine contracts, forms or scanned pages into one tidy PDF — in the right order, without uploading anything.</span><span class="meta"><span class="tag">Guide</span><span class="tag">PDF Merge</span></span></span></a>
       <a class="card" href="guides/how-to-split-a-pdf.html"><span class="ic" aria-hidden="true">✎</span><span><span class="card-t">How to split a PDF</span><span class="card-d">Pull a single chapter, form or page range out of a big PDF and save just the part you need.</span><span class="meta"><span class="tag">Guide</span><span class="tag">PDF Split</span></span></span></a>
       <a class="card" href="guides/how-to-convert-images-to-pdf.html"><span class="ic" aria-hidden="true">✎</span><span><span class="card-t">How to convert images to PDF</span><span class="card-d">Turn photos of documents, receipts or whiteboards into one clean PDF you can email or print.</span><span class="meta"><span class="tag">Guide</span><span class="tag">Images to PDF</span></span></span></a>
@@ -190,13 +159,16 @@
       <a class="card" href="guides/how-to-make-a-qr-code.html"><span class="ic" aria-hidden="true">✎</span><span><span class="card-t">How to make a QR code</span><span class="card-d">Create a QR code for a link, text or Wi-Fi network that actually scans — size, contrast and testing tips.</span><span class="meta"><span class="tag">Guide</span><span class="tag">QR Code Generator</span></span></span></a>
       <a class="card" href="guides/how-to-create-a-strong-password.html"><span class="ic" aria-hidden="true">✎</span><span><span class="card-t">How to create a strong password</span><span class="card-d">What makes a password hard to crack — length beats cleverness — and how to generate one you can trust.</span><span class="meta"><span class="tag">Guide</span><span class="tag">Password Generator</span></span></span></a>
     </div>
+    <div class="browse-actions">
+      <button type="button" class="btn ghost" id="guidesToggle" aria-expanded="false">Show all 10 guides</button>
+    </div>
   </section>
 
   <section class="block" id="faq" aria-labelledby="faq-h">
     <div class="sec-head"><h2 id="faq-h">Frequently asked questions</h2><p>About ToolSprint itself.</p></div>
     <div class="faq">
-      <details><summary>How many tools are on ToolSprint, and how are they organised?</summary><p>There are 50 tools in seven groups — Image, PDF, Text, Developer, Generator, Calculator and Timer. The ten most-used tools sit under Popular tools at the top of this page, and every tool also appears again in its group below, so you can either search or browse.</p></details>
-      <details><summary>How does the search on this page work?</summary><p>Type part of a tool's name or the job you want to do — for example “PDF”, “QR” or “password”. Matching tools appear under “Search results” as you type. Clear the search box and the Popular tools and grouped sections come back.</p></details>
+      <details><summary>How many tools are on ToolSprint, and how are they organised?</summary><p>There are 50 tools in seven groups — Image, PDF, Text, Developer, Generator, Calculator and Timer. The ten most-used tools sit under the Popular tab, and one tab per category lets you browse each group on its own — no need to scroll through all 50. The All Tools page lists everything in one searchable grid.</p></details>
+      <details><summary>How does the search on this page work?</summary><p>Type part of a tool's name or the job you want to do — for example “PDF”, “QR” or “password”. Matching tools appear under “Search results” as you type. Clear the search box and the Popular tools and category tabs come back.</p></details>
       <details><summary>Do I need to install anything or create an account?</summary><p>No. There is nothing to install and no account, sign-up or trial. Open a tool page in any modern browser on a phone or computer and it works straight away, with no watermark on anything you download.</p></details>
       <details><summary>Why are there no finance or colour tools on ToolSprint?</summary><p>On purpose. Finance and tax calculators live on PayWise, and colour tools live on Chromora, so each site keeps one clear job. ToolSprint is the general tools hub — PDFs, images, text, developer and everyday tools only.</p></details>
     </div>
@@ -213,13 +185,49 @@
   buildFooter();
 
   var searchEl = document.getElementById("search");
-  var popularGrid = document.getElementById("popularGrid");
-  var groupedEl = document.getElementById("grouped");
+  var browseGrid = document.getElementById("browseGrid");
+  var browseH = document.getElementById("browse-h");
+  var browseCount = document.getElementById("browse-count");
+  var showMoreBtn = document.getElementById("showMoreBtn");
   var noResults = document.getElementById("noResults");
   var favSection = document.getElementById("favSection");
   var recentSection = document.getElementById("recentSection");
   var favGrid = document.getElementById("favGrid");
   var recentGrid = document.getElementById("recentGrid");
+  var catbar = document.getElementById("catbar");
+  var catTabs = document.getElementById("catTabs");
+
+  var PAGE_SIZE = 6;               /* cards shown per tab before "Show more" */
+  var activeCat = "Popular";
+  var expanded = false;
+
+  /* Keep the sticky category bar tucked exactly under the sticky header. */
+  function syncCatbar() {
+    var h = document.getElementById("site-header");
+    if (h && catbar) catbar.style.top = h.offsetHeight + "px";
+  }
+  window.addEventListener("resize", syncCatbar);
+  syncCatbar();
+
+  /* Add the tool count to each category tab. */
+  catTabs.querySelectorAll("[data-cat]").forEach(function (b) {
+    var c = b.getAttribute("data-cat");
+    var n = c === "Popular"
+      ? TOOLS.filter(function (t) { return t.popular; }).length
+      : TOOLS.filter(function (t) { return t.category === c; }).length;
+    var s = document.createElement("span");
+    s.className = "cnt";
+    s.textContent = n;
+    b.appendChild(s);
+  });
+  catTabs.addEventListener("click", function (e) {
+    var b = e.target && e.target.closest ? e.target.closest("[data-cat]") : null;
+    if (!b) return;
+    activeCat = b.getAttribute("data-cat");
+    expanded = false;
+    if (searchEl.value) searchEl.value = "";
+    renderHome();
+  });
 
   function renderMine() {
     /* Favourites + Recently used come from this browser's own storage
@@ -234,33 +242,62 @@
 
   function renderHome() {
     var q = searchEl.value.trim();
-    var searching = q.length > 0;
-    /* While searching, show every match in the popular grid area and
-       hide the grouped sections; otherwise show popular + groups. */
-    if (searching) {
+    /* Tabs always reflect the active category (or none while searching). */
+    catTabs.querySelectorAll("[data-cat]").forEach(function (b) {
+      var on = !q && b.getAttribute("data-cat") === activeCat;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    if (q) {
+      /* Search looks across all 50 tools; results replace the tab panel. */
       var matches = TOOLS.filter(function (t) { return toolMatches(t, q); });
-      document.getElementById("popular-h").textContent = "Search results";
-      renderCards(popularGrid, matches);
-      groupedEl.innerHTML = "";
+      browseH.textContent = "Search results";
+      browseCount.textContent = matches.length + " of " + TOOLS.length + " tools match “" + q + "”.";
+      renderCards(browseGrid, matches);
+      showMoreBtn.style.display = "none";
       favSection.style.display = "none";
       recentSection.style.display = "none";
       noResults.style.display = matches.length ? "none" : "block";
       return;
     }
-    document.getElementById("popular-h").textContent = "Popular tools";
-    renderCards(popularGrid, TOOLS.filter(function (t) { return t.popular; }));
-    renderMine();
     noResults.style.display = "none";
-    groupedEl.innerHTML = TOOL_CATEGORIES.map(function (cat) {
-      var list = TOOLS.filter(function (t) { return t.category === cat; });
-      if (!list.length) return "";
-      return '<section class="block" aria-label="' + cat + ' tools">' +
-        '<div class="sec-head"><h2>' + cat + ' tools</h2><p>' + list.length + ' tools</p></div>' +
-        '<div class="grid">' + list.map(toolCard).join("") + "</div></section>";
-    }).join("");
+    renderMine();
+    var list = activeCat === "Popular"
+      ? TOOLS.filter(function (t) { return t.popular; })
+      : TOOLS.filter(function (t) { return t.category === activeCat; });
+    browseH.textContent = activeCat === "Popular" ? "Popular tools" : activeCat + " tools";
+    browseCount.textContent = activeCat === "Popular"
+      ? "The ones people open first."
+      : list.length + " tools — or see them all on the All Tools page.";
+    renderCards(browseGrid, expanded ? list : list.slice(0, PAGE_SIZE));
+    if (list.length > PAGE_SIZE) {
+      showMoreBtn.style.display = "";
+      showMoreBtn.textContent = expanded
+        ? "Show fewer tools"
+        : "Show all " + list.length + " " + (activeCat === "Popular" ? "popular" : activeCat) + " tools";
+    } else {
+      showMoreBtn.style.display = "none";
+    }
   }
   searchEl.addEventListener("input", renderHome);
+  showMoreBtn.addEventListener("click", function () { expanded = !expanded; renderHome(); });
   renderHome();
+  syncCatbar();
+
+  /* Guides: show the first six, keep the rest one click away. */
+  var guidesGrid = document.getElementById("guidesGrid");
+  var guidesToggle = document.getElementById("guidesToggle");
+  var guideCards = guidesGrid ? Array.prototype.slice.call(guidesGrid.children) : [];
+  var guidesOpen = false;
+  function renderGuides() {
+    guideCards.forEach(function (c, i) { c.style.display = (guidesOpen || i < 6) ? "" : "none"; });
+    if (guidesToggle) {
+      guidesToggle.textContent = guidesOpen ? "Show fewer guides" : "Show all " + guideCards.length + " guides";
+      guidesToggle.setAttribute("aria-expanded", guidesOpen ? "true" : "false");
+    }
+  }
+  if (guidesToggle) guidesToggle.addEventListener("click", function () { guidesOpen = !guidesOpen; renderGuides(); });
+  renderGuides();
 </script>
 </body>
 </html>
