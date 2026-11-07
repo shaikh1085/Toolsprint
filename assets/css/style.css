@@ -108,9 +108,6 @@ section.block{padding:30px 0 6px;scroll-margin-top:84px}
 .drop.is-dragging{border-color:#000;background:#f2f2f2;border-style:solid;color:var(--text)}
 .drop .drop-hint{display:block;font-size:13px;margin-top:4px}
 .drop input[type=file]{cursor:pointer;max-width:100%}
-/* Checkerboard behind transparent results (Background Remover) */
-.checker{background-image:linear-gradient(45deg,#d9d9d9 25%,transparent 25%),linear-gradient(-45deg,#d9d9d9 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#d9d9d9 75%),linear-gradient(-45deg,transparent 75%,#d9d9d9 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0;background-color:#fff;border:1px solid var(--border);border-radius:10px}
-.swatch{display:inline-block;width:22px;height:22px;border:1px solid var(--border);border-radius:6px;vertical-align:middle;margin-left:8px}
 .checks{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0}
 .checks label{display:inline-flex;gap:6px;align-items:center;margin:0;font-weight:600;min-height:44px}
 input[type=range]{width:100%;accent-color:var(--primary);min-height:44px}

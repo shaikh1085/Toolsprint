@@ -32,10 +32,6 @@ var TOOLS = [
   {name:"Signature Maker", slug:"signature-maker", category:"Image", popular:false,
    description:"Draw your signature with mouse or finger and download it as a transparent PNG.",
    keywords:"signature maker generator draw online creator e free how to your and download png create digital make transparent no sign up"},
-  {name:"Background Remover", slug:"background-remover", category:"Image", popular:false,
-   description:"Remove the background from any photo and download a transparent PNG.",
-   keywords:"background remover remove background bg remover ai transparent png make image transparent remove bg from photo online free how to remove the background of a picture selfie portrait person product photo logo cutout without uploading no sign up drag and drop"},
-
   {name:"PDF Merge", slug:"pdf-merge", category:"PDF", popular:true,
    description:"Combine two or more PDFs into one file — reorder them with up/down buttons or drag and drop.",
    keywords:"merge pdf merger combine join files joiner online free how to multiple into one without sign up no watermark in browser not uploaded"},
