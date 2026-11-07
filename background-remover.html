@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<meta name="description" content="Remove a plain or solid background from an image online for free and download a transparent PNG. Best for logos, product shots and portraits on plain backgrounds — runs in your browser, nothing is uploaded."/>
-<meta name="keywords" content="background remover, remove background, bg remover, remove bg, transparent background maker, make background transparent, background remover online free, how to remove background from image without uploading, remove background from product photo online free no sign up, make image background transparent png, remove white background from logo online"/>
+<meta name="description" content="Remove the background from a photo online for free and download a transparent PNG. Smart AI needs an internet connection the first time to download its model, then runs in your browser — best for photos with 1–2 people and a clear subject. Plain mode is for logos and product shots on one flat colour. Nothing is uploaded."/>
+<meta name="keywords" content="background remover, remove background, bg remover, remove bg, transparent background maker, ai background remover, remove background from photo, background remover online free, how to remove background from image without uploading, remove background from product photo online free no sign up, make image background transparent png, remove white background from logo online, remove background from selfie portrait photo"/>
 <link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/background-remover.html"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="ToolSprint"/>
 <meta property="og:title" content="Background Remover — ToolSprint"/>
-<meta property="og:description" content="Remove a plain or solid background from an image online for free and download a transparent PNG. Best for logos, product shots and portraits on plain backgrounds — runs in your browser, nothing is uploaded."/>
+<meta property="og:description" content="Remove the background from a photo online for free and download a transparent PNG. Smart AI needs an internet connection the first time to download its model, then runs in your browser — best for photos with 1–2 people and a clear subject. Plain mode is for logos and product shots on one flat colour. Nothing is uploaded."/>
 <meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/background-remover.html"/>
 <meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Background Remover — ToolSprint"/>
-<meta name="twitter:description" content="Remove a plain or solid background from an image online for free and download a transparent PNG. Best for logos, product shots and portraits on plain backgrounds — runs in your browser, nothing is uploaded."/>
+<meta name="twitter:description" content="Remove the background from a photo online for free and download a transparent PNG. Smart AI needs an internet connection the first time to download its model, then runs in your browser — best for photos with 1–2 people and a clear subject. Plain mode is for logos and product shots on one flat colour. Nothing is uploaded."/>
 <meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
 <script type="application/ld+json">
 {
@@ -22,7 +22,7 @@
  "@type": "SoftwareApplication",
  "name": "Background Remover",
  "url": "https://shaikh1085.github.io/Toolsprint/background-remover.html",
- "description": "Remove a plain or solid background from an image online for free and download a transparent PNG. Best for logos, product shots and portraits on plain backgrounds \u2014 runs in your browser, nothing is uploaded.",
+ "description": "Remove the background from a photo online for free and download a transparent PNG. Smart AI needs an internet connection the first time to download its model, then runs in your browser \u2014 best for photos with 1\u20132 people and a clear subject. Plain mode is for logos and product shots on one flat colour. Nothing is uploaded.",
  "applicationCategory": "UtilitiesApplication",
  "operatingSystem": "Any (web browser)",
  "offers": {
@@ -70,18 +70,18 @@
  "mainEntity": [
   {
    "@type": "Question",
-   "name": "What kinds of images work best with this background remover?",
+   "name": "Which mode should I use — Smart AI or Plain background?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Images with a plain or solid background: product photos on white, logos, scanned documents and portraits shot against a plain wall. The tool removes the colour connected to the edges of the picture, so a busy background \u2014 trees, crowds, patterned wallpaper \u2014 will only come off in patches. For those photos a server-based AI remover is still better; this one is honest about being a plain-background tool."
+    "text": "Use Smart AI for photos of people \u2014 selfies and portraits with a busy background like sky, trees, fountains, streets or rooms. It needs an internet connection the first time, to download its model to your browser; after that it runs on your device. It works best on photos with 1\u20132 people and a clear subject. Use Plain background mode for logos, graphics and product photos shot on one flat colour: it removes the colour connected to the edges of the picture, which keeps flat artwork crisp."
    }
   },
   {
    "@type": "Question",
-   "name": "Part of my subject disappeared, or some background is left. How do I fix it?",
+   "name": "The edges look rough, or some hair is missing. How do I fix it?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Adjust the Tolerance slider: lower it if parts of the subject are being removed, raise it if background is left behind. If the background is not one even colour, click directly on the background in the Original preview to sample its exact colour, then remove again. Switching Mode to \u201CEverywhere\u201D helps for logos and graphics where the same background colour also appears inside the picture."
+    "text": "In Smart AI mode, lower the Detail slider to bring back fine edges like hair, or raise it if bits of background are clinging to the outline. Raise Edge softness for a smoother, less jagged cut, and preview against the white and black backgrounds to check the edge from both sides. In Plain mode, adjust Tolerance instead: lower it if parts of the subject are being removed, raise it if background is left behind."
    }
   },
   {
@@ -89,7 +89,7 @@
    "name": "Is my image uploaded to a server?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "No. The removal happens entirely in your browser using your own device \u2014 there is no upload, no account and no copy of your image anywhere else. That is also why it works on plain backgrounds rather than using a server AI model."
+    "text": "No. Both modes run entirely in your browser on your own device \u2014 there is no upload, no account and no copy of your image anywhere else. Smart AI mode downloads a small AI model to your browser the first time you use it (a few MB, so the first removal needs an internet connection); after that the model works on your photo locally, just like the plain mode."
    }
   },
   {
@@ -106,36 +106,89 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
 <title>Background Remover — ToolSprint</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
+<style>
+  .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}
+  .mode-btn{text-align:left;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;min-height:44px}
+  .mode-btn strong{display:block;font-size:15.5px;margin-bottom:2px}
+  .mode-btn span{display:block;color:var(--muted);font-size:13px;line-height:1.4}
+  .mode-btn[aria-pressed="true"]{border-color:#000;border-width:2px;background:#f7f7f7}
+  .mode-btn[aria-pressed="true"] strong::before{content:"● "}
+  .ai-status{display:none;margin-top:14px;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14.5px;background:var(--bg)}
+  .ai-status.show{display:block}
+  .ai-bar{height:8px;border:1px solid #000;border-radius:999px;margin-top:8px;overflow:hidden;background:#fff}
+  .ai-bar i{display:block;height:100%;width:38%;background:#000;border-radius:999px;animation:aislide 1.1s ease-in-out infinite alternate}
+  @keyframes aislide{from{transform:translateX(-30%)}to{transform:translateX(230%)}}
+  .smart-hint{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:#f7f7f7;font-size:14px;line-height:1.5;margin-top:12px}
+  .smart-error{display:none;margin-top:14px;border:2px solid #000;border-radius:10px;padding:14px 16px;background:#fff}
+  .smart-error.show{display:block}
+  .smart-error p{margin:0 0 10px;line-height:1.5}
+  .smart-error .row{display:flex;gap:10px;flex-wrap:wrap}
+  .bg-pills{display:inline-flex;gap:6px;margin-left:10px;vertical-align:middle}
+  .bg-pills .pill{min-height:36px;padding:5px 12px;font-size:13px}
+  #resultBox.white{background:#fff}
+  #resultBox.black{background:#000}
+  @media(max-width:640px){.mode-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <header class="site" id="site-header"></header>
 <main id="main"><div class="wrap">
   <nav class="breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a> › <a href="all-tools.html">All Tools</a> › Background Remover</nav>
   <div class="prose" style="padding-top:10px"><h1>Background Remover</h1>
-  <p>Remove a plain or solid background and download your image as a transparent PNG. It works best on product photos on white, logos and portraits against a plain wall — and it all happens in your browser, with no upload.</p></div>
+  <p>Remove the background from a photo and download it as a transparent PNG. <strong>Smart AI</strong> separates people from busy backgrounds — sky, trees, streets, rooms — and works best on photos with 1–2 people and a clear subject. It needs an internet connection the first time, to download its model; after that everything runs in your browser, with no upload. <strong>Plain background</strong> mode is for logos and product shots on one flat colour.</p></div>
 
   <div class="panel">
     <div class="drop">Drag &amp; drop an image here, or choose one from your device.<br/><br/><input type="file" id="f" accept="image/*" aria-label="Choose an image"/></div>
 
-    <label for="mode">Mode</label>
-    <select id="mode">
-      <option value="edges" selected>Edges only — remove the background connected to the edges (recommended)</option>
-      <option value="everywhere">Everywhere — remove that colour anywhere in the image (logos &amp; graphics)</option>
-    </select>
-
-    <label>Background colour <span class="swatch" id="swatch" aria-hidden="true"></span></label>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-      <input type="color" id="bgColor" value="#ffffff" aria-label="Background colour to remove" style="width:64px;height:44px;padding:2px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg)"/>
-      <button type="button" class="btn ghost" id="autoBtn">Auto-detect from corners</button>
+    <label>Removal mode</label>
+    <div class="mode-grid" role="group" aria-label="Removal mode">
+      <button type="button" class="mode-btn" id="modeSmart" aria-pressed="true"><strong>Smart AI — people &amp; photos</strong><span>For selfies and portraits with a busy background. Best with 1–2 people and a clear subject. Needs internet the first time to download the model.</span></button>
+      <button type="button" class="mode-btn" id="modePlain" aria-pressed="false"><strong>Plain background — logos &amp; products</strong><span>For one flat background colour: white product shots, logos, graphics and scans.</span></button>
     </div>
-    <p style="color:var(--muted);font-size:14px;margin:8px 0 0">Tip: you can also <strong>click on the background in the Original preview</strong> below to sample its exact colour.</p>
 
-    <label for="tol">Tolerance — <span id="tolv">32</span></label>
-    <input type="range" id="tol" min="5" max="80" value="32"/>
-    <p style="color:var(--muted);font-size:14px;margin:4px 0 0">Higher removes more background; lower protects the subject. If parts of the subject vanish, lower it.</p>
+    <div id="smartControls">
+      <label for="smartDetail">Detail — <span id="smartDetailv">55</span></label>
+      <input type="range" id="smartDetail" min="0" max="100" value="55"/>
+      <p style="color:var(--muted);font-size:14px;margin:4px 0 0">Higher keeps more of the outline; lower cleans harder. If hair or fine edges go missing, lower it. If background bits cling to the edges, raise it.</p>
 
-    <label for="feather">Edge softness (feather) — <span id="featherv">4</span></label>
-    <input type="range" id="feather" min="0" max="20" value="4"/>
+      <label for="smartFeather">Edge softness — <span id="smartFeatherv">3</span></label>
+      <input type="range" id="smartFeather" min="0" max="10" value="3"/>
+      <p style="color:var(--muted);font-size:14px;margin:4px 0 0">Smooths a jagged cut line. A little goes a long way — too much makes the edge look fuzzy.</p>
+
+      <div class="ai-status" id="aiStatus" role="status"><span id="aiStatusText">Loading the AI model…</span><div class="ai-bar" aria-hidden="true"><i></i></div></div>
+      <p style="color:var(--muted);font-size:14px;margin:10px 0 0">The first Smart removal downloads a small AI model to your browser (a few MB) — after that it works on-device and your photo is never uploaded. Best on photos where a person is the clear subject.</p>
+      <p class="smart-hint"><strong>Works best:</strong> photos with 1–2 people and a clear subject, where the person stands out from the background. Crowded scenes, tiny or partly hidden people, and subjects that blend into the background are harder. Logos, graphics and product shots on one flat colour are crisper in <strong>Plain background</strong> mode.</p>
+    </div>
+
+    <div class="smart-error" id="smartError" role="alert">
+      <p><strong>Smart AI couldn't finish this one.</strong><br/>Something went wrong while loading or running the AI model — this can happen on a slow connection or an older device. Your photo was not uploaded. You can try Smart AI again, or switch to Plain background mode, which works best for logos and product shots on one flat colour.</p>
+      <div class="row">
+        <button type="button" class="btn" id="retrySmart">Retry Smart AI</button>
+        <button type="button" class="btn ghost" id="usePlain">Use Plain background mode</button>
+      </div>
+    </div>
+
+    <div id="plainControls" style="display:none">
+      <label for="mode">Plain removal style</label>
+      <select id="mode">
+        <option value="edges" selected>Edges only — remove the background connected to the edges (recommended)</option>
+        <option value="everywhere">Everywhere — remove that colour anywhere in the image (logos &amp; graphics)</option>
+      </select>
+
+      <label>Background colour <span class="swatch" id="swatch" aria-hidden="true"></span></label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <input type="color" id="bgColor" value="#ffffff" aria-label="Background colour to remove" style="width:64px;height:44px;padding:2px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg)"/>
+        <button type="button" class="btn ghost" id="autoBtn">Auto-detect from corners</button>
+      </div>
+      <p style="color:var(--muted);font-size:14px;margin:8px 0 0">Tip: you can also <strong>click on the background in the Original preview</strong> below to sample its exact colour.</p>
+
+      <label for="tol">Tolerance — <span id="tolv">32</span></label>
+      <input type="range" id="tol" min="5" max="80" value="32"/>
+      <p style="color:var(--muted);font-size:14px;margin:4px 0 0">Higher removes more background; lower protects the subject. If parts of the subject vanish, lower it.</p>
+
+      <label for="feather">Edge softness (feather) — <span id="featherv">4</span></label>
+      <input type="range" id="feather" min="0" max="20" value="4"/>
+    </div>
 
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
       <button type="button" class="btn" id="go">Remove background</button>
@@ -145,10 +198,10 @@
     <div class="msg" id="msg" role="alert"></div>
     <div class="out" id="sizeOut" aria-live="polite"></div>
 
-    <div id="origWrap" style="display:none;margin-top:16px"><strong>Original</strong> <span style="color:var(--muted);font-size:13.5px">(click the background to sample its colour)</span><br/><img id="origPreview" alt="Your original image — click its background to sample the colour to remove" style="max-width:100%;border-radius:10px;border:1px solid var(--border);margin-top:8px;cursor:crosshair"/></div>
-    <div id="resultWrap" style="display:none;margin-top:16px"><strong>Result — transparent background</strong><br/><div class="checker" style="margin-top:8px;padding:10px"><canvas id="outCanvas" style="max-width:100%;height:auto;display:block;margin:0 auto" aria-label="Preview of the image with its background removed"></canvas></div></div>
+    <div id="origWrap" style="display:none;margin-top:16px"><strong>Original</strong> <span id="origHint" style="color:var(--muted);font-size:13.5px"></span><br/><img id="origPreview" alt="Your original image" style="max-width:100%;border-radius:10px;border:1px solid var(--border);margin-top:8px;cursor:crosshair"/></div>
+    <div id="resultWrap" style="display:none;margin-top:16px"><strong>Result — transparent background</strong><span class="bg-pills" role="group" aria-label="Preview background"><button type="button" class="pill active" data-bg="checker">Checker</button><button type="button" class="pill" data-bg="white">White</button><button type="button" class="pill" data-bg="black">Black</button></span><br/><div class="checker" id="resultBox" style="margin-top:8px;padding:10px"><canvas id="outCanvas" style="max-width:100%;height:auto;display:block;margin:0 auto" aria-label="Preview of the image with its background removed"></canvas></div></div>
 
-    <p class="notice"><strong>Private:</strong> Your file is processed in your browser and never uploaded. <strong>Honest limit:</strong> this is a plain-background remover — busy photo backgrounds will only come off in patches.</p>
+    <p class="notice"><strong>Private:</strong> your file is processed in your browser and never uploaded — in Smart AI mode only the model files are downloaded, never your photo. <strong>Which mode?</strong> A photo of a person in front of a real scene needs Smart AI; a logo or product on one flat colour is crisper in Plain mode.</p>
   </div>
 
   <!-- ad-slot -->
@@ -156,17 +209,17 @@
 
   <h2>How to use</h2>
   <div class="steps">
-    <div><b>1</b><strong>Add your image</strong><br/>Drag &amp; drop it onto the dashed box, or click the box and pick a JPG or PNG. The background colour is detected from the corners automatically.</div>
-    <div><b>2</b><strong>Remove</strong><br/>Press Remove background. The result appears on a checkerboard, which shows the transparent areas.</div>
-    <div><b>3</b><strong>Fine-tune</strong><br/>Background left over? Raise Tolerance. Subject being eaten? Lower it — or click the background in the Original preview to sample its exact colour.</div>
-    <div><b>4</b><strong>Download</strong><br/>Save the transparent PNG, ready for designs, listings and documents.</div>
+    <div><b>1</b><strong>Add your image</strong><br/>Drag &amp; drop it onto the dashed box, or click the box and pick a JPG or PNG.</div>
+    <div><b>2</b><strong>Pick the mode</strong><br/>Smart AI for photos of people with a real background behind them — best with 1–2 people and a clear subject, and it needs internet the first time to download the model. Plain background for logos, graphics and product shots on one flat colour.</div>
+    <div><b>3</b><strong>Remove &amp; fine-tune</strong><br/>Press Remove background. In Smart AI, use Detail and Edge softness to clean up hair and outlines — check the edge on the white and black previews. In Plain mode, use Tolerance.</div>
+    <div><b>4</b><strong>Download</strong><br/>Save the transparent PNG, ready for designs, listings, thumbnails and documents.</div>
   </div>
 
   <h2>Frequently asked questions</h2>
   <div class="faq">
-    <details><summary>What kinds of images work best with this background remover?</summary><p>Images with a plain or solid background: product photos on white, logos, scanned documents and portraits shot against a plain wall. The tool removes the colour connected to the edges of the picture, so a busy background — trees, crowds, patterned wallpaper — will only come off in patches. For those photos a server-based AI remover is still better; this one is honest about being a plain-background tool.</p></details>
-    <details><summary>Part of my subject disappeared, or some background is left. How do I fix it?</summary><p>Adjust the Tolerance slider: lower it if parts of the subject are being removed, raise it if background is left behind. If the background is not one even colour, click directly on the background in the Original preview to sample its exact colour, then remove again. Switching Mode to “Everywhere” helps for logos and graphics where the same background colour also appears inside the picture.</p></details>
-    <details><summary>Is my image uploaded to a server?</summary><p>No. The removal happens entirely in your browser using your own device — there is no upload, no account and no copy of your image anywhere else. That is also why it works on plain backgrounds rather than using a server AI model.</p></details>
+    <details><summary>Which mode should I use — Smart AI or Plain background?</summary><p>Use Smart AI for photos of people — selfies and portraits with a busy background like sky, trees, fountains, streets or rooms. It needs an internet connection the first time, to download its model to your browser; after that it runs on your device. It works best on photos with 1–2 people and a clear subject. Use Plain background mode for logos, graphics and product photos shot on one flat colour: it removes the colour connected to the edges of the picture, which keeps flat artwork crisp.</p></details>
+    <details><summary>The edges look rough, or some hair is missing. How do I fix it?</summary><p>In Smart AI mode, lower the Detail slider to bring back fine edges like hair, or raise it if bits of background are clinging to the outline. Raise Edge softness for a smoother, less jagged cut, and preview against the white and black backgrounds to check the edge from both sides. In Plain mode, adjust Tolerance instead: lower it if parts of the subject are being removed, raise it if background is left behind.</p></details>
+    <details><summary>Is my image uploaded to a server?</summary><p>No. Both modes run entirely in your browser on your own device — there is no upload, no account and no copy of your image anywhere else. Smart AI mode downloads a small AI model to your browser the first time you use it (a few MB, so the first removal needs an internet connection); after that the model works on your photo locally, just like the plain mode.</p></details>
     <details><summary>Why is the download a PNG, and why might it be resized?</summary><p>PNG is the download format because JPG cannot store transparency. Very large photos are scaled down to at most 2048 pixels on the longest side before processing, so the tool stays fast and does not freeze your phone; the size line under the result always shows the exact output dimensions.</p></details>
   </div>
 
@@ -180,14 +233,23 @@
 buildHeader("All Tools"); buildFooter(); renderRelated("background-remover", document.getElementById("related"));
 
 var MAXDIM = 2048;
+var TASKS_VISION_VERSION = "0.10.14";
+var VISION_BUNDLE_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
+var WASM_BASE_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
+var WASM_LOADER_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm/vision_wasm_internal.js";
+var SEG_MODEL_URL = "https://storage.googleapis.com/mediapipe-models/image_segmenter/deeplab_v3/float32/1/deeplab_v3.tflite";
 var srcCanvas = document.createElement("canvas");
 var srcCtx = srcCanvas.getContext("2d", { willReadFrequently: true });
 var outCanvas = document.getElementById("outCanvas");
 var outCtx = outCanvas.getContext("2d");
 var fEl = document.getElementById("f");
+var goBtn = document.getElementById("go");
 var loaded = false, hasResult = false, sampled = false, origName = "image";
 var target = { r: 255, g: 255, b: 255 };
 var debounce = null;
+var removalMode = "smart";           /* "smart" (AI person segmentation) | "plain" (colour flood-fill) */
+var segWorker = null, segWorkerUrl = null, segPending = null, segBusy = false, segPreflightDone = false;
+var rawMask = null;                  /* cached full-size AI mask canvas, so Detail/softness tweaks are instant */
 
 function hexOf(c) {
   function h(v) { return ("0" + v.toString(16)).slice(-2); }
@@ -198,8 +260,42 @@ function setTarget(c, fromSample) {
   document.getElementById("bgColor").value = hexOf(c);
   document.getElementById("swatch").style.background = hexOf(c);
 }
-function fmt(b) { return b < 1024 ? b + " B" : b < 1048576 ? (b / 1024).toFixed(1) + " KB" : (b / 1048576).toFixed(2) + " MB"; }
 
+/* ---------------- Mode switching ---------------- */
+function setMode(m) {
+  removalMode = m;
+  if (typeof hideSmartError === "function") hideSmartError();
+  document.getElementById("modeSmart").setAttribute("aria-pressed", m === "smart" ? "true" : "false");
+  document.getElementById("modePlain").setAttribute("aria-pressed", m === "plain" ? "true" : "false");
+  document.getElementById("smartControls").style.display = m === "smart" ? "" : "none";
+  document.getElementById("plainControls").style.display = m === "plain" ? "" : "none";
+  document.getElementById("origPreview").style.cursor = m === "plain" ? "crosshair" : "default";
+  document.getElementById("origHint").textContent = m === "plain" ? "(click the background to sample its colour)" : "";
+  if (loaded) scheduleProcess();
+}
+document.getElementById("modeSmart").addEventListener("click", function () { setMode("smart"); });
+document.getElementById("modePlain").addEventListener("click", function () { setMode("plain"); });
+
+/* Preview background: checker / white / black, to judge the cut edge. */
+document.querySelectorAll("[data-bg]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    document.querySelectorAll("[data-bg]").forEach(function (x) { x.classList.toggle("active", x === b); });
+    var box = document.getElementById("resultBox");
+    box.classList.toggle("checker", b.getAttribute("data-bg") === "checker");
+    box.classList.toggle("white", b.getAttribute("data-bg") === "white");
+    box.classList.toggle("black", b.getAttribute("data-bg") === "black");
+  });
+});
+
+function showResult(sizeHtml, okText) {
+  document.getElementById("resultWrap").style.display = "block";
+  document.getElementById("dl").disabled = false;
+  hasResult = true;
+  document.getElementById("sizeOut").innerHTML = sizeHtml;
+  showMsg("msg", okText, true);
+}
+
+/* ================= Plain mode (original colour removal) ================= */
 /* Average colour of the four corner patches — the background estimate. */
 function cornerColour(data, w, h) {
   var size = Math.max(2, Math.min(12, Math.floor(Math.min(w, h) / 8)));
@@ -214,8 +310,7 @@ function cornerColour(data, w, h) {
   return { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n) };
 }
 
-function process() {
-  if (!loaded) { showMsg("msg", "Choose an image first — drag & drop it onto the box above, or click the box to pick one."); return; }
+function processPlain() {
   var w = srcCanvas.width, h = srcCanvas.height, total = w * h;
   var imgData = srcCtx.getImageData(0, 0, w, h);
   var d = imgData.data;
@@ -277,11 +372,263 @@ function process() {
   }
   outCanvas.width = w; outCanvas.height = h;
   outCtx.putImageData(out, 0, 0);
-  document.getElementById("resultWrap").style.display = "block";
-  document.getElementById("dl").disabled = false;
-  hasResult = true;
-  document.getElementById("sizeOut").innerHTML = "Output: <strong>" + w + " × " + h + " px</strong> transparent PNG · background colour removed: <strong>" + hexOf(target) + "</strong> · about <strong>" + Math.round(removed / total * 100) + "%</strong> of pixels removed.";
-  showMsg("msg", "Done — check the checkerboard preview, adjust Tolerance if needed, then download.", true);
+  showResult("Output: <strong>" + w + " × " + h + " px</strong> transparent PNG · Plain mode · background colour removed: <strong>" + hexOf(target) + "</strong> · about <strong>" + Math.round(removed / total * 100) + "%</strong> of pixels removed.",
+    "Done — check the checkerboard preview, adjust Tolerance if needed, then download.");
+}
+
+/* ================= Smart AI mode (person segmentation) ================= */
+function aiStatus(text) {
+  var box = document.getElementById("aiStatus");
+  if (text) {
+    document.getElementById("aiStatusText").textContent = text;
+    box.classList.add("show");
+  } else {
+    box.classList.remove("show");
+  }
+}
+/* Smart AI engine: MediaPipe Tasks-Vision ImageSegmenter
+   (@mediapipe/tasks-vision@0.10.14, deeplab_v3) — the current
+   IMGSegmentation result type (category + confidence masks).
+   The library only ships as an ES module, and this page uses classic
+   scripts, so it is loaded inside an inline Blob-URL module Worker:
+   the worker script imports ImageSegmenter + FilesetResolver from
+   the CDN bundle, resolves the WASM fileset, creates the segmenter
+   from the deeplab_v3 .tflite model, and answers with a mask.
+   Only the library, WASM and model files are downloaded — the photo
+   itself is sent only to the worker on this same device. */
+var SEG_WORKER_SRC = [
+  'import { ImageSegmenter, FilesetResolver } from "' + VISION_BUNDLE_URL + '";',
+  'var segmenter = null, creating = null;',
+  'async function createSegmenter() {',
+  '  if (segmenter) return segmenter;',
+  '  if (creating) return creating;',
+  '  creating = (async function () {',
+  '    var fileset = await FilesetResolver.forVisionTasks("' + WASM_BASE_URL + '");',
+  '    var opts = function (delegate) { return { baseOptions: { modelAssetPath: "' + SEG_MODEL_URL + '", delegate: delegate }, runningMode: "IMAGE", outputCategoryMask: true, outputConfidenceMasks: true }; };',
+  '    try { segmenter = await ImageSegmenter.createFromOptions(fileset, opts("GPU")); }',
+  '    catch (e) { segmenter = await ImageSegmenter.createFromOptions(fileset, opts("CPU")); }',
+  '    return segmenter;',
+  '  })();',
+  '  return creating;',
+  '}',
+  'onmessage = async function (e) {',
+  '  var data = e.data || {};',
+  '  if (data.type !== "segment") return;',
+  '  try {',
+  '    var seg = await createSegmenter();',
+  '    var result = seg.segment(data.image);',
+  '    var w = data.width, h = data.height, mask = null, mw = w, mh = h;',
+  '    if (result && result.confidenceMasks && result.confidenceMasks.length) {',
+  '      var bg = result.confidenceMasks[0].getAsFloat32Array();',
+  '      if (bg && bg.length === w * h) { mask = new Float32Array(w * h); for (var i = 0; i < bg.length; i++) { var v = 1 - bg[i]; mask[i] = v < 0 ? 0 : (v > 1 ? 1 : v); } }',
+  '    }',
+  '    if (!mask && result && result.categoryMask) {',
+  '      var cat = result.categoryMask.getAsUint8Array();',
+  '      mw = result.categoryMask.width; mh = result.categoryMask.height;',
+  '      if (cat && cat.length === mw * mh) { mask = new Float32Array(mw * mh); for (var j = 0; j < cat.length; j++) mask[j] = cat[j] === 0 ? 0 : 1; }',
+  '    }',
+  '    if (!mask) throw new Error("IMGSegmentation returned no usable mask");',
+  '    try { if (result && result.close) result.close(); } catch (e2) {}',
+  '    postMessage({ type: "mask", ok: true, width: mw, height: mh, mask: mask.buffer }, [mask.buffer]);',
+  '  } catch (err) {',
+  '    postMessage({ type: "mask", ok: false, error: String((err && err.message) || err) });',
+  '  }',
+  '};'
+].join("\n");
+
+function showSmartError() {
+  var box = document.getElementById("smartError");
+  if (box) box.classList.add("show");
+  clearMsg("msg");
+}
+function hideSmartError() {
+  var box = document.getElementById("smartError");
+  if (box) box.classList.remove("show");
+}
+function resetSegWorker() {
+  if (segWorker) { try { segWorker.terminate(); } catch (e) {} segWorker = null; }
+  if (segWorkerUrl) { try { URL.revokeObjectURL(segWorkerUrl); } catch (e) {} segWorkerUrl = null; }
+  segPending = null;
+}
+/* Preflight: check all three Smart URLs and log the real HTTP
+   status of each, so a CDN/model failure is visible in the console
+   instead of failing silently inside the worker. */
+function segPreflight() {
+  if (segPreflightDone) return Promise.resolve();
+  var urls = [VISION_BUNDLE_URL, WASM_LOADER_URL, SEG_MODEL_URL];
+  return Promise.all(urls.map(function (url) {
+    return fetch(url, { method: "HEAD", cache: "no-store" }).then(function (r) {
+      console.info("[Background Remover] preflight " + r.status + " " + url);
+      if (r.status === 200) return;
+      throw new Error("preflight " + r.status);
+    }).catch(function () {
+      return fetch(url, { method: "GET", headers: { Range: "bytes=0-0" }, cache: "no-store" }).then(function (r) {
+        console.info("[Background Remover] preflight (range) " + r.status + " " + url);
+        if (r.status === 200 || r.status === 206) return;
+        throw new Error("Smart AI files unreachable (" + r.status + ")");
+      });
+    });
+  })).then(function () { segPreflightDone = true; });
+}
+function ensureSegWorker() {
+  if (segWorker) return segWorker;
+  var blob = new Blob([SEG_WORKER_SRC], { type: "text/javascript" });
+  segWorkerUrl = URL.createObjectURL(blob);
+  segWorker = new Worker(segWorkerUrl, { type: "module" });
+  segWorker.onmessage = function (e) {
+    var cb = segPending; segPending = null;
+    if (cb) cb(e.data || {});
+  };
+  segWorker.onerror = function () {
+    var cb = segPending; segPending = null;
+    if (cb) cb({ ok: false, error: "worker error" });
+  };
+  return segWorker;
+}
+function runSegmentation() {
+  aiStatus("Loading the AI model — first use downloads a few MB, please wait…");
+  return segPreflight().then(function () {
+    aiStatus("Finding the person in your photo…");
+    var worker = ensureSegWorker();
+    return new Promise(function (resolve, reject) {
+      var timedOut = false;
+      var timer = setTimeout(function () {
+        timedOut = true; segPending = null;
+        reject(new Error("segmentation timed out"));
+      }, 90000);
+      segPending = function (data) {
+        if (timedOut) return;
+        clearTimeout(timer);
+        if (!data || !data.ok || !data.mask) { reject(new Error((data && data.error) || "no mask returned")); return; }
+        resolve(data);
+      };
+      /* The model works best at moderate size; the mask is scaled
+         back up to full resolution afterwards, which also smooths it. */
+      var scale = Math.min(1, 1024 / Math.max(srcCanvas.width, srcCanvas.height));
+      var small = document.createElement("canvas");
+      small.width = Math.max(1, Math.round(srcCanvas.width * scale));
+      small.height = Math.max(1, Math.round(srcCanvas.height * scale));
+      small.getContext("2d").drawImage(srcCanvas, 0, 0, small.width, small.height);
+      var sendIt = function (bitmap) {
+        try { worker.postMessage({ type: "segment", image: bitmap, width: small.width, height: small.height }, [bitmap]); }
+        catch (e) { /* some browsers cannot transfer to a module worker — resend without transfer */
+          createImageBitmap(small).then(function (b2) { worker.postMessage({ type: "segment", image: b2, width: small.width, height: small.height }); }).catch(function (e2) { if (!timedOut) { clearTimeout(timer); segPending = null; reject(e2); } });
+        }
+      };
+      if (typeof createImageBitmap === "function") {
+        createImageBitmap(small).then(sendIt).catch(function (e) { if (!timedOut) { clearTimeout(timer); segPending = null; reject(e); } });
+      } else {
+        /* Fallback: draw the small canvas into an ImageBitmap via blob is not
+           available everywhere; use an offscreen transfer through toBlob. */
+        small.toBlob(function (b) {
+          if (!b) { reject(new Error("could not prepare image")); return; }
+          createImageBitmap(b).then(sendIt).catch(reject);
+        }, "image/png");
+      }
+    });
+  }).then(function (data) {
+    var mask = new Float32Array(data.mask);
+    var mw = data.width, mh = data.height;
+    if (!mask || mask.length !== mw * mh) throw new Error("IMGSegmentation mask size mismatch");
+    var tmp = document.createElement("canvas");
+    tmp.width = mw; tmp.height = mh;
+    var tctx = tmp.getContext("2d");
+    var idata = tctx.createImageData(mw, mh);
+    for (var i = 0, p = 0; i < mask.length; i++, p += 4) {
+      var g = Math.max(0, Math.min(255, Math.round(mask[i] * 255)));
+      idata.data[p] = g; idata.data[p + 1] = g; idata.data[p + 2] = g; idata.data[p + 3] = 255;
+    }
+    tctx.putImageData(idata, 0, 0);
+    var w = srcCanvas.width, h = srcCanvas.height;
+    rawMask = document.createElement("canvas");
+    rawMask.width = w; rawMask.height = h;
+    var mctx = rawMask.getContext("2d", { willReadFrequently: true });
+    mctx.imageSmoothingEnabled = true;
+    mctx.imageSmoothingQuality = "high";
+    mctx.drawImage(tmp, 0, 0, w, h);
+  });
+}
+/* Turn the cached mask into the output image. Detail sets where the
+   cut sits inside the mask's soft edge; Edge softness blurs the mask
+   first so the outline is smooth instead of jagged. Runs instantly
+   from the cache — the AI model is not re-run for slider tweaks. */
+function applyMask() {
+  if (!rawMask) return;
+  var w = srcCanvas.width, h = srcCanvas.height, total = w * h;
+  var detail = document.getElementById("smartDetail").value / 100;   /* 0..1 */
+  var feather = +document.getElementById("smartFeather").value;      /* 0..10 px */
+
+  var maskCanvas = document.createElement("canvas");
+  maskCanvas.width = w; maskCanvas.height = h;
+  var mctx = maskCanvas.getContext("2d", { willReadFrequently: true });
+  if (feather > 0) { try { mctx.filter = "blur(" + feather + "px)"; } catch (e) { /* older Safari: unblurred mask still works */ } }
+  mctx.drawImage(rawMask, 0, 0);
+  var md = mctx.getImageData(0, 0, w, h).data;
+
+  var sd = srcCtx.getImageData(0, 0, w, h).data;
+  var out = outCtx.createImageData(w, h);
+  var od = out.data;
+  var lo = 0.48 - detail * 0.36;          /* detail 0 → cut at .48, detail 1 → cut at .12 (keeps hair) */
+  var hi = Math.min(1, lo + 0.22);
+  var removed = 0;
+  for (var p = 0, i = 0; p < total; p++, i += 4) {
+    var m = md[i] / 255;                  /* mask is greyscale: white = person */
+    var a;
+    if (m <= lo) a = 0;
+    else if (m >= hi) a = 255;
+    else a = Math.round(255 * (m - lo) / (hi - lo));
+    od[i] = sd[i]; od[i + 1] = sd[i + 1]; od[i + 2] = sd[i + 2];
+    od[i + 3] = Math.round(sd[i + 3] * a / 255);
+    if (a === 0) removed++;
+  }
+  outCanvas.width = w; outCanvas.height = h;
+  outCtx.putImageData(out, 0, 0);
+  showResult("Output: <strong>" + w + " × " + h + " px</strong> transparent PNG · Smart AI mode · about <strong>" + Math.round(removed / total * 100) + "%</strong> of pixels removed (the background).",
+    "Done — the person is cut out. Fine-tune Detail / Edge softness if the outline needs it, then download.");
+}
+function processSmart() {
+  if (segBusy) return;
+  if (rawMask) { hideSmartError(); applyMask(); return; }
+  segBusy = true;
+  hideSmartError();
+  goBtn.disabled = true;
+  goBtn.textContent = "Working…";
+  aiStatus("Loading the AI model — first use downloads a few MB, please wait…");
+  runSegmentation().then(function () {
+    aiStatus(null);
+    hideSmartError();
+    applyMask();
+  }).catch(function (err) {
+    if (window.console && console.warn) console.warn("[Background Remover] Smart AI failed:", err);
+    aiStatus(null);
+    /* Generic failure: never point at a feature this mode does not
+       have, never auto-switch modes — stay on Smart, show the error
+       box with a real Retry button and a Plain-mode fallback the
+       user can choose themselves. */
+    showSmartError();
+  }).then(function () {
+    segBusy = false;
+    goBtn.disabled = false;
+    goBtn.textContent = "Remove background";
+  });
+}
+document.getElementById("retrySmart").addEventListener("click", function () {
+  hideSmartError();
+  rawMask = null;
+  resetSegWorker();
+  segPreflightDone = false;
+  process();
+});
+document.getElementById("usePlain").addEventListener("click", function () {
+  hideSmartError();
+  setMode("plain");
+});
+
+/* ---------------- Shared dispatch ---------------- */
+function process() {
+  if (!loaded) { showMsg("msg", "Choose an image first — drag & drop it onto the box above, or click the box to pick one."); return; }
+  clearMsg("msg");
+  if (removalMode === "smart") processSmart(); else processPlain();
 }
 function scheduleProcess() {
   if (!loaded) return;
@@ -290,7 +637,7 @@ function scheduleProcess() {
 }
 
 fEl.addEventListener("change", function () {
-  clearMsg("msg");
+  clearMsg("msg"); hideSmartError();
   var file = fEl.files[0] || null;
   if (!file) return;
   if (!/^image\//.test(file.type)) { showMsg("msg", "That is not an image file. Please choose a JPG, PNG or WebP image."); fEl.value = ""; return; }
@@ -301,7 +648,7 @@ fEl.addEventListener("change", function () {
     srcCanvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
     srcCanvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
     srcCtx.drawImage(img, 0, 0, srcCanvas.width, srcCanvas.height);
-    loaded = true; sampled = false; hasResult = false;
+    loaded = true; sampled = false; hasResult = false; rawMask = null;
     var pv = document.getElementById("origPreview");
     pv.src = url;
     document.getElementById("origWrap").style.display = "block";
@@ -311,9 +658,9 @@ fEl.addEventListener("change", function () {
   img.src = url;
 });
 
-/* Click the original preview to sample the exact background colour. */
+/* Click the original preview to sample the exact background colour (Plain mode only). */
 document.getElementById("origPreview").addEventListener("click", function (e) {
-  if (!loaded) return;
+  if (!loaded || removalMode !== "plain") return;
   var rect = e.target.getBoundingClientRect();
   var x = Math.floor((e.clientX - rect.left) / rect.width * srcCanvas.width);
   var y = Math.floor((e.clientY - rect.top) / rect.height * srcCanvas.height);
@@ -343,6 +690,14 @@ document.getElementById("feather").addEventListener("input", function (e) {
   scheduleProcess();
 });
 document.getElementById("mode").addEventListener("change", scheduleProcess);
+document.getElementById("smartDetail").addEventListener("input", function (e) {
+  document.getElementById("smartDetailv").textContent = e.target.value;
+  scheduleProcess();
+});
+document.getElementById("smartFeather").addEventListener("input", function (e) {
+  document.getElementById("smartFeatherv").textContent = e.target.value;
+  scheduleProcess();
+});
 document.getElementById("go").addEventListener("click", process);
 document.getElementById("dl").addEventListener("click", function () {
   if (!hasResult) return;
@@ -356,7 +711,7 @@ document.getElementById("dl").addEventListener("click", function () {
   }, "image/png");
 });
 document.getElementById("reset").addEventListener("click", function () {
-  loaded = false; hasResult = false; sampled = false;
+  loaded = false; hasResult = false; sampled = false; rawMask = null;
   fEl.value = "";
   document.getElementById("origWrap").style.display = "none";
   document.getElementById("resultWrap").style.display = "none";
@@ -365,10 +720,14 @@ document.getElementById("reset").addEventListener("click", function () {
   document.getElementById("tol").value = 32; document.getElementById("tolv").textContent = "32";
   document.getElementById("feather").value = 4; document.getElementById("featherv").textContent = "4";
   document.getElementById("mode").value = "edges";
+  document.getElementById("smartDetail").value = 55; document.getElementById("smartDetailv").textContent = "55";
+  document.getElementById("smartFeather").value = 3; document.getElementById("smartFeatherv").textContent = "3";
+  aiStatus(null); hideSmartError(); resetSegWorker();
   setTarget({ r: 255, g: 255, b: 255 }, false);
   clearMsg("msg");
 });
 setTarget({ r: 255, g: 255, b: 255 }, false);
+setMode("smart");
 </script>
 </body>
 </html>
