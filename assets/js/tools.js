@@ -2,8 +2,7 @@
    Homepage, All Tools page, live search and every "Related tools" row
    read from this list. Fields: name, slug, category, description,
    keywords, popular. The tool page file is slug + ".html".
-   No finance/tax calculators, no colour tools, no PDF-to-Word,
-   no Video Converter — by design. */
+   No PDF-to-Word, no Video Converter — by design. */
 var TOOLS = [
   {name:"Image Compressor", slug:"image-compressor", category:"Image", popular:true,
    description:"Shrink JPG, PNG and WebP photos with a quality slider and see original vs new size before you download.",
