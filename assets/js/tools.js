@@ -1,4 +1,4 @@
-/* ToolSprint — the ONE tools array.
+/* ToolSprintHub — the ONE tools array.
    Homepage, All Tools page, live search and every "Related tools" row
    read from this list. Fields: name, slug, category, description,
    keywords, popular. The tool page file is slug + ".html".

@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Create a scannable CODE128 barcode from any text or number online for free — download it as a PNG for labels and packaging."/>
 <meta name="keywords" content="barcode generator, barcode maker, code128 barcode, create barcode, barcode creator, generate barcode online, barcode generator online free, create code128 barcode from text online, make scannable barcode for products online free"/>
-<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/barcode-generator.html"/>
+<link rel="canonical" href="https://toolsprinthub.vercel.app/barcode-generator.html"/>
 <meta property="og:type" content="website"/>
-<meta property="og:site_name" content="ToolSprint"/>
-<meta property="og:title" content="Barcode Generator (CODE128) — ToolSprint"/>
+<meta property="og:site_name" content="ToolSprintHub"/>
+<meta property="og:title" content="Barcode Generator (CODE128) — ToolSprintHub"/>
 <meta property="og:description" content="Create a scannable CODE128 barcode from any text or number online for free — download it as a PNG for labels and packaging."/>
-<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/barcode-generator.html"/>
-<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta property="og:url" content="https://toolsprinthub.vercel.app/barcode-generator.html"/>
+<meta property="og:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Barcode Generator (CODE128) — ToolSprint"/>
+<meta name="twitter:title" content="Barcode Generator (CODE128) — ToolSprintHub"/>
 <meta name="twitter:description" content="Create a scannable CODE128 barcode from any text or number online for free — download it as a PNG for labels and packaging."/>
-<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
  "name": "Barcode Generator (CODE128)",
- "url": "https://shaikh1085.github.io/Toolsprint/barcode-generator.html",
+ "url": "https://toolsprinthub.vercel.app/barcode-generator.html",
  "description": "Create a scannable CODE128 barcode from any text or number online for free \u2014 download it as a PNG for labels and packaging.",
  "applicationCategory": "UtilitiesApplication",
  "operatingSystem": "Any (web browser)",
@@ -32,8 +32,8 @@
  },
  "publisher": {
   "@type": "Organization",
-  "name": "ToolSprint",
-  "url": "https://shaikh1085.github.io/Toolsprint/"
+  "name": "ToolSprintHub",
+  "url": "https://toolsprinthub.vercel.app/"
  }
 }
 </script>
@@ -46,19 +46,19 @@
    "@type": "ListItem",
    "position": 1,
    "name": "Home",
-   "item": "https://shaikh1085.github.io/Toolsprint/"
+   "item": "https://toolsprinthub.vercel.app/"
   },
   {
    "@type": "ListItem",
    "position": 2,
    "name": "All Tools",
-   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+   "item": "https://toolsprinthub.vercel.app/all-tools.html"
   },
   {
    "@type": "ListItem",
    "position": 3,
    "name": "Barcode Generator (CODE128)",
-   "item": "https://shaikh1085.github.io/Toolsprint/barcode-generator.html"
+   "item": "https://toolsprinthub.vercel.app/barcode-generator.html"
   }
  ]
 }
@@ -96,7 +96,7 @@
 }
 </script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
-<title>Barcode Generator (CODE128) — ToolSprint</title>
+<title>Barcode Generator (CODE128) — ToolSprintHub</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
 <style>.bc-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px;text-align:center}.bc-wrap:empty{display:none}.bc-wrap svg{max-width:100%}</style>
 </head>
@@ -108,7 +108,7 @@
   <p>Turn a product code, SKU, ticket number or any short text into a proper CODE128 barcode that standard scanners can read.</p></div>
   <div class="panel">
     <label for="bc">Text or number</label>
-    <input type="text" id="bc" placeholder="e.g. TOOLSPRINT-50 or 123456789012"/>
+    <input type="text" id="bc" placeholder="e.g. TOOLSPRINTHUB-50 or 123456789012"/>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
       <button type="button" class="btn" id="go">Generate barcode</button>
       <button type="button" class="btn ghost" id="dl" disabled>Download PNG</button>
@@ -161,7 +161,7 @@ document.getElementById("dl").addEventListener("click",function(){
     var c=document.createElement("canvas"); c.width=img.width*3; c.height=img.height*3;
     var ctx=c.getContext("2d"); ctx.fillStyle="#fff"; ctx.fillRect(0,0,c.width,c.height);
     ctx.drawImage(img,0,0,c.width,c.height);
-    var a=document.createElement("a"); a.href=c.toDataURL("image/png"); a.download="toolsprint-barcode.png"; a.click();
+    var a=document.createElement("a"); a.href=c.toDataURL("image/png"); a.download="toolsprinthub-barcode.png"; a.click();
   };
   img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(xml);
 });

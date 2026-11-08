@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Turn JPG and PNG images into a single PDF online for free. One page per image, in the order you add them — processed in your browser, never uploaded."/>
 <meta name="keywords" content="images to pdf, image to pdf, jpg to pdf, png to pdf, photo to pdf, image to pdf converter, pictures to pdf, convert images to pdf online free, how to turn photos into one pdf, jpg to pdf converter online without sign up, make pdf from images online free no watermark"/>
-<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/images-to-pdf.html"/>
+<link rel="canonical" href="https://toolsprinthub.vercel.app/images-to-pdf.html"/>
 <meta property="og:type" content="website"/>
-<meta property="og:site_name" content="ToolSprint"/>
-<meta property="og:title" content="Images to PDF — ToolSprint"/>
+<meta property="og:site_name" content="ToolSprintHub"/>
+<meta property="og:title" content="Images to PDF — ToolSprintHub"/>
 <meta property="og:description" content="Turn JPG and PNG images into a single PDF online for free. One page per image, in the order you add them — processed in your browser, never uploaded."/>
-<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/images-to-pdf.html"/>
-<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta property="og:url" content="https://toolsprinthub.vercel.app/images-to-pdf.html"/>
+<meta property="og:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Images to PDF — ToolSprint"/>
+<meta name="twitter:title" content="Images to PDF — ToolSprintHub"/>
 <meta name="twitter:description" content="Turn JPG and PNG images into a single PDF online for free. One page per image, in the order you add them — processed in your browser, never uploaded."/>
-<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
  "name": "Images to PDF",
- "url": "https://shaikh1085.github.io/Toolsprint/images-to-pdf.html",
+ "url": "https://toolsprinthub.vercel.app/images-to-pdf.html",
  "description": "Turn JPG and PNG images into a single PDF online for free. One page per image, in the order you add them \u2014 processed in your browser, never uploaded.",
  "applicationCategory": "UtilitiesApplication",
  "operatingSystem": "Any (web browser)",
@@ -32,8 +32,8 @@
  },
  "publisher": {
   "@type": "Organization",
-  "name": "ToolSprint",
-  "url": "https://shaikh1085.github.io/Toolsprint/"
+  "name": "ToolSprintHub",
+  "url": "https://toolsprinthub.vercel.app/"
  }
 }
 </script>
@@ -46,19 +46,19 @@
    "@type": "ListItem",
    "position": 1,
    "name": "Home",
-   "item": "https://shaikh1085.github.io/Toolsprint/"
+   "item": "https://toolsprinthub.vercel.app/"
   },
   {
    "@type": "ListItem",
    "position": 2,
    "name": "All Tools",
-   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+   "item": "https://toolsprinthub.vercel.app/all-tools.html"
   },
   {
    "@type": "ListItem",
    "position": 3,
    "name": "Images to PDF",
-   "item": "https://shaikh1085.github.io/Toolsprint/images-to-pdf.html"
+   "item": "https://toolsprinthub.vercel.app/images-to-pdf.html"
   }
  ]
 }
@@ -104,7 +104,7 @@
 }
 </script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
-<title>Images to PDF — ToolSprint</title>
+<title>Images to PDF — ToolSprintHub</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
 </head>
 <body>
@@ -187,7 +187,7 @@ document.getElementById("go").addEventListener("click",async function(){
     showMsg("msg","Done — download your PDF.",true);
   }catch(e){ showMsg("msg","Creating the PDF failed. One of the images may be corrupt — try removing it and rebuilding."); }
 });
-document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprint-images.pdf"; a.click(); });
+document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprinthub-images.pdf"; a.click(); });
 document.getElementById("reset").addEventListener("click",function(){
   files=[]; fEl.value=""; document.getElementById("listOut").innerHTML=""; document.getElementById("sizeOut").innerHTML="";
   document.getElementById("dl").disabled=true; clearMsg("msg");

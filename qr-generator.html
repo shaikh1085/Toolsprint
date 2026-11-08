@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Generate a QR code for a link, text or Wi-Fi network and download it as PNG — free, in your browser, with nothing uploaded."/>
 <meta name="keywords" content="qr code generator, qr generator, make qr code, create qr code, qr code maker, qr code for wifi, qr code for link, qr code generator online free, how to make a qr code for a link, create qr code for wifi network online free, qr code generator no sign up download png"/>
-<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/qr-generator.html"/>
+<link rel="canonical" href="https://toolsprinthub.vercel.app/qr-generator.html"/>
 <meta property="og:type" content="website"/>
-<meta property="og:site_name" content="ToolSprint"/>
-<meta property="og:title" content="QR Code Generator — ToolSprint"/>
+<meta property="og:site_name" content="ToolSprintHub"/>
+<meta property="og:title" content="QR Code Generator — ToolSprintHub"/>
 <meta property="og:description" content="Generate a QR code for a link, text or Wi-Fi network and download it as PNG — free, in your browser, with nothing uploaded."/>
-<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/qr-generator.html"/>
-<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta property="og:url" content="https://toolsprinthub.vercel.app/qr-generator.html"/>
+<meta property="og:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="QR Code Generator — ToolSprint"/>
+<meta name="twitter:title" content="QR Code Generator — ToolSprintHub"/>
 <meta name="twitter:description" content="Generate a QR code for a link, text or Wi-Fi network and download it as PNG — free, in your browser, with nothing uploaded."/>
-<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
  "name": "QR Code Generator",
- "url": "https://shaikh1085.github.io/Toolsprint/qr-generator.html",
+ "url": "https://toolsprinthub.vercel.app/qr-generator.html",
  "description": "Generate a QR code for a link, text or Wi-Fi network and download it as PNG \u2014 free, in your browser, with nothing uploaded.",
  "applicationCategory": "UtilitiesApplication",
  "operatingSystem": "Any (web browser)",
@@ -32,8 +32,8 @@
  },
  "publisher": {
   "@type": "Organization",
-  "name": "ToolSprint",
-  "url": "https://shaikh1085.github.io/Toolsprint/"
+  "name": "ToolSprintHub",
+  "url": "https://toolsprinthub.vercel.app/"
  }
 }
 </script>
@@ -46,19 +46,19 @@
    "@type": "ListItem",
    "position": 1,
    "name": "Home",
-   "item": "https://shaikh1085.github.io/Toolsprint/"
+   "item": "https://toolsprinthub.vercel.app/"
   },
   {
    "@type": "ListItem",
    "position": 2,
    "name": "All Tools",
-   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+   "item": "https://toolsprinthub.vercel.app/all-tools.html"
   },
   {
    "@type": "ListItem",
    "position": 3,
    "name": "QR Code Generator",
-   "item": "https://shaikh1085.github.io/Toolsprint/qr-generator.html"
+   "item": "https://toolsprinthub.vercel.app/qr-generator.html"
   }
  ]
 }
@@ -73,7 +73,7 @@
    "name": "Do QR codes from here expire?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "No. The code simply encodes your text \u2014 there is no ToolSprint redirect in between \u2014 so it works for as long as the link or Wi-Fi details stay the same."
+    "text": "No. The code simply encodes your text \u2014 there is no ToolSprintHub redirect in between \u2014 so it works for as long as the link or Wi-Fi details stay the same."
    }
   },
   {
@@ -104,7 +104,7 @@
 }
 </script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
-<title>QR Code Generator — ToolSprint</title>
+<title>QR Code Generator — ToolSprintHub</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
 <style>#qrOut{display:grid;place-items:center;padding:14px;background:#fff;border-radius:10px;width:fit-content;margin:16px auto;border:1px solid var(--border)}#qrOut:empty{display:none}</style>
 </head>
@@ -153,7 +153,7 @@
 
   <h2>Frequently asked questions</h2>
   <div class="faq">
-    <details><summary>Do QR codes from here expire?</summary><p>No. The code simply encodes your text — there is no ToolSprint redirect in between — so it works for as long as the link or Wi-Fi details stay the same.</p></details>
+    <details><summary>Do QR codes from here expire?</summary><p>No. The code simply encodes your text — there is no ToolSprintHub redirect in between — so it works for as long as the link or Wi-Fi details stay the same.</p></details>
     <details><summary>Why doesn't my Wi-Fi QR code connect?</summary><p>Check the SSID and password character-for-character (they are case-sensitive) and that the security type matches your router. The tool escapes special characters in the standard WIFI: format, but a typo in the password is the usual cause.</p></details>
     <details><summary>How big should I print a QR code?</summary><p>At least 2×2 cm for close-up scanning, and bigger the further away the scanner will be — roughly 1:10 code-size to scanning-distance.</p></details>
     <details><summary>Is it safe to put my Wi-Fi password in a QR code?</summary><p>Anyone who scans or photographs it gets the password, so treat the printed code like the password itself — fine for your living room, not for a public noticeboard.</p></details>
@@ -203,7 +203,7 @@ document.getElementById("dl").addEventListener("click",function(){
   var c=document.querySelector("#qrOut canvas"), img=document.querySelector("#qrOut img");
   var url=c?c.toDataURL("image/png"):(img?img.src:null);
   if(!url){ showMsg("msg","Generate a QR code first, then download it."); return; }
-  var a=document.createElement("a"); a.href=url; a.download="toolsprint-qr.png"; a.click();
+  var a=document.createElement("a"); a.href=url; a.download="toolsprinthub-qr.png"; a.click();
 });
 document.getElementById("reset").addEventListener("click",function(){
   typeEl.value="text"; typeEl.dispatchEvent(new Event("change"));

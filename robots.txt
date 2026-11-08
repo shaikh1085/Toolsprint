@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://shaikh1085.github.io/Toolsprint/sitemap.xml
+Sitemap: https://toolsprinthub.vercel.app/sitemap.xml

@@ -1,11 +1,11 @@
-/* ToolSprint — shared site script (Batch 1).
+/* ToolSprintHub — shared site script (Batch 1).
    SITE_NAME is defined ONCE here and used for the header, footer,
    titles and copy across every page. Also owns: header/footer
    injection, live search helpers, tool-card rendering and the
    "Related tools" row used by tool pages. Design is strict
    black-and-white; there is no dark mode.
    Plain vanilla JS, no router, no build step. */
-var SITE_NAME = "ToolSprint";
+var SITE_NAME = "ToolSprintHub";
 
 /* Pages live in two places: the site root (index.html, every tool
    page, all-tools, about, privacy, terms, contact) and guides/

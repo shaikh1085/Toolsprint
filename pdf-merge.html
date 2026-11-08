@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Merge multiple PDF files into one online for free. Reorder files with up/down buttons or drag and drop, see page counts, then download — in your browser."/>
 <meta name="keywords" content="merge pdf, pdf merger, combine pdf, pdf combine, join pdf, merge pdf files, pdf joiner, merge pdf files online free, how to combine multiple pdf files into one, merge pdf online without sign up, combine pdf files free no watermark, merge pdf files in browser files not uploaded"/>
-<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/pdf-merge.html"/>
+<link rel="canonical" href="https://toolsprinthub.vercel.app/pdf-merge.html"/>
 <meta property="og:type" content="website"/>
-<meta property="og:site_name" content="ToolSprint"/>
-<meta property="og:title" content="PDF Merge — ToolSprint"/>
+<meta property="og:site_name" content="ToolSprintHub"/>
+<meta property="og:title" content="PDF Merge — ToolSprintHub"/>
 <meta property="og:description" content="Merge multiple PDF files into one online for free. Reorder files with up/down buttons or drag and drop, see page counts, then download — in your browser."/>
-<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/pdf-merge.html"/>
-<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta property="og:url" content="https://toolsprinthub.vercel.app/pdf-merge.html"/>
+<meta property="og:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="PDF Merge — ToolSprint"/>
+<meta name="twitter:title" content="PDF Merge — ToolSprintHub"/>
 <meta name="twitter:description" content="Merge multiple PDF files into one online for free. Reorder files with up/down buttons or drag and drop, see page counts, then download — in your browser."/>
-<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
  "name": "PDF Merge",
- "url": "https://shaikh1085.github.io/Toolsprint/pdf-merge.html",
+ "url": "https://toolsprinthub.vercel.app/pdf-merge.html",
  "description": "Merge multiple PDF files into one online for free. Reorder files with up/down buttons or drag and drop, see page counts, then download \u2014 in your browser.",
  "applicationCategory": "UtilitiesApplication",
  "operatingSystem": "Any (web browser)",
@@ -32,8 +32,8 @@
  },
  "publisher": {
   "@type": "Organization",
-  "name": "ToolSprint",
-  "url": "https://shaikh1085.github.io/Toolsprint/"
+  "name": "ToolSprintHub",
+  "url": "https://toolsprinthub.vercel.app/"
  }
 }
 </script>
@@ -46,19 +46,19 @@
    "@type": "ListItem",
    "position": 1,
    "name": "Home",
-   "item": "https://shaikh1085.github.io/Toolsprint/"
+   "item": "https://toolsprinthub.vercel.app/"
   },
   {
    "@type": "ListItem",
    "position": 2,
    "name": "All Tools",
-   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+   "item": "https://toolsprinthub.vercel.app/all-tools.html"
   },
   {
    "@type": "ListItem",
    "position": 3,
    "name": "PDF Merge",
-   "item": "https://shaikh1085.github.io/Toolsprint/pdf-merge.html"
+   "item": "https://toolsprinthub.vercel.app/pdf-merge.html"
   }
  ]
 }
@@ -104,7 +104,7 @@
 }
 </script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
-<title>PDF Merge — ToolSprint</title>
+<title>PDF Merge — ToolSprintHub</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
 <style>.file-row{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-top:8px;flex-wrap:wrap}.file-row .fname{font-weight:700;word-break:break-all}.file-row .fmeta{color:var(--muted);font-size:13px}.file-row button{min-height:44px;min-width:44px;border:1px solid var(--border);background:var(--card);border-radius:8px;cursor:pointer;font-weight:700}.file-row.dragging{opacity:.5}</style>
 </head>
@@ -228,7 +228,7 @@ document.getElementById("go").addEventListener("click",async function(){
     showMsg("msg","Done — download your merged PDF.",true);
   }catch(e){ showMsg("msg","Merging failed. One of the PDFs may be damaged or protected — remove files one at a time to find it."); }
 });
-document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprint-merged.pdf"; a.click(); });
+document.getElementById("dl").addEventListener("click",function(){ if(!outUrl) return; var a=document.createElement("a"); a.href=outUrl; a.download="toolsprinthub-merged.pdf"; a.click(); });
 document.getElementById("reset").addEventListener("click",function(){
   items=[]; renderList(); document.getElementById("sizeOut").innerHTML="";
   document.getElementById("dl").disabled=true; clearMsg("msg");

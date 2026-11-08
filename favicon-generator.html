@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="description" content="Generate favicons at 16, 32, 48, 180, 192 and 512 px from any image — download all sizes as one ZIP or individually, free in your browser."/>
 <meta name="keywords" content="favicon generator, favicon maker, icon generator, favicon creator, ico generator, website icon maker, favicon generator online free, how to create a favicon from an image, generate favicon png all sizes online, make website icon online free no sign up"/>
-<link rel="canonical" href="https://shaikh1085.github.io/Toolsprint/favicon-generator.html"/>
+<link rel="canonical" href="https://toolsprinthub.vercel.app/favicon-generator.html"/>
 <meta property="og:type" content="website"/>
-<meta property="og:site_name" content="ToolSprint"/>
-<meta property="og:title" content="Favicon Generator — ToolSprint"/>
+<meta property="og:site_name" content="ToolSprintHub"/>
+<meta property="og:title" content="Favicon Generator — ToolSprintHub"/>
 <meta property="og:description" content="Generate favicons at 16, 32, 48, 180, 192 and 512 px from any image — download all sizes as one ZIP or individually, free in your browser."/>
-<meta property="og:url" content="https://shaikh1085.github.io/Toolsprint/favicon-generator.html"/>
-<meta property="og:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta property="og:url" content="https://toolsprinthub.vercel.app/favicon-generator.html"/>
+<meta property="og:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Favicon Generator — ToolSprint"/>
+<meta name="twitter:title" content="Favicon Generator — ToolSprintHub"/>
 <meta name="twitter:description" content="Generate favicons at 16, 32, 48, 180, 192 and 512 px from any image — download all sizes as one ZIP or individually, free in your browser."/>
-<meta name="twitter:image" content="https://shaikh1085.github.io/Toolsprint/assets/logo-mark.svg"/>
+<meta name="twitter:image" content="https://toolsprinthub.vercel.app/assets/logo-mark.svg"/>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
  "@type": "SoftwareApplication",
  "name": "Favicon Generator",
- "url": "https://shaikh1085.github.io/Toolsprint/favicon-generator.html",
+ "url": "https://toolsprinthub.vercel.app/favicon-generator.html",
  "description": "Generate favicons at 16, 32, 48, 180, 192 and 512 px from any image \u2014 download all sizes as one ZIP or individually, free in your browser.",
  "applicationCategory": "UtilitiesApplication",
  "operatingSystem": "Any (web browser)",
@@ -32,8 +32,8 @@
  },
  "publisher": {
   "@type": "Organization",
-  "name": "ToolSprint",
-  "url": "https://shaikh1085.github.io/Toolsprint/"
+  "name": "ToolSprintHub",
+  "url": "https://toolsprinthub.vercel.app/"
  }
 }
 </script>
@@ -46,19 +46,19 @@
    "@type": "ListItem",
    "position": 1,
    "name": "Home",
-   "item": "https://shaikh1085.github.io/Toolsprint/"
+   "item": "https://toolsprinthub.vercel.app/"
   },
   {
    "@type": "ListItem",
    "position": 2,
    "name": "All Tools",
-   "item": "https://shaikh1085.github.io/Toolsprint/all-tools.html"
+   "item": "https://toolsprinthub.vercel.app/all-tools.html"
   },
   {
    "@type": "ListItem",
    "position": 3,
    "name": "Favicon Generator",
-   "item": "https://shaikh1085.github.io/Toolsprint/favicon-generator.html"
+   "item": "https://toolsprinthub.vercel.app/favicon-generator.html"
   }
  ]
 }
@@ -104,7 +104,7 @@
 }
 </script>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
-<title>Favicon Generator — ToolSprint</title>
+<title>Favicon Generator — ToolSprintHub</title>
 <link rel="stylesheet" href="assets/css/style.css"/>
 <style>.fav-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}.fav-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}.fav-item img{display:block;margin:0 auto 8px;image-rendering:auto}</style>
 </head>
@@ -214,7 +214,7 @@ async function makeZip(){
 document.getElementById("zip").addEventListener("click",async function(){
   if(!made.length){ showMsg("msg","Generate the favicons first."); return; }
   var blob=await makeZip();
-  var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="toolsprint-favicons.zip"; a.click();
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="toolsprinthub-favicons.zip"; a.click();
 });
 document.getElementById("reset").addEventListener("click",function(){file=null;made=[];fEl.value="";document.getElementById("out").innerHTML="";document.getElementById("zip").disabled=true;clearMsg("msg");});
 </script>
