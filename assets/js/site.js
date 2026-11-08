@@ -215,7 +215,7 @@ function buildHeader(active) {
     '<div class="wrap header-in">' +
       '<a class="logo" href="' + pageHref("index.html") + '" aria-label="' + SITE_NAME + ' home">' +
         '<img src="' + assetHref("assets/logo-mark.svg") + '" alt=""/>' +
-        '<span class="word">Tool<b>Sprint</b></span></a>' +
+        '<span class="word">Tool<b>SprintHub</b></span></a>' +
       '<nav class="main" aria-label="Main">' + nav + "</nav>" +
     "</div>";
 }
@@ -230,7 +230,7 @@ function buildFooter() {
     '<div class="wrap"><div class="footer-in">' +
       "<div>" +
         '<a class="logo" href="' + pageHref("index.html") + '"><img src="' + assetHref("assets/logo-mark.svg") + '" alt=""/>' +
-        '<span class="word">Tool<b>Sprint</b></span></a>' +
+        '<span class="word">Tool<b>SprintHub</b></span></a>' +
         "<p>Free browser tools for PDF, images, text and everyday tasks. Everything runs on your device — " + SITE_NAME + " never receives your files.</p>" +
       "</div>" +
       "<div><strong>Popular tools</strong><nav style=\"margin-top:10px\" aria-label=\"Popular tools\">" + popLinks + "</nav></div>" +
